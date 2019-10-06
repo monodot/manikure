@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.13.1/js-yaml.min.js" integrity="sha256-ry6nlLQ1JmRl5RUPQ4eSuaSp/rGNPvl144WHHs7BiNE=" crossorigin="anonymous"></script>
+	<title>OpenShift DeploymentConfig YAML builder</title>
+
+</head>
+<body>
+
+  <h1>OpenShift DeploymentConfig YAML Builder</h1>
+  
+  <p><em>I remember the syntax....so you don't have to. </em> 🤔</p>
+
+  <p>Builds a very basic DeploymentConfig for OpenShift, based on your inputs. This is an early prototype - please <a href="https://github.com/monodot/k8s-yaml-builder/issues/new">submit any issues at GitHub</a>.</p>
+
+  <hr/>
+
+	<form id="app">
+    <p><label for="dc-metadata-name">Name</label></p>
+    <p><input type="text" id="dc-metadata-name" value="my-app"/></p>
+
+    <p><label for="dc-spec-containers-name">Container name</label></p>
+    <p><input type="text" id="dc-spec-containers-name" value="my-container"/></p>
+
+    <p><label for="dc-spec-replicas">Replicas</label></p>
+    <p>
+      <input type="text" id="dc-spec-replicas" value="1"/>
+    </p>
+    
+
+    <!-- <p>Deploy from</p>
+    <select id="deploy-from">
+      <option value="dockerimage">Docker image</option>
+      <option value="imagestream">Image stream</option>
+    </select> -->
+
+    <h3>Image stream</h3>
+    <p><label for="imagestream-name">Image stream (<code>imagename:tag</code>)</label></p>
+    <p><input type="text" id="imagestream-name"/></p>
+
+    <p><label for="imagestream-namespace">Image stream namespace</label></p>
+    <p><input type="text" id="imagestream-namespace"/></p>
+
+    <p>
+      <label><input type="checkbox" id="dc-spec-triggers-imagechange"> Trigger deployment on creation and when image changes (applies to image streams only)</label>
+    </p>
+  
+    <h3>Triggers</h3>
+    <p>
+      <label><input type="checkbox" id="dc-spec-triggers-configchange"> Trigger deployment on config change</label>
+    </p>
+
+    <h3>Labels</h3>
+    <p>
+      <label for="dc-metadata-labels-app">Application name (used to group resources on the OpenShift Overview page)</label>
+    </p>
+    <p><input type="text" id="dc-metadata-labels-app" value="my-application"/></p>
+
+    <p><button type="submit">Generate YAML</button></p>
+  </form>
+
+  <pre id="yaml" aria-live="polite"></pre>
+
+
+	<script>
+    // Variables
+
+    var form = document.querySelector('#app');
+    var dcName = document.querySelector('#dc-metadata-name');
+    var containerName = document.querySelector('#dc-spec-containers-name');
+    var yaml = document.querySelector('#yaml');
+    var triggerConfigChange = document.querySelector('#dc-spec-triggers-configchange');
+    var triggerImageChange = document.querySelector('#dc-spec-triggers-imagechange');
+    var replicas = document.querySelector('#dc-spec-replicas');
+    var appName = document.querySelector('#dc-metadata-labels-app');
+
+    // var deployFrom = document.querySelector('#deploy-from');
+
+    var imageStreamName = document.querySelector('#imagestream-name');
+    var imageStreamNamespace = document.querySelector('#imagestream-namespace');
+
+    // var deployFromHandler = function(event) {
+    //   console.log('do stuff.....');
+    // }
+
+    var submitHandler = function(event) {
+      event.preventDefault();
+
+      var dcObj = {
+        'apiVersion': 'v1',
+        'kind': 'DeploymentConfig',
+        'metadata': {
+          'labels': {
+            'app': appName.value
+          },
+          'name': dcName.value
+        },
+        'spec': {
+          'selector': {
+            'deploymentconfig': dcName.value
+          },
+          'replicas': replicas.value,
+          'template': {
+            'metadata': {
+              'labels': {
+                'deploymentconfig': dcName.value
+              }
+            },
+            'spec': {
+              'containers': [
+                {
+                  'name': containerName.value,
+                  'readinessProbe': {
+                    'httpGet': {
+                      'path': '/health',
+                      'port': 8080
+                    },
+                    'initialDelaySeconds': 10
+                  },
+                  'livenessProbe': {
+                    'httpGet': {
+                      'path': '/health',
+                      'port': 8080
+                    },
+                    'initialDelaySeconds': 180
+                  },
+                  'ports': [
+                    {
+                      'containerPort': 8080,
+                      'protocol': 'TCP',
+                      'name': 'myport'
+                    }
+                  ],
+                  'env': [ {
+                    'name': 'KUBERNETES_NAMESPACE',
+                    'valueFrom': {
+                      'fieldRef': {
+                        'fieldPath': 'metadata.namespace'
+                      }
+                    }
+                  }],
+                  'resources': {
+                    'requests': {
+                      'cpu': '0.2',
+                      'memory': '256Mi'
+                    },
+                    'limits': {
+                      'cpu': '1',
+                      'memory': '1Gi'
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          'triggers': []
+        }
+      }
+
+      if (triggerConfigChange.checked) {
+        dcObj.spec.triggers.push({ 'type': 'ConfigChange' });
+      }
+
+      if (imageStreamName.value.length > 0) {
+        imageStreamTrigger = { 
+          'type': 'ImageChange',
+          'imageChangeParams': {
+            'containerNames': [
+              containerName.value
+            ],
+            'from': {
+              'kind': 'ImageStreamTag',
+              'name': imageStreamName.value
+            }
+          }
+        };
+
+        if (triggerImageChange.checked) {
+          imageStreamTrigger.imageChangeParams.automatic = true;
+        }
+        if (imageStreamNamespace.value.length > 0) {
+          imageStreamTrigger.imageChangeParams.from.namespace = imageStreamNamespace.value;
+        }
+
+        dcObj.spec.triggers.push(imageStreamTrigger);
+      }
+
+      yaml.textContent = jsyaml.dump(dcObj);
+    }
+
+    form.addEventListener('submit', submitHandler, false);
+    // deployFrom.addEventListener('change', deployFromHandler, false);
+	</script>
+
+</body>
+</html>
