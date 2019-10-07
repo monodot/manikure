@@ -2,87 +2,198 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="bulma.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.13.1/js-yaml.min.js" integrity="sha256-ry6nlLQ1JmRl5RUPQ4eSuaSp/rGNPvl144WHHs7BiNE=" crossorigin="anonymous"></script>
 	<title>OpenShift DeploymentConfig YAML builder</title>
-
+  <style type="text/css">
+    .sticky { position: sticky; top: 10px; }
+  </style>
 </head>
 <body>
 
-  <h1>OpenShift DeploymentConfig YAML Builder</h1>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <h1 class="title">YAML Builder for Kubernetes</h1>
+      </div>
   
-  <p><em>I remember the syntax....so you don't have to. </em> 🤔</p>
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+  
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <div class="navbar-item has-background-light">
+          DeploymentConfig
+        </div>
+      </div>
+  
+  
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-primary" href="https://tomd.xyz">
+              <strong>← Return to tomd.xyz</strong>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-  <p>Builds a very basic DeploymentConfig for OpenShift, based on your inputs. This is an early prototype - please <a href="https://github.com/monodot/k8s-yaml-builder/issues/new">submit any issues at GitHub</a>.</p>
+  <section class="section has-background-light">
+    <div class="container">
+      <p class="subtitle">
+        This app builds a very basic DeploymentConfig for OpenShift, based on your inputs. <strong>Runs entirely in your browser - your data is safe here.</strong> :-)
+      </p>
+      <div class="notification is-warning">
+        This is a <strong>very</strong> early prototype! - please <a href="https://github.com/monodot/k8s-yaml-builder/issues/new">submit any issues on GitHub</a>. Thanks!
+      </div>
+    </div>
+  </section>
 
-  <hr/>
-
-	<form id="app">
-    <p><label for="dc-metadata-name">Name</label></p>
-    <p><input type="text" id="dc-metadata-name" value="my-app"/></p>
-
-    <p><label for="dc-spec-containers-name">Container name</label></p>
-    <p><input type="text" id="dc-spec-containers-name" value="my-container"/></p>
-
-    <p><label for="dc-spec-replicas">Replicas</label></p>
-    <p>
-      <input type="text" id="dc-spec-replicas" value="1"/>
-    </p>
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <form id="app">
+            <div class="field">
+              <label for="dc-metadata-name" class="label">Deployment Config Name</label>
+              <div class="control">
+                <input class="input" type="text" id="dc-metadata-name" value="my-app"/>
+              </div>
+            </div>
+            <div class="field">
+              <label for="dc-spec-container-name" class="label">Container Name</label>
+              <div class="control">
+                <input class="input" type="text" id="dc-spec-container-name" value="my-container"/>
+              </div>
+            </div>
+            <div class="field">
+              <label for="dc-spec-replicas" class="label">Replicas</label>
+              <div class="control">
+                <input class="input" type="text" id="dc-spec-replicas" value="1"/>
+              </div>
+            </div>
+            
+            <h3 class="is-size-4">Image stream</h3>
+            <div class="field">
+              <label for="imagestream-name" class="label">Image stream name and tag (<code>imagename:tag</code>)</label>
+              <div class="control">
+                <input type="text" id="imagestream-name" class="input"/>
+              </div>
+            </div>
+            <div class="field">
+              <label for="imagestream-namespace" class="label">Image stream namespace</label>
+              <div class="control">
+                <input type="text" id="imagestream-namespace" class="input"/>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" id="dc-spec-triggers-imagechange">
+                  Trigger deployment on creation and when image changes (applies to image streams only)
+                </label>
+              </div>
+            </div>
     
+            <h3 class="is-size-4">Triggers</h3>
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" id="dc-spec-triggers-configchange"/>
+                  Trigger deployment on config change
+                </label>
+              </div>
+            </div>
 
-    <!-- <p>Deploy from</p>
-    <select id="deploy-from">
-      <option value="dockerimage">Docker image</option>
-      <option value="imagestream">Image stream</option>
-    </select> -->
-
-    <h3>Image stream</h3>
-    <p><label for="imagestream-name">Image stream (<code>imagename:tag</code>)</label></p>
-    <p><input type="text" id="imagestream-name"/></p>
-
-    <p><label for="imagestream-namespace">Image stream namespace</label></p>
-    <p><input type="text" id="imagestream-namespace"/></p>
-
-    <p>
-      <label><input type="checkbox" id="dc-spec-triggers-imagechange"> Trigger deployment on creation and when image changes (applies to image streams only)</label>
-    </p>
+            <h3 class="is-size-4">Health checks</h3>
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" id="dc-spec-container-readinessprobe" checked/>
+                  Include example readiness probe
+                </label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox" id="dc-spec-container-livenessprobe" checked/>
+                  Include example liveness probe
+                </label>
+              </div>
+            </div>
   
-    <h3>Triggers</h3>
-    <p>
-      <label><input type="checkbox" id="dc-spec-triggers-configchange"> Trigger deployment on config change</label>
-    </p>
+            <h3 class="is-size-4">Labels</h3>
+            <div class="field">
+              <label for="dc-metadata-labels-app" class="label">Application name (used to group resources on the OpenShift Overview page)</label>
+              <div class="control">
+                <input type="text" id="dc-metadata-labels-app" value="my-application" class="input"/>
+              </div>
+            </div>
+  
+            <div class="field is-grouped">
+              <div class="control">
+                <button type="submit" class="button is-link">Generate YAML</button>
+              </div>
+            </div>
 
-    <h3>Labels</h3>
-    <p>
-      <label for="dc-metadata-labels-app">Application name (used to group resources on the OpenShift Overview page)</label>
-    </p>
-    <p><input type="text" id="dc-metadata-labels-app" value="my-application"/></p>
+          </form>
+        </div>
+        <div class="column">
+          <div class="sticky">
+            <label for="yaml" class="label">Generated YAML</label>
+            <div class="control" style="position: sticky; top: 0">
+              <textarea id="yaml" rows="20"
+                        class="textarea is-family-code is-size-7" 
+                        aria-live="polite" readonly></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <p><button type="submit">Generate YAML</button></p>
-  </form>
+  <section class="section has-background-light">
+    <div class="container">
+      <div class="content">
+        <p class="is-size-3">Stop wasting your life writing YAML! Use this <strong>Kubernetes YAML Builder</strong> to generate valid YAML which you can apply to a <a href="https://kubernetes.io/">Kubernetes</a> or <a href="https://docs.openshift.com/">OpenShift</a> cluster.</p>
+        <p class="is-size-4">Use this web UI to enter the details of your new Kubernetes object. Then click the <strong>Generate YAML</strong> button to generate the YAML. You can use the <code>kubectl</code> or <code>oc</code> commands to apply the YAML to your cluster.</p>
+        <p class="is-size-4">At the moment, the YAML builder has support for creating <a href="https://docs.openshift.com/container-platform/3.11/dev_guide/deployments/how_deployments_work.html">OpenShift's DeploymentConfig objects</a>, but I'll be adding support for more OpenShift and Kubernetes objects in the future, such as Services, BuildConfigs and Routes.</p>
+      </div>
+    </div>
+  </section>
 
-  <pre id="yaml" aria-live="polite"></pre>
-
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <strong>Kubernetes YAML Builder</strong> by <a href="https://tomd.xyz">Tom D</a>. The source code is licensed under
+        <a href="https://opensource.org/licenses/GPL-3.0">GNU GPLv3</a>. Made with 💙 in London.
+      </p>
+    </div>
+  </footer>
 
 	<script>
     // Variables
 
     var form = document.querySelector('#app');
     var dcName = document.querySelector('#dc-metadata-name');
-    var containerName = document.querySelector('#dc-spec-containers-name');
+    var containerName = document.querySelector('#dc-spec-container-name');
     var yaml = document.querySelector('#yaml');
     var triggerConfigChange = document.querySelector('#dc-spec-triggers-configchange');
     var triggerImageChange = document.querySelector('#dc-spec-triggers-imagechange');
     var replicas = document.querySelector('#dc-spec-replicas');
     var appName = document.querySelector('#dc-metadata-labels-app');
-
-    // var deployFrom = document.querySelector('#deploy-from');
-
     var imageStreamName = document.querySelector('#imagestream-name');
     var imageStreamNamespace = document.querySelector('#imagestream-namespace');
-
-    // var deployFromHandler = function(event) {
-    //   console.log('do stuff.....');
-    // }
+    var defaultReadinessProbe = document.querySelector('#dc-spec-container-readinessprobe');
+    var defaultLivenessProbe = document.querySelector('#dc-spec-container-livenessprobe');
 
     var submitHandler = function(event) {
       event.preventDefault();
@@ -111,20 +222,6 @@
               'containers': [
                 {
                   'name': containerName.value,
-                  'readinessProbe': {
-                    'httpGet': {
-                      'path': '/health',
-                      'port': 8080
-                    },
-                    'initialDelaySeconds': 10
-                  },
-                  'livenessProbe': {
-                    'httpGet': {
-                      'path': '/health',
-                      'port': 8080
-                    },
-                    'initialDelaySeconds': 180
-                  },
                   'ports': [
                     {
                       'containerPort': 8080,
@@ -158,6 +255,25 @@
         }
       }
 
+      if (defaultReadinessProbe.checked) {
+        dcObj.spec.template.spec.containers[0].readinessProbe = {
+          'httpGet': {
+            'path': '/health',
+            'port': 8080
+          },
+          'initialDelaySeconds': 10
+        };
+      }
+      if (defaultLivenessProbe.checked) {
+        dcObj.spec.template.spec.containers[0].livenessProbe = {
+          'httpGet': {
+            'path': '/health',
+            'port': 8080
+          },
+          'initialDelaySeconds': 180
+        };
+      }
+
       if (triggerConfigChange.checked) {
         dcObj.spec.triggers.push({ 'type': 'ConfigChange' });
       }
@@ -186,11 +302,41 @@
         dcObj.spec.triggers.push(imageStreamTrigger);
       }
 
-      yaml.textContent = jsyaml.dump(dcObj);
+      yaml.value = jsyaml.dump(dcObj);
     }
 
     form.addEventListener('submit', submitHandler, false);
     // deployFrom.addEventListener('change', deployFromHandler, false);
+
+    // ------------------------------
+    // Enable navbar BURGER ahahahaha
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // Get all "navbar-burger" elements
+      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+      // Check if there are any navbar burgers
+      if ($navbarBurgers.length > 0) {
+
+        // Add a click event on each of them
+        $navbarBurgers.forEach( el => {
+          el.addEventListener('click', () => {
+
+            // Get the target from the "data-target" attribute
+            const target = el.dataset.target;
+            const $target = document.getElementById(target);
+
+            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+            el.classList.toggle('is-active');
+            $target.classList.toggle('is-active');
+
+          });
+        });
+      }
+    });    
+
+    // -----------------------
+    // End navbar BURGER setup
 	</script>
 
 </body>
