@@ -30,6 +30,9 @@
         <div class="navbar-item has-background-light">
           DeploymentConfig
         </div>
+        <div class="navbar-item">
+          <a href="bc.html">BuildConfig</a>
+        </div>
       </div>
   
   
@@ -259,7 +262,7 @@
           <li>Apply the YAML to your cluster using <code>kubectl create -f ...</code> or <code>oc create -f ..</code>🌠</li>
           <li>Take the rest of the day off.</li>
         </ol>
-        <p>Right now, the YAML builder only supports the creation of <a href="https://docs.openshift.com/container-platform/3.11/dev_guide/deployments/how_deployments_work.html">OpenShift's DeploymentConfig objects</a>, but I'll be adding support for more OpenShift and Kubernetes objects in the future, such as Services, BuildConfigs and Routes.</p>
+        <p>Right now, the YAML builder only supports the creation of basic OpenShift <a href="https://docs.openshift.com/container-platform/3.11/dev_guide/deployments/how_deployments_work.html">DeploymentConfig</a> and BuildConfig objects</a>, but I'll be adding support for more OpenShift and Kubernetes objects in the future, such as Services and Routes.</p>
       </div>
     </div>
   </section>

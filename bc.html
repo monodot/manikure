@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="bulma.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.13.1/js-yaml.min.js" integrity="sha256-ry6nlLQ1JmRl5RUPQ4eSuaSp/rGNPvl144WHHs7BiNE=" crossorigin="anonymous"></script>
+	<title>YAML Builder for Kubernetes</title>
+  <style type="text/css">
+    .sticky { position: sticky; top: 10px; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <h1 class="title">YAML Builder for Kubernetes</h1>
+      </div>
+  
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+  
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <div class="navbar-item">
+          <a href="index.html">DeploymentConfig</a>
+        </div>
+        <div class="navbar-item has-background-light">
+          BuildConfig
+        </div>
+      </div>
+  
+  
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-primary" href="https://tomd.xyz">
+              <strong>← Return to tomd.xyz</strong>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section has-background-light">
+    <div class="container">
+      <p class="subtitle">
+        This app builds a very basic BuildConfig for OpenShift, based on your inputs. <strong>Runs entirely in your browser - your data is safe here.</strong> :-)
+      </p>
+      <div class="notification is-warning">
+        <p>Thanks for trying out this <strong>very</strong> early prototype! Please <a href="https://github.com/monodot/k8s-yaml-builder/issues/new">submit any issues on GitHub</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column is-two-thirds">
+          <form id="app">
+            <div class="field">
+              <label for="bc-metadata-name" class="label">Build Config Name</label>
+              <div class="control">
+                <input class="input" type="text" id="bc-metadata-name" value="my-build"/>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="bc-output-to-is-name">Output Image Stream Name (<code>imagename:tag</code>)</label>
+              <div class="control">
+                <input class="input" type="text" name="bc-output-to-is-name" id="bc-output-to-is-name" value="my-app:latest"/>
+              </div>
+            </div> 
+
+            <div class="field">
+              <label for="bc-spec-source-dockerfile" class="label">Inline Dockerfile</label>
+              <div class="control">
+                <textarea id="bc-spec-source-dockerfile" class="textarea is-family-code is-size-7">FROM mycorp/base-image:1.0
+RUN yum install -y skopeo
+USER 1001</textarea>
+              </div>
+            </div> 
+
+            <div class="field">
+              <label for="bc-spec-strategy-from-name" class="label">Source Image Stream Name</label>
+              <div class="control">
+                <input class="input" type="text" name="bc-spec-strategy-from-name" id="bc-spec-strategy-from-name" value="base-image:1.0"/>
+              </div>
+            </div> 
+  
+
+<!-- WIP: To be added            
+            <div class="field">
+              <label for="bc-spec-strategy" class="label">Strategy</label>
+              <div class="control">
+                <span class="select">
+                  <select id="bc-spec-strategy">
+                    <option value="source">Source-to-image</option>
+                    <option value="jenkinspipeline">Jenkins Pipeline</option>
+                    <option value="docker">Docker</option>
+                  </select>
+                </span>
+              </div>
+            </div>            
+          -->
+
+            <div class="field is-grouped">
+              <div class="control">
+                <button type="submit" class="button is-link">Generate YAML</button>
+                <button type="reset" class="button">Reset to defaults</button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="column">
+          <div class="sticky">
+            <label for="yaml" class="label">Generated YAML</label>
+            <div class="control" style="position: sticky; top: 0">
+              <textarea id="yaml" rows="20"
+                        class="textarea is-family-code is-size-7" 
+                        aria-live="polite" readonly></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section has-background-light">
+    <div class="container">
+      <div class="content is-size-4">
+        <h2 class="has-text-centered">Stop wasting your life writing YAAAAAAAAAML!</h2>
+        <p class="is-size-3">Use this <strong>Kubernetes YAML Builder</strong> to generate fresh, delicious, syntactically-valid YAML 🍞 which you can apply to your <a href="https://kubernetes.io/">Kubernetes</a> or <a href="https://docs.openshift.com/">OpenShift</a> cluster.</p>
+        <p>How does it work?</p>
+        <ol>
+          <li>Use this web UI to enter the details of your new Kubernetes object.</li>
+          <li>Click the <strong>Generate YAML</strong> button to generate the YAML.</li>
+          <li>Copy the YAML to your favourite text editor and save to a file.</li>
+          <li>Apply the YAML to your cluster using <code>kubectl create -f ...</code> or <code>oc create -f ..</code>🌠</li>
+          <li>Take the rest of the day off.</li>
+        </ol>
+        <p>Right now, the YAML builder only supports the creation of basic OpenShift <a href="https://docs.openshift.com/container-platform/3.11/dev_guide/deployments/how_deployments_work.html">DeploymentConfig</a> and BuildConfig objects</a>, but I'll be adding support for more OpenShift and Kubernetes objects in the future, such as Services, BuildConfigs and Routes.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <strong>YAML Builder for Kubernetes</strong> by <a href="https://tomd.xyz">Tom D</a>. The <a href="https://github.com/monodot/k8s-yaml-builder">source code</a> is licensed under
+        <a href="https://opensource.org/licenses/GPL-3.0">GNU GPLv3</a>. Made with 💙 in London.
+      </p>
+    </div>
+  </footer>
+
+	<script>
+    // Variables
+
+    var form = document.querySelector('#app');
+    var yaml = document.querySelector('#yaml');
+
+    var bcName = document.querySelector('#bc-metadata-name');
+    var bcSpecStrategy = document.querySelector('#bc-spec-strategy');
+    var bcOutputToIsName = document.querySelector('#bc-output-to-is-name');
+    var bcSpecSourceDockerfile = document.querySelector('#bc-spec-source-dockerfile');
+    var bcSpecStrategyFromName = document.querySelector('#bc-spec-strategy-from-name');
+
+    var sourceStrategyContent = document.querySelector('#form-group-source-strategy');
+    var pipelineStrategyContent = document.querySelector('#form-group-pipeline-strategy');
+    var dockerStrategyContent = document.querySelector('#form-group-docker-strategy');
+
+    var submitHandler = function(event) {
+      event.preventDefault();
+
+      var dcObj = {
+        'apiVersion': 'v1',
+        'kind': 'BuildConfig',
+        'metadata': {
+          'name': bcName.value
+        },
+        'spec': {
+          'output': {
+            'to': {
+              'kind': 'ImageStreamTag',
+              'name': bcOutputToIsName.value
+            }
+          },
+          'source': {
+            'dockerfile': bcSpecSourceDockerfile.value,
+            'type': 'Dockerfile'
+          },
+          'strategy': {
+            'dockerStrategy': {
+              'from': {
+                'kind': 'ImageStreamTag',
+                'name': bcSpecStrategyFromName.value
+              }
+            },
+            'type': 'Docker'
+          }
+        }
+      }
+
+      yaml.value = jsyaml.dump(dcObj);
+    }
+
+    // Show/hide the different strategy form parts
+    var specChangeHandler = function(event) {
+      event.preventDefault();
+
+      if (event.target.id == 'docker') {
+        // DO STUFF
+      } else if (event.target.id == 'jenkinspipeline') {
+        // DO STUFF
+        console.log('Jenkins');
+      } else {
+        // ASSUME source-to-image
+        console.log('Source-to-image');
+        sourceStrategyContent.classList.remove('is-hidden');
+        pipelineStrategyContent.classList.add('is-hidden');
+        dockerStrategyContent.classList.add('is-hidden');
+      }
+    }
+
+    // Listeners
+    form.addEventListener('submit', submitHandler, false);
+    bcSpecStrategy.addEventListener('input', specChangeHandler, false);
+
+
+    
+    // ------------------------------
+    // Enable navbar BURGER ahahahaha
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // Get all "navbar-burger" elements
+      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+      // Check if there are any navbar burgers
+      if ($navbarBurgers.length > 0) {
+
+        // Add a click event on each of them
+        $navbarBurgers.forEach( el => {
+          el.addEventListener('click', () => {
+
+            // Get the target from the "data-target" attribute
+            const target = el.dataset.target;
+            const $target = document.getElementById(target);
+
+            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+            el.classList.toggle('is-active');
+            $target.classList.toggle('is-active');
+
+          });
+        });
+      }
+    });    
+
+    // -----------------------
+    // End navbar BURGER setup
+	</script>
+
+</body>
+</html>
