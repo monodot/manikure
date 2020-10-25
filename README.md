@@ -1,23 +1,29 @@
-# k8s-yaml-builder
+# k8s-manifest-builder
 
-A simple webapp for building Kubernetes resource definitions using a form. All static HTML and vanilla JavaScript.
+A simple webapp for building Kubernetes resource definitions using a form.
 
-You can find this running at: https://tomd.xyz/tools/kubernetes-yaml-builder/
+You can find this running at: https://tomd.xyz/tools/kubernetes-manifest-builder/
 
-Or, to serve the static content locally with Python's simple HTTP server:
+## Project setup
+```
+npm install
+```
 
-    python -m SimpleHTTPServer 8000 
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-You can now visit the app at `http://localhost:8000`.
+### Compiles and minifies for production
+```
+npm run build
+```
 
-## Serve using a container
+### Lints and fixes files
+```
+npm run lint
+```
 
-Or, to serve using an Apache HTTP Server container:
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
 
-    docker run --rm --name k8s-yaml-builder -p 8055:80 -v "$PWD":/usr/local/apache2/htdocs/ httpd:2.4
-
-Or if you use _selinux_ you'll need to mount with `:z`:
-
-    docker run --rm --name k8s-yaml-builder -p 8055:80 -v "$PWD":/usr/local/apache2/htdocs/:z httpd:2.4
-     
-Then you can visit the app in your browser at `http://localhost:8055`
