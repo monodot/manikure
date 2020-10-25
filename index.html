@@ -65,13 +65,24 @@
         <div class="column is-two-thirds">
           <form id="app">
             <div class="field">
-              <label for="dc-metadata-name" class="label">Deployment Config Name</label>
+              <label for="dc-metadata-name" class="label">Type of object to create</label>
+              <div class="control">
+                <div class="select">
+                  <select id="dc-objecttype">
+                    <option value="DeploymentConfig">DeploymentConfig (for OpenShift)</option>
+                    <option value="StatefulSet">StatefulSet</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label for="dc-metadata-name" class="label">Object Name</label>
               <div class="control">
                 <input class="input" type="text" id="dc-metadata-name" value="my-app"/>
               </div>
             </div>
             <div class="field">
-              <label for="dc-spec-container-name" class="label">Container Name</label>
+              <label for="dc-spec-container-name" class="label tooltip" data-tooltip="Lorem ipsum dolor sit amet">Container Name</label>
               <div class="control">
                 <input class="input" type="text" id="dc-spec-container-name" value="my-container"/>
               </div>
@@ -169,6 +180,30 @@
               </div>
             </div>
 
+            <div id="group-sts-spec-volumeclaimtemplates" class="is-hidden">
+              <h3 class="is-size-4 tooltip" data-tooltip="hello">Volume Claim Template (for StatefulSet)</h3>
+              <p>Kubernetes creates one PersistentVolume for each VolumeClaimTemplate</p>
+              <div class="field">
+                <label for="dc-spec-template-spec-volume-pvc-claimname" class="label">Volume Claim Template name</label>
+                <div class="control">
+                  <input type="text" id="sts-spec-volumeclaimtemplates-metadata-name" class="input"/>
+                </div>
+              </div>
+              <div class="field">
+                <label for="dc-spec-template-spec-volume-pvc-claimname" class="label">Access mode</label>
+                <div class="control">
+                  <select id="sts-spec-volumeclaimtemplates-metadata-spec-accessmode">
+                      <option value="ReadWriteOnce">Read-Write-Once (RWO)</option>
+                      <option value="ReadOnlyMany">Read-Only-Many (ROX)</option>
+                      <option value="ReadWriteMany">Read-Write-Many (RWX)</option>
+                  </select>
+                </div>
+              </div>
+
+
+
+            </div>
+
             <h3 class="is-size-4">ConfigMap mount</h3>
 
             <div class="field">
@@ -188,8 +223,8 @@
               <div class="control">
                 <input type="text" id="dc-spec-template-spec-volume-cm-mountpath" class="input"/>
               </div>
-            </div>            
-          
+            </div>   
+            
             <h3 class="is-size-4">Triggers</h3>
             <div class="field">
               <div class="control">
@@ -276,259 +311,7 @@
     </div>
   </footer>
 
-	<script>
-    // Variables
-
-    var form = document.querySelector('#app');
-    var yaml = document.querySelector('#yaml');
-
-    var appName = document.querySelector('#dc-metadata-labels-app');
-    var dcName = document.querySelector('#dc-metadata-name');
-    var replicas = document.querySelector('#dc-spec-replicas');
-    var containerName = document.querySelector('#dc-spec-container-name');
-
-    var triggerConfigChange = document.querySelector('#dc-spec-triggers-configchange');
-    var triggerImageChange = document.querySelector('#dc-spec-triggers-imagechange');
-
-    var imageStreamName = document.querySelector('#imagestream-name');
-    var imageStreamNamespace = document.querySelector('#imagestream-namespace');
-
-    var defaultReadinessProbe = document.querySelector('#dc-spec-container-readinessprobe');
-    var defaultLivenessProbe = document.querySelector('#dc-spec-container-livenessprobe');
-    
-    var envLiteralName = document.querySelector('#dc-spec-template-spec-container-env-literal-name');
-    var envLiteralValue = document.querySelector('#dc-spec-template-spec-container-env-literal-value');
-
-    var envKubernetesNamespace = document.querySelector('#dc-spec-template-container-env-k8sns');
-    var envRefName = document.querySelector('#dc-spec-template-spec-container-env-ref-name');
-    var envRefType = document.querySelector('#dc-spec-template-spec-container-env-ref-type');
-    var envRefRefName = document.querySelector('#dc-spec-template-spec-container-env-ref-refname');
-    var envRefRefKey = document.querySelector('#dc-spec-template-spec-container-env-ref-refkey');
-
-    var volPvcVolName = document.querySelector('#dc-spec-template-spec-volume-pvc-volname');
-    var volPvcClaimName = document.querySelector('#dc-spec-template-spec-volume-pvc-claimname');
-    var volPvcMountPath = document.querySelector('#dc-spec-template-spec-volume-pvc-mountpath');
-    var volCMVolName = document.querySelector('#dc-spec-template-spec-volume-cm-volname');
-    var volCMCMName = document.querySelector('#dc-spec-template-spec-volume-cm-cmname');
-    var volCMMountPath = document.querySelector('#dc-spec-template-spec-volume-cm-mountpath');
-
-    var submitHandler = function(event) {
-      event.preventDefault();
-
-      var dcObj = {
-        'apiVersion': 'v1',
-        'kind': 'DeploymentConfig',
-        'metadata': {
-          'labels': {
-            'app': appName.value
-          },
-          'name': dcName.value
-        },
-        'spec': {
-          'selector': {
-            'deploymentconfig': dcName.value
-          },
-          'replicas': replicas.value,
-          'template': {
-            'metadata': {
-              'labels': {
-                'deploymentconfig': dcName.value
-              }
-            },
-            'spec': {
-              'containers': [
-                {
-                  'name': containerName.value,
-                  'ports': [
-                    {
-                      'containerPort': 8080,
-                      'protocol': 'TCP',
-                      'name': 'myport'
-                    }
-                  ],
-                  'env': [ ],
-                  'resources': {
-                    'requests': {
-                      'cpu': '0.2',
-                      'memory': '256Mi'
-                    },
-                    'limits': {
-                      'cpu': '1',
-                      'memory': '1Gi'
-                    }
-                  },
-                  'volumeMounts': []
-                }
-              ],
-              'volumes': []
-            }
-          },
-          'triggers': []
-        }
-      }
-
-      if (defaultReadinessProbe.checked) {
-        dcObj.spec.template.spec.containers[0].readinessProbe = {
-          'httpGet': {
-            'path': '/health',
-            'port': 8080
-          },
-          'initialDelaySeconds': 10
-        };
-      }
-      if (defaultLivenessProbe.checked) {
-        dcObj.spec.template.spec.containers[0].livenessProbe = {
-          'httpGet': {
-            'path': '/health',
-            'port': 8080
-          },
-          'initialDelaySeconds': 180
-        };
-      }
-
-      if (triggerConfigChange.checked) {
-        dcObj.spec.triggers.push({ 'type': 'ConfigChange' });
-      }
-
-      // Image Stream
-      if (imageStreamName.value.length > 0) {
-        imageStreamTrigger = { 
-          'type': 'ImageChange',
-          'imageChangeParams': {
-            'containerNames': [
-              containerName.value
-            ],
-            'from': {
-              'kind': 'ImageStreamTag',
-              'name': imageStreamName.value
-            }
-          }
-        };
-
-        if (triggerImageChange.checked) {
-          imageStreamTrigger.imageChangeParams.automatic = true;
-        }
-        if (imageStreamNamespace.value.length > 0) {
-          imageStreamTrigger.imageChangeParams.from.namespace = imageStreamNamespace.value;
-        }
-
-        dcObj.spec.triggers.push(imageStreamTrigger);
-      }
-
-      // Environment variables
-      if (envKubernetesNamespace.checked) {
-        dcObj.spec.template.spec.containers[0].env.push({
-          'name': 'KUBERNETES_NAMESPACE',
-          'valueFrom': {
-            'fieldRef': {
-              'fieldPath': 'metadata.namespace'
-            }
-          }
-        });
-      }
-
-
-
-      if (envLiteralName.value.length > 0 && envLiteralValue.value.length > 0) {
-        dcObj.spec.template.spec.containers[0].env.push({
-          'name': envLiteralName.value,
-          'value': envLiteralValue.value
-        })
-      };
-
-      if (envRefName.value.length > 0 && envRefRefName.value.length > 0 
-          && envRefRefKey.value.length > 0) {
-        var refType;
-        if (envRefType.value == 'secret') {
-          refType = 'secretKeyRef';
-        } else {
-          refType = 'configMapKeyRef';
-        }
-        dcObj.spec.template.spec.containers[0].env.push({
-          'name': envRefName.value,
-          'valueFrom': {
-            [refType]: {
-              'name': envRefRefName.value,
-              'key': envRefRefKey.value
-            }
-          }
-
-        })
-      }
-
-      
-
-      // PV mounts
-      if (volPvcVolName.value.length > 0 && volPvcClaimName.value.length > 0) {
-        dcObj.spec.template.spec.volumes.push({
-          'name': volPvcVolName.value,
-          'persistentVolumeClaim': {
-            'claimName': volPvcClaimName.value
-          }
-        });
-
-        // Mount the PV at a location
-        if (volPvcMountPath.value.length > 0) {
-          dcObj.spec.template.spec.containers[0].volumeMounts.push({
-            'mountPath': volPvcMountPath.value,
-            'name': volPvcVolName.value
-          });
-        }
-      }
-
-      // ConfigMap mounts
-      if (volCMVolName.value.length > 0 && volCMCMName.value.length > 0) {
-        dcObj.spec.template.spec.volumes.push({
-          'name': volCMVolName.value,
-          'configMap': {
-            'name': volCMCMName.value
-          }
-        });
-
-        // Mount the ConfigMap at a nice location
-        if (volCMMountPath.value.length > 0) {
-          dcObj.spec.template.spec.containers[0].volumeMounts.push({
-            'mountPath': volCMMountPath.value,
-            'name': volCMVolName.value
-          });
-        }
-      }
-
-      yaml.value = jsyaml.dump(dcObj);
-    }
-
-    form.addEventListener('submit', submitHandler, false);
-
-    // ------------------------------
-    // Enable navbar BURGER ahahahaha
-    document.addEventListener('DOMContentLoaded', () => {
-
-      // Get all "navbar-burger" elements
-      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-      // Check if there are any navbar burgers
-      if ($navbarBurgers.length > 0) {
-
-        // Add a click event on each of them
-        $navbarBurgers.forEach( el => {
-          el.addEventListener('click', () => {
-
-            // Get the target from the "data-target" attribute
-            const target = el.dataset.target;
-            const $target = document.getElementById(target);
-
-            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-            el.classList.toggle('is-active');
-            $target.classList.toggle('is-active');
-
-          });
-        });
-      }
-    });    
-
-    // -----------------------
-    // End navbar BURGER setup
-	</script>
+  <script src="app.js"></script>
 
 </body>
 </html>
