@@ -24,6 +24,21 @@
                 class="appearance-none bg-gray-200 w-full py-2 px-4 block rounded text-gray-800 focus:outline-none focus:shadow-outline">
       </div>
       <div>
+        <label>Environment variable name:</label>
+        <input v-model="deployment.spec.template.spec.containers[0].env[0].name"
+                class="appearance-none bg-gray-200 w-full py-2 px-4 block rounded text-gray-800 focus:outline-none focus:shadow-outline">
+      </div>
+      <div>
+        <label>Environment variable source ConfigMap name:</label>
+        <input v-model="deployment.spec.template.spec.containers[0].env[0].valueFrom.configMapKeyRef.name"
+                class="appearance-none bg-gray-200 w-full py-2 px-4 block rounded text-gray-800 focus:outline-none focus:shadow-outline">
+      </div>
+      <div>
+        <label>Environment variable source ConfigMap key:</label>
+        <input v-model="deployment.spec.template.spec.containers[0].env[0].valueFrom.configMapKeyRef.key"
+                class="appearance-none bg-gray-200 w-full py-2 px-4 block rounded text-gray-800 focus:outline-none focus:shadow-outline">
+      </div>
+      <div>
         <label>Container port:</label>
         <input v-model="deployment.spec.template.spec.containers[0].ports[0].containerPort"
                 class="appearance-none bg-gray-200 w-full py-2 px-4 block rounded text-gray-800 focus:outline-none focus:shadow-outline">
@@ -72,6 +87,15 @@ export default {
               containers: [{
                 name: "container",
                 image: "hello-world",
+                env: [{
+                  name: "GREETING",
+                  valueFrom: {
+                    configMapKeyRef: {
+                      name: "my-configmap",
+                      key: "database.password"
+                    }
+                  }
+                }],
                 ports: [{
                   containerPort: 80
                 }]
