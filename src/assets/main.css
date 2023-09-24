@@ -22,19 +22,8 @@ a,
 }
 
 @media (min-width: 1024px) {
-  body {
-    /* display: flex; */
-    /* place-items: center; */
-  }
-
   #app {
     height: 100vh;
-    display: grid;
-    grid-template-columns: 200px 1fr;
   }
 
-  main.object-with-codeview {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
 }

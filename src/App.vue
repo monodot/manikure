@@ -1,25 +1,29 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import ResourceList from './components/ResourceList.vue'
+// import DeploymentView from './views/DeploymentView.vue'
+import CanvasView from './views/CanvasView.vue'
+import AppHeader from './components/AppHeader.vue'
 </script>
 
 <template>
   <header>
-    <div class="wrapper">
-      <ResourceList />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+    <AppHeader/>
   </header>
 
-  <RouterView />
+  <main class="grid grid-cols-sidebar-with-canvas">
+    <ResourceList />
+    <CanvasView />
+  </main>
 </template>
 
 <style scoped>
-header {
+main {
+  /* display: grid; */
+  /* grid-template-columns: 200px 1fr; */
+}
+
+/* header {
   line-height: 1.5;
   max-height: 100vh;
 }
@@ -52,13 +56,13 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
-}
+} */
 
 @media (min-width: 1024px) {
   header {
-    display: flex;
-    padding: 1rem;
-    border-right: 2px solid var(--color-border);
+    /* display: flex; */
+    /* padding: 1rem; */
+    /* border-right: 2px solid var(--color-border); */
     /* place-items: center; */
     /* padding-right: calc(var(--section-gap) / 2); */
   }

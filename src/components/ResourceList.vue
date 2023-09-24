@@ -1,34 +1,30 @@
+<script setup>
+import { useProjectStore } from '../stores/project'
+
+const project = useProjectStore()
+</script>
+
+
 <template>
-  <div>
-    <h1>A list of open files</h1>
-    <select>
-      <option v-for="file in files" :key="file.id">
-        {{ file.name }}
-      </option>
-    </select>
-    <ul>
-      <li v-for="file in files" :key="file.id">
-        {{ file.name }}
-      </li>
-    </ul>
+  <div class="p-4 border-r-2">
+    <div>
+      <h2 class="text-lg font-bold">Project</h2>
+      <div v-for="(document, index) in project.documents" :key="index">
+        <label>
+          <input type="radio" v-model="project.selectedDocument" :value="index" />
+          {{ document.kind }} - {{ document.metadata.name }} ({{  document.apiVersion }})
+          <button @click="project.removeDocument(index)">Remove</button>
+        </label>
+      </div>
+
+      <p class="my-4">
+        <a href="#">+ Deployment</a>
+      </p>
+
+      <p class="my-4">
+        <a href="#">Export</a>
+      </p>
+    </div>
   </div>
 </template>
 
-<script>
-import { ref } from 'vue'
-
-export default {
-  setup() {
-    const files = ref([
-      { id: 1, name: 'Deployment' },
-      { id: 2, name: 'Service' },
-      { id: 3, name: 'ConfigMap' },
-      { id: 4, name: 'Secret' },
-    ])
-
-    return {
-      files,
-    }
-  },
-}
-</script>
