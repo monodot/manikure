@@ -1,10 +1,15 @@
 <script setup>
 import { usePreferencesStore } from '../stores/preferences';
 
-const emit = defineEmits(['showAbout'])
+const emit = defineEmits(['showAbout', 'showNewProject'])
 const showAbout = () => {
     console.log('about clicked')
     emit('showAbout')
+}
+
+const showNewProject = () => {
+    console.log('new project clicked')
+    emit('showNewProject')
 }
 
 const prefs = usePreferencesStore()
@@ -13,7 +18,12 @@ const prefs = usePreferencesStore()
 <template>
     <div class="border-b-2">
         <div class="flex justify-between">
-            <p class="p-4">Manikure Studio 💅 &#8212; <strong>Mani</strong>fest Builder for <strong>Ku</strong>bernetes <strong>Re</strong>sources</p>
+            <div class="flex flex-wrap justify-center">
+                <nav>
+                    <a @click="showNewProject" class="p-4 cursor-pointer">New Project</a>
+                </nav>
+                <p class="p-4">Manikure Studio 💅 &#8212; <strong>Mani</strong>fest Builder for <strong>Ku</strong>bernetes <strong>Re</strong>sources</p>
+            </div>
             <nav class="flex flex-wrap justify-center">
                 <div>
                     <label class="inline-block p-4">

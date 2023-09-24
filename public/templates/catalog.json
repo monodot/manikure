@@ -1,0 +1,14 @@
+{
+    "items": [
+        {
+            "id": "nginx-basic",
+            "name": "NGINX Basic",
+            "description": "Deploys an NGINX server with a basic configuration."
+        },
+        {
+            "id": "pod-sleep",
+            "name": "Pod with sleep",
+            "description": "Creates a single pod that sleeps for 60 minutes."
+        }
+    ]
+}

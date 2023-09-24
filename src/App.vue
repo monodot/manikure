@@ -4,22 +4,31 @@ import CanvasView from './views/CanvasView.vue'
 import AppHeader from './components/AppHeader.vue'
 import AboutBox from './components/AboutBox.vue'
 import { ref } from 'vue'
+import NewProject from './components/NewProject.vue'
 
 const aboutVisible = ref(false)
+const newProjectVisible = ref(false)
 
 const showAbout = () => {
     console.log('about received')
     aboutVisible.value = true
+}
+const showNewProject = () => {
+    console.log('new project received')
+    newProjectVisible.value = true
 }
 
 </script>
 
 <template>
   <header>
-    <AppHeader @show-about="showAbout"/>
+    <AppHeader @show-about="showAbout" @show-new-project="showNewProject"/>
   </header>
 
   <main class="grid grid-cols-sidebar-with-canvas">
+    <Suspense>
+      <NewProject v-if="newProjectVisible" @close="newProjectVisible = false" />
+    </Suspense>
     <ResourceList />
     <CanvasView />
   </main>
