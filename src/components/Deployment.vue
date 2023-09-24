@@ -7,7 +7,7 @@ const tehObject = ref(project.documents[project.selectedDocument])
 </script>
 
 <template>
-  <div class="p-4" aria-label="Resource Properties">
+  <div class="p-4" aria-label="Deployment Properties">
     <h2 class="text-4xl font-bold text-gray-800 py-4">Deployment</h2>
     <p>A Deployment provides declarative updates for Pods and ReplicaSets.</p>
     <div class="">

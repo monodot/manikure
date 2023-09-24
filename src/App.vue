@@ -1,72 +1,35 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
 import ResourceList from './components/ResourceList.vue'
-// import DeploymentView from './views/DeploymentView.vue'
 import CanvasView from './views/CanvasView.vue'
 import AppHeader from './components/AppHeader.vue'
+import AboutBox from './components/AboutBox.vue'
+import { ref } from 'vue'
+
+const aboutVisible = ref(false)
+
+const showAbout = () => {
+    console.log('about received')
+    aboutVisible.value = true
+}
+
 </script>
 
 <template>
   <header>
-    <AppHeader/>
+    <AppHeader @show-about="showAbout"/>
   </header>
 
   <main class="grid grid-cols-sidebar-with-canvas">
     <ResourceList />
     <CanvasView />
   </main>
+
+  <AboutBox v-if="aboutVisible" @close="aboutVisible = false" />
 </template>
 
 <style scoped>
-main {
-  /* display: grid; */
-  /* grid-template-columns: 200px 1fr; */
-}
-
-/* header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-} */
 
 @media (min-width: 1024px) {
-  header {
-    /* display: flex; */
-    /* padding: 1rem; */
-    /* border-right: 2px solid var(--color-border); */
-    /* place-items: center; */
-    /* padding-right: calc(var(--section-gap) / 2); */
-  }
-
   .logo {
     margin: 0 2rem 0 0;
   }
