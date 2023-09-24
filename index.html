@@ -1,65 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Markdown Editor</title>
-    <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/marked@0.3.6"></script>
-    <script src="https://unpkg.com/lodash@4.16.0"></script>
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K8s Manifest Builder</title>
   </head>
   <body>
-    <div id="editor">
-      <div>
-        <label>Pod name:</label>
-        <input v-model="pod.metadata.name"
-               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-        />
-      </div>
-      <div>
-        <label>Container image:</label>
-        <input v-model="pod.spec.template.spec.containers[0].image"/>
-      </div>
-      <button v-on:click="counter += 1">Generate</button>
-      <div v-html="compiledMarkdown"></div>
-      
-    </div>
-
-    <script>
-      new Vue({
-        el: "#editor",
-        data: {
-          pod: {
-            kind: "Pod",
-            metadata: {
-              name: "my-pod"
-            },
-            spec: {
-              template: {
-                spec: {
-                  containers: [{
-                    name: "container1",
-                    image: "hello-worldz"
-                  }],
-                  restartPolicy: "OnFailure"
-                }
-              }
-            }
-          }
-        },
-        computed: {
-          compiledMarkdown: function() {
-            return this.pod
-            // return marked(this.image, { sanitize: true });
-          }
-        }
-        // ,
-        // methods: {
-        //   update: _.debounce(function(e) {
-        //     this.input = e.target.value;
-        //     console.log(e);
-        //   }, 300)
-        // }
-      });
-    </script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

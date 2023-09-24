@@ -1,16 +1,9 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  future: {
-    // removeDeprecatedGapUtilities: true,
-    // purgeLayersByDefault: true,
-  },
-  purge: [
-    './src/**/*.html',
-    './src/**/*.vue',
-    './src/**/*.jsx',
-  ],
+  content: ["./src/**/*.{html,vue}"],
   theme: {
     extend: {},
   },
-  variants: {},
   plugins: [],
 }
+

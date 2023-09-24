@@ -1,0 +1,40 @@
+@import './base.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+#app {
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    /* display: flex; */
+    /* place-items: center; */
+  }
+
+  #app {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+  }
+
+  main.object-with-codeview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
