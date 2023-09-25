@@ -16,7 +16,7 @@ var faro = initializeFaro({
   app: {
     name: 'manikure',
     version: '1.0.0',
-    environment: process.env.NODE_ENV
+    environment: process.env.FARO_APP_ENVIRONMENT
   },
   instrumentations: [
     // Mandatory, overwriting the instrumentations array would cause the default instrumentations to be omitted
