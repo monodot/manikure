@@ -1,4 +1,4 @@
-# Kubernetes Manifest Builder
+# 💅 manikure - Manifest Builder for Kubernetes Resources
 
 🔎 **A single-page web application for creating Kubernetes resource definitions (JSON/YAML manifests).** Built with: VueJS, TailwindCSS, sweat+tears.
 
