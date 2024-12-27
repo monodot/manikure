@@ -6,6 +6,7 @@
             "name": "sleep"
         },
         "spec": {
+            "activeDeadlineSeconds": 5,
             "containers": [
                 {
                     "name": "sleep",

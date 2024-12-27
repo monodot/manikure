@@ -15,6 +15,12 @@
 - Combine multiple objects into a Kubernetes List or OpenShift Template
 - Support for creating Helm charts
 - Make it look nicer
+- Add 'catalogue' build phase which fetches Kubernetes API definitions before building the UI
+- Possible form implementations:
+    - https://github.com/rjsf-team/react-jsonschema-form
+    - https://github.com/json-editor/json-editor
+    - https://github.com/yourtion/vue-json-ui-editor - no commits for 3 years
+
 
 ## Project setup
 

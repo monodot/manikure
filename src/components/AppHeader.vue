@@ -19,9 +19,7 @@ const prefs = usePreferencesStore()
     <div class="border-b-2">
         <div class="flex justify-between">
             <div class="flex flex-wrap justify-center">
-                <nav>
-                    <a @click="showNewProject" class="p-4 cursor-pointer">New Project</a>
-                </nav>
+                <a @click="showNewProject" class="p-4 cursor-pointer">New Project</a>
                 <p class="p-4">Manikure Studio 💅 &#8212; <strong>Mani</strong>fest Builder for <strong>Ku</strong>bernetes <strong>Re</strong>sources</p>
             </div>
             <nav class="flex flex-wrap justify-center">

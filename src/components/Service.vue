@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits, reactive, watch } from 'vue'
+import { reactive } from 'vue'
 import { useProjectStore } from '../stores/project';
 
 const project = useProjectStore()

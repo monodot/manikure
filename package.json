@@ -7,11 +7,15 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "catalogue": "fetch-the-catalogue TODO"
   },
   "dependencies": {
     "@grafana/faro-web-sdk": "^1.2.1",
     "@grafana/faro-web-tracing": "^1.2.1",
+    "@jsonforms/core": "^3.2.1",
+    "@jsonforms/vue": "^3.2.1",
+    "@jsonforms/vue-vanilla": "^3.2.1",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"

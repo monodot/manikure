@@ -11,23 +11,24 @@ import router from './router'
 import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
 
-var faro = initializeFaro({
-  url: process.env.FARO_API_URL,
-  app: {
-    name: 'manikure',
-    version: '1.0.0',
-    environment: process.env.FARO_APP_ENVIRONMENT
-  },
-  instrumentations: [
-    // Mandatory, overwriting the instrumentations array would cause the default instrumentations to be omitted
-    ...getWebInstrumentations(),
+if (process.env.FARO_API_URL != '') {
+    var faro = initializeFaro({
+        url: process.env.FARO_API_URL,
+        app: {
+            name: 'manikure',
+            version: '1.0.0',
+            environment: process.env.FARO_APP_ENVIRONMENT
+        },
+        instrumentations: [
+            // Mandatory, overwriting the instrumentations array would cause the default instrumentations to be omitted
+            ...getWebInstrumentations(),
 
-    // Initialization of the tracing package.
-    // This packages is optional because it increases the bundle size noticeably. Only add it if you want tracing data.
-    new TracingInstrumentation(),
-  ],
-});
-
+            // Initialization of the tracing package.
+            // This packages is optional because it increases the bundle size noticeably. Only add it if you want tracing data.
+            new TracingInstrumentation(),
+        ],
+    });
+}
 
 const pinia = createPinia()
 const app = createApp(App)

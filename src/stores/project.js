@@ -17,29 +17,29 @@ export const useProjectStore = defineStore({
           replicas: 1,
           selector: {
             matchLabels: {
-              app: 'my-app-label'
+              app: 'my-app-label',
+              poopy: 'pigeon'
             }
+          },
+          strategy: {
+            type: 'RollingUpdate'
           },
           template: {
             metadata: {
               labels: {
-                app: 'my-app-label'
+                app: 'my-app-label',
+                poopy: 'pigeon'
               }
             },
             spec: {
               containers: [
                 {
-                  name: 'container',
-                  image: 'hello-world',
+                  name: 'my-app',
+                  image: 'nginx:latest',
                   env: [
                     {
-                      name: 'GREETING',
-                      valueFrom: {
-                        configMapKeyRef: {
-                          name: 'my-configmap',
-                          key: 'database.password'
-                        }
-                      }
+                      name: 'MY_APP_ENV',
+                      value: 'my-app-value'
                     }
                   ],
                   ports: [
@@ -48,7 +48,16 @@ export const useProjectStore = defineStore({
                     }
                   ]
                 }
-              ]
+              ],
+              imagePullSecrets: [
+                {
+                  name: 'my-app-secret'
+                },
+                {
+                  name: 'alternative-image-secret'
+                }
+              ],
+              restartPolicy: 'Always',
             }
           }
         }
@@ -91,7 +100,24 @@ export const useProjectStore = defineStore({
         }
       }
     ],
-    selectedDocument: 0
+    selectedDocument: 0,
+    foobartest: {
+      cheese: 'brie',
+      foo: 'bar',
+      sauce: 'tomato',
+      mayonnaise: 'false',
+      hours: 'lots'
+    },
+    foobartest2: [
+      {
+        key: 'cheese',
+        value: 'brie',
+      },
+      {
+        key: 'foo',
+        value: 'bar',
+      },
+    ]
   }),
   actions: {
     addDocument(document) {
