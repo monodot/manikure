@@ -47,6 +47,10 @@ import {
 } from "lucide-vue-next";
 
 import ResourceForm from "./ResourceForm.vue";
+import CodeViewer from "./CodeViewer.vue";
+import { ref } from 'vue';
+
+const formValues = ref({});
 
 const resources = [
   {
@@ -89,7 +93,7 @@ const resources = [
       <main
         class="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3"
       >
-        <ResourceForm />
+        <ResourceForm @update:values="formValues = $event" />
 
         <div
           class="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2"
@@ -97,7 +101,7 @@ const resources = [
           <Badge variant="outline" class="absolute right-3 top-3">
             Output
           </Badge>
-          <div class="flex-1" />
+          <CodeViewer :code="formValues" />
         </div>
       </main>
     </div>

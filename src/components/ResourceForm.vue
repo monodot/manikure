@@ -40,15 +40,12 @@ const schema = z.object({
   }),
 });
 
+const emit = defineEmits<{
+  (e: 'update:values', values: Record<string, any>): void
+}>();
+
 function onSubmit(values: Record<string, any>) {
-  toast({
-    title: "You submitted the following values:",
-    description: h(
-      "pre",
-      { class: "mt-2 w-[340px] rounded-md bg-slate-950 p-4" },
-      h("code", { class: "text-white" }, JSON.stringify(values, null, 2))
-    ),
-  });
+  emit('update:values', values);
 }
 </script>
 

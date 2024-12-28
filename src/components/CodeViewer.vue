@@ -1,3 +1,9 @@
+<script setup lang="ts">
+defineProps<{
+  code: Record<string, any>
+}>();
+</script>
+
 <template>
-    <div>Code goes here</div>
+  <pre class="text-sm"><code>{{ JSON.stringify(code, null, 2) }}</code></pre>
 </template>
