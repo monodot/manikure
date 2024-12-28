@@ -57,7 +57,7 @@ const templates = [
   },
   {
     name: "Alpine",
-    description: "Minimal Alpine Linux container",
+    description: "Minimal Alpine Linux container with a custom entry command",
     values: {
       apiVersion: "apps/v1",
       kind: "Deployment",
@@ -131,7 +131,7 @@ const handleSubmit = () => {
       </div>
       <DialogFooter>
         <Button @click="handleSubmit" :disabled="!selectedTemplate">
-          Choose Template
+          Clear & Apply Template
         </Button>
       </DialogFooter>
     </DialogContent>
