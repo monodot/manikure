@@ -7,16 +7,16 @@ import ResourceForm from "./ResourceForm.vue";
 import CodeViewer from "./CodeViewer.vue";
 import TemplateDialog from "./TemplateDialog.vue";
 import { useToast } from "@/components/ui/toast/use-toast";
-import { Clipboard } from "lucide-vue-next";
+import { Clipboard, PlusCircle } from "lucide-vue-next";
+import yaml from 'js-yaml';
+
+interface Resource {
+  id: string;
+  type: string;
+  values: Record<string, any>;
+}
 
 const { toast } = useToast();
-
-const copyToClipboard = () => {
-  navigator.clipboard.writeText(JSON.stringify(formValues.value, null, 2));
-  toast({
-    description: "Manifest copied to your clipboard!",
-  });
-};
 
 const defaultValues = {
   apiVersion: "apps/v1",
@@ -50,7 +50,44 @@ const defaultValues = {
   },
 };
 
-const formValues = ref(defaultValues);
+const resources = ref<Resource[]>([{
+  id: '1',
+  type: 'Deployment',
+  values: defaultValues
+}]);
+
+const activeResourceId = ref<string>('1');
+
+const copyToClipboard = () => {
+  const yamlDocs = resources.value.map(r => yaml.dump(r.values)).join('---\n');
+  navigator.clipboard.writeText(yamlDocs);
+  toast({
+    description: "Resources copied to your clipboard!",
+  });
+};
+
+const addResource = (type: string) => {
+  const id = crypto.randomUUID();
+  resources.value.push({
+    id,
+    type,
+    values: {
+      apiVersion: "apps/v1",
+      kind: type,
+      metadata: { name: "" },
+      spec: {}
+    }
+  });
+  activeResourceId.value = id;
+};
+
+const removeResource = (id: string) => {
+  const index = resources.value.findIndex(r => r.id === id);
+  resources.value.splice(index, 1);
+  if (activeResourceId.value === id) {
+    activeResourceId.value = resources.value[0]?.id;
+  }
+};
 </script>
 
 <template>
@@ -79,13 +116,34 @@ const formValues = ref(defaultValues);
     <main class="lg:flex lg:flex-1">
 
       <!-- Resources list -->
-      <div class="lg:flex lg:flex-col w-[200px]">
+      <div class="lg:flex lg:flex-col w-[200px] border-r">
         <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4">
-          <div>
-            <p>Resource 1</p>
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-medium">Resources</h3>
+            <Button variant="ghost" size="sm" @click="addResource('Deployment')">
+              <PlusCircle class="size-4" />
+            </Button>
           </div>
-          <div>
-            <p>Resource 2</p>
+          
+          <div 
+            v-for="resource in resources" 
+            :key="resource.id"
+            @click="activeResourceId = resource.id"
+            class="flex items-center justify-between p-2 rounded cursor-pointer"
+            :class="{'bg-accent': activeResourceId === resource.id}"
+          >
+            <div>
+              <p class="font-medium">{{ resource.values.metadata?.name || 'Unnamed' }}</p>
+              <p class="text-sm text-muted-foreground">{{ resource.type }}</p>
+            </div>
+            <Button 
+              v-if="resources.length > 1"
+              variant="ghost" 
+              size="sm"
+              @click.stop="removeResource(resource.id)"
+            >
+              ×
+            </Button>
           </div>
         </div>
       </div>
@@ -94,8 +152,9 @@ const formValues = ref(defaultValues);
       <div class="lg:flex lg:flex-col w-[400px]">
         <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4">
           <ResourceForm
-            :initial-values="defaultValues"
-            @update:values="formValues = $event"
+            v-if="activeResourceId"
+            :initial-values="resources.find(r => r.id === activeResourceId)?.values"
+            @update:values="resources.find(r => r.id === activeResourceId)!.values = $event"
           />
         </div>
       </div>
@@ -104,7 +163,7 @@ const formValues = ref(defaultValues);
       <div class="lg:flex lg:flex-col flex-1">
         <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4 bg-muted">
           <Badge variant="outline" class="absolute right-3 top-3">Output</Badge>
-          <CodeViewer :code="formValues" />
+          <CodeViewer :code="resources.map(r => r.values)" />
         </div>
       </div>
     </main>
