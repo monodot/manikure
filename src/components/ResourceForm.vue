@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { h } from "vue";
 import * as z from "zod";
-import { useForm } from 'vee-validate';
+import { useForm } from "vee-validate";
 
 enum Sports {
   Football = "Football/Soccer",
@@ -16,7 +16,7 @@ enum Sports {
 
 enum ResourceTypes {
   // For native enums, you can alternatively define a backed enum to set a custom label
-  Deployment = 'Deployment',
+  Deployment = "Deployment",
 }
 
 const schema = z.object({
@@ -33,94 +33,108 @@ const schema = z.object({
       })
       .default(1),
 
-    containers: z.array(
-      z.object({
-        name: z.string(),
-        image: z.string(),
+    containers: z
+      .array(
+        z
+          .object({
+            name: z.string(),
+            image: z.string(),
 
-        ports: z.array(
-          z.object({
-            containerPort: z.number(),
-          }).describe("Port")
-        ).describe("Ports"),
-      }).describe("Container"),
-    ).describe("Containers"),
+            ports: z
+              .array(
+                z
+                  .object({
+                    containerPort: z.number(),
+                  })
+                  .describe("Port")
+              )
+              .describe("Ports"),
+          })
+          .describe("Container")
+      )
+      .describe("Containers"),
 
-    initContainers: z.array(
-      z.object({
-        name: z.string(),
-        image: z.string(),
-      })
-    ).describe("Init containers")
+    initContainers: z
+      .array(
+        z.object({
+          name: z.string(),
+          image: z.string(),
+        })
+      )
+      .describe("Init containers"),
   }),
 });
 
 const props = defineProps<{
-  initialValues?: Record<string, any>
+  initialValues?: Record<string, any>;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:values', values: Record<string, any>): void
+  (e: "update:values", values: Record<string, any>): void;
 }>();
 
 function onSubmit(values: Record<string, any>) {
-  emit('update:values', values);
+  emit("update:values", values);
 }
 
 const form = useForm({
   validationSchema: schema,
-  initialValues: props.initialValues
+  initialValues: props.initialValues,
 });
-
 </script>
 
 <template>
-  <AutoForm
-    class="w-full space-y-6"
-    :form="form"
-    :schema="schema"
-    :default-values="initialValues"
-    :field-config="{
-      metadata: {
-        description: 'eh',
-        name: {
-          description: 'Must be unique for this kind',
-        }
-      },
-      spec: {
-        replicas: {
-          description: 'How many instances of this application should be running'
+  <div>
+    <h2
+      class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+    >
+      Deployment
+    </h2>
+    <AutoForm
+      class="w-full space-y-6"
+      :form="form"
+      :schema="schema"
+      :default-values="initialValues"
+      :field-config="{
+        metadata: {
+          description: 'eh',
+          name: {
+            description: 'Must be unique for this kind',
+          },
         },
-        containers: {
-          image: {
-            description: 'e.g. image:tag',
-            inputProps: {
-              placeholder: 'docker.io/library/nginx:latest',
-            }
-          }
+        spec: {
+          replicas: {
+            description:
+              'How many instances of this application should be running',
+          },
+          containers: {
+            image: {
+              description: 'e.g. image:tag',
+              inputProps: {
+                placeholder: 'docker.io/library/nginx:latest',
+              },
+            },
+          },
         },
-        initContainers: {
-          description: 'brenda'
-        },
-      }
-    }"
-    @submit="onSubmit"
-  >
-    <template #acceptTerms="slotProps">
-      <AutoFormField v-bind="slotProps" />
-      <div class="!mt-2 text-sm">
-        I agree to the
-        <button class="text-primary underline">terms and conditions</button>.
-      </div>
-    </template>
+      }"
+      @submit="onSubmit"
+    >
+      <template #acceptTerms="slotProps">
+        <AutoFormField v-bind="slotProps" />
+        <div class="!mt-2 text-sm">
+          I agree to the
+          <button class="text-primary underline">terms and conditions</button>.
+        </div>
+      </template>
 
-    <template #customParent="slotProps">
-      <div class="flex items-end space-x-2">
-        <AutoFormField v-bind="slotProps" class="w-full" />
-        <Button type="button"> Check </Button>
-      </div>
-    </template>
+      <template #customParent="slotProps">
+        <div class="flex items-end space-x-2">
+          <AutoFormField v-bind="slotProps" class="w-full" />
+          <Button type="button"> Check </Button>
+        </div>
+      </template>
 
-    <Button type="submit"> Submit </Button>
-  </AutoForm>
+      <Button type="submit"> Submit </Button>
+    </AutoForm>
+  </div>
 </template>
