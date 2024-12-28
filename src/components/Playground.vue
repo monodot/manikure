@@ -57,8 +57,7 @@ const { toast } = useToast();
 const copyToClipboard = () => {
   navigator.clipboard.writeText(JSON.stringify(formValues.value, null, 2));
   toast({
-    title: "Copied to clipboard",
-    description: "The manifest has been copied to your clipboard",
+    description: "Manifest has been copied to your clipboard",
   });
 };
 
@@ -88,8 +87,8 @@ const formValues = ref(defaultValues);
 </script>
 
 <template>
+  <Toaster />
   <div class="grid h-screen w-full">
-    <Toaster />
     <!-- Main canvas -->
     <div class="flex flex-col">
       <header

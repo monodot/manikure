@@ -1,18 +1,8 @@
 <script setup lang="ts">
 import { AutoForm, AutoFormField } from "@/components/ui/auto-form";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/toast";
 import { h, watch } from "vue";
 import * as z from "zod";
 import { useForm } from "vee-validate";
-
-enum Sports {
-  Football = "Football/Soccer",
-  Basketball = "Basketball",
-  Baseball = "Baseball",
-  Hockey = "Hockey (Ice)",
-  None = "I don't like sports",
-}
 
 enum ResourceTypes {
   // For native enums, you can alternatively define a backed enum to set a custom label
@@ -39,6 +29,13 @@ const schema = z.object({
           .object({
             name: z.string(),
             image: z.string(),
+
+            env: z.array(
+              z.object({
+                name: z.string(),
+                value: z.string(),
+              }).describe("Environment variable")
+            ).describe("Environment variables"),
 
             ports: z
               .array(
@@ -76,6 +73,7 @@ const emit = defineEmits<{
 const form = useForm({
   validationSchema: schema,
   initialValues: props.initialValues,
+  keepValuesOnUnmount: true,
 });
 
 // Watch for form value changes and emit them
@@ -102,7 +100,6 @@ watch(
       :default-values="initialValues"
       :field-config="{
         metadata: {
-          description: 'eh',
           name: {
             description: 'Must be unique for this kind',
           },
