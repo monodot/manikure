@@ -142,7 +142,7 @@ const clearAll = () => {
           @click="copyToClipboard"
         >
           <Clipboard class="size-3.5" />
-          Copy
+          Copy all
         </Button>
       </div>
     </header>
