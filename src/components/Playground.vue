@@ -50,7 +50,27 @@ import ResourceForm from "./ResourceForm.vue";
 import CodeViewer from "./CodeViewer.vue";
 import { ref } from 'vue';
 
-const formValues = ref({});
+const defaultValues = {
+  metadata: {
+    name: "nginx-deployment"
+  },
+  spec: {
+    replicas: 1,
+    containers: [
+      {
+        name: "nginx",
+        image: "docker.io/library/nginx:latest",
+        ports: [
+          {
+            containerPort: 80
+          }
+        ]
+      }
+    ]
+  }
+};
+
+const formValues = ref(defaultValues);
 
 const resources = [
   {
@@ -93,7 +113,10 @@ const resources = [
       <main
         class="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3"
       >
-        <ResourceForm @update:values="formValues = $event" />
+        <ResourceForm 
+          :initial-values="defaultValues"
+          @update:values="formValues = $event" 
+        />
 
         <div
           class="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2"

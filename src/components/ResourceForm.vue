@@ -40,6 +40,10 @@ const schema = z.object({
   }).describe('Specification'),
 });
 
+const props = defineProps<{
+  initialValues?: Record<string, any>
+}>();
+
 const emit = defineEmits<{
   (e: 'update:values', values: Record<string, any>): void
 }>();
@@ -53,6 +57,7 @@ function onSubmit(values: Record<string, any>) {
   <AutoForm
     class="w-full space-y-6"
     :schema="schema"
+    :default-values="initialValues"
     :field-config="{
       password: {
         label: 'Your secure password',
