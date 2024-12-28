@@ -15,66 +15,197 @@ import { PlusCircle } from "lucide-vue-next";
 const templates = [
   {
     name: "Nginx",
-    description: "Basic Nginx web server deployment",
-    values: {
-      apiVersion: "apps/v1",
-      kind: "Deployment",
-      metadata: {
-        name: "nginx-deployment",
-      },
-      spec: {
-        replicas: 1,
-        containers: [
-          {
-            name: "nginx",
-            image: "docker.io/library/nginx:latest",
-            ports: [{ containerPort: 80 }],
+    description: "Nginx web server with Service and Ingress",
+    resources: [
+      {
+        type: "Deployment",
+        values: {
+          apiVersion: "apps/v1",
+          kind: "Deployment",
+          metadata: {
+            name: "nginx-deployment",
           },
-        ],
+          spec: {
+            replicas: 1,
+            selector: {
+              matchLabels: {
+                app: "nginx"
+              }
+            },
+            template: {
+              metadata: {
+                labels: {
+                  app: "nginx"
+                }
+              },
+              spec: {
+                containers: [
+                  {
+                    name: "nginx",
+                    image: "docker.io/library/nginx:latest",
+                    ports: [{ containerPort: 80 }],
+                  },
+                ],
+              }
+            }
+          },
+        },
       },
-    },
+      {
+        type: "Service",
+        values: {
+          apiVersion: "v1",
+          kind: "Service",
+          metadata: {
+            name: "nginx-service",
+          },
+          spec: {
+            selector: {
+              app: "nginx"
+            },
+            ports: [
+              {
+                port: 80,
+                targetPort: 80
+              }
+            ]
+          }
+        }
+      },
+      {
+        type: "Ingress",
+        values: {
+          apiVersion: "networking.k8s.io/v1",
+          kind: "Ingress",
+          metadata: {
+            name: "nginx-ingress",
+          },
+          spec: {
+            rules: [
+              {
+                http: {
+                  paths: [
+                    {
+                      path: "/",
+                      pathType: "Prefix",
+                      backend: {
+                        service: {
+                          name: "nginx-service",
+                          port: {
+                            number: 80
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
   },
   {
     name: "Redis",
-    description: "Redis database server",
-    values: {
-      apiVersion: "apps/v1",
-      kind: "Deployment",
-      metadata: {
-        name: "redis-deployment",
-      },
-      spec: {
-        replicas: 1,
-        containers: [
-          {
-            name: "redis",
-            image: "docker.io/library/redis:latest",
-            ports: [{ containerPort: 6379 }],
+    description: "Redis database with Service",
+    resources: [
+      {
+        type: "Deployment",
+        values: {
+          apiVersion: "apps/v1",
+          kind: "Deployment",
+          metadata: {
+            name: "redis-deployment",
           },
-        ],
+          spec: {
+            replicas: 1,
+            selector: {
+              matchLabels: {
+                app: "redis"
+              }
+            },
+            template: {
+              metadata: {
+                labels: {
+                  app: "redis"
+                }
+              },
+              spec: {
+                containers: [
+                  {
+                    name: "redis",
+                    image: "docker.io/library/redis:latest",
+                    ports: [{ containerPort: 6379 }],
+                  },
+                ],
+              }
+            }
+          },
+        },
       },
-    },
+      {
+        type: "Service",
+        values: {
+          apiVersion: "v1",
+          kind: "Service",
+          metadata: {
+            name: "redis-service",
+          },
+          spec: {
+            selector: {
+              app: "redis"
+            },
+            ports: [
+              {
+                port: 6379,
+                targetPort: 6379
+              }
+            ]
+          }
+        }
+      }
+    ]
   },
   {
     name: "Alpine",
-    description: "Minimal Alpine Linux container with a custom entry command",
-    values: {
-      apiVersion: "apps/v1",
-      kind: "Deployment",
-      metadata: {
-        name: "alpine-deployment",
-      },
-      spec: {
-        replicas: 1,
-        containers: [
-          {
-            name: "alpine",
-            image: "docker.io/library/alpine:latest",
-            command: ["tail", "-f", "/dev/null"],
+    description: "Minimal Alpine Linux container",
+    resources: [
+      {
+        type: "Deployment",
+        values: {
+          apiVersion: "apps/v1",
+          kind: "Deployment",
+          metadata: {
+            name: "alpine-deployment",
           },
-        ],
-      },
-    },
+          spec: {
+            replicas: 1,
+            selector: {
+              matchLabels: {
+                app: "alpine"
+              }
+            },
+            template: {
+              metadata: {
+                labels: {
+                  app: "alpine"
+                }
+              },
+              spec: {
+                containers: [
+                  {
+                    name: "alpine",
+                    image: "docker.io/library/alpine:latest",
+                    command: ["tail", "-f", "/dev/null"],
+                  },
+                ],
+              }
+            }
+          },
+        },
+      }
+    ]
   },
 ];
 
@@ -82,7 +213,7 @@ const isOpen = ref(false);
 const selectedTemplate = ref<typeof templates[0] | null>(null);
 
 const emit = defineEmits<{
-  (e: "select", template: typeof templates[0]): void;
+  (e: "select", resources: { type: string; values: Record<string, any> }[]): void;
 }>();
 
 const handleSelect = (template: typeof templates[0]) => {
@@ -91,7 +222,7 @@ const handleSelect = (template: typeof templates[0]) => {
 
 const handleSubmit = () => {
   if (selectedTemplate.value) {
-    emit("select", selectedTemplate.value);
+    emit("select", selectedTemplate.value.resources);
     isOpen.value = false;
     selectedTemplate.value = null;
   }

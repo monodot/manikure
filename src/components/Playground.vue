@@ -100,7 +100,25 @@ const removeResource = (id: string) => {
 
       <!-- Buttons -->
       <div class="flex gap-2">
-        <TemplateDialog @select="(template) => formValues = template.values" />
+        <TemplateDialog @select="(resources) => {
+          // Replace all resources with the template resources
+          resources.forEach((resource, index) => {
+            if (index === 0) {
+              // Update first resource
+              resources.value[0].type = resource.type;
+              resources.value[0].values = resource.values;
+            } else {
+              // Add additional resources
+              resources.value.push({
+                id: crypto.randomUUID(),
+                type: resource.type,
+                values: resource.values
+              });
+            }
+          });
+          // Set active resource to first one
+          activeResourceId.value = resources.value[0].id;
+        }" />
         <Button
           variant="outline"
           size="sm"
