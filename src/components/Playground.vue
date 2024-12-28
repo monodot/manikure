@@ -154,6 +154,7 @@ const clearAll = () => {
           <ResourceForm
             v-if="activeResourceId"
             :initial-values="resources.find(r => r.id === activeResourceId)?.values"
+            :type="resources.find(r => r.id === activeResourceId)?.type as ResourceType"
             @update:values="resources.find(r => r.id === activeResourceId)!.values = $event"
           />
         </div>
