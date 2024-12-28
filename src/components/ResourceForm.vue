@@ -7,7 +7,13 @@ import { useForm } from "vee-validate";
 enum ResourceTypes {
   // For native enums, you can alternatively define a backed enum to set a custom label
   Deployment = "Deployment",
-}
+};
+
+enum ImagePullPolicyTypes {
+  IfNotPresent = "IfNotPresent",
+  Always = "Always",
+  Never = "Never",
+};
 
 const schema = z.object({
   // kind: z.nativeEnum(ResourceTypes),
@@ -29,6 +35,7 @@ const schema = z.object({
           .object({
             name: z.string(),
             image: z.string(),
+            imagePullPolicy: z.nativeEnum(ImagePullPolicyTypes),
 
             env: z.array(
               z.object({
@@ -56,9 +63,10 @@ const schema = z.object({
         z.object({
           name: z.string(),
           image: z.string(),
-        })
+        }).describe("Init container")
       )
-      .describe("Init containers"),
+      .describe("Init containers")
+      // .optional(),
   }),
 });
 
@@ -88,11 +96,9 @@ watch(
 
 <template>
   <div>
-    <h2
-      class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-    >
+    <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">
       Deployment
-    </h2>
+    </h3>
     <AutoForm
       class="w-full space-y-6"
       :form="form"
@@ -116,6 +122,9 @@ watch(
                 placeholder: 'docker.io/library/nginx:latest',
               },
             },
+            imagePullPolicy: {
+              description: 'When should Kubernetes pull the image from the registry'
+            }
           },
         },
       }"

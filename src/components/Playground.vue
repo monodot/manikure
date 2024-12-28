@@ -1,63 +1,19 @@
 <script setup lang="ts">
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Bird,
-  Book,
-  Bot,
-  Clipboard,
-  Code2,
-  CornerDownLeft,
-  LifeBuoy,
-  Mic,
-  Paperclip,
-  Rabbit,
-  Settings,
-  Settings2,
-  Share,
-  SquareTerminal,
-  SquareUser,
-  Triangle,
-  Turtle,
-} from "lucide-vue-next";
-
+import { Toaster } from "@/components/ui/toast";
+import { ref } from "vue";
 import ResourceForm from "./ResourceForm.vue";
 import CodeViewer from "./CodeViewer.vue";
-import { ref } from "vue";
-import { Toaster } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/toast/use-toast";
+import { Clipboard } from "lucide-vue-next";
 
 const { toast } = useToast();
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(JSON.stringify(formValues.value, null, 2));
   toast({
-    description: "Manifest has been copied to your clipboard",
+    description: "Manifest copied to your clipboard!",
   });
 };
 
@@ -73,6 +29,16 @@ const defaultValues = {
       {
         name: "nginx",
         image: "docker.io/library/nginx:latest",
+        env: [
+            {
+                name: "DEBUG",
+                value: "true"
+            },
+            {
+                name: "LOG_LEVEL",
+                value: "TRACE",
+            }
+        ],
         ports: [
           {
             containerPort: 80,
@@ -88,45 +54,47 @@ const formValues = ref(defaultValues);
 
 <template>
   <Toaster />
-  <div class="grid h-screen w-full">
-    <!-- Main canvas -->
-    <div class="flex flex-col">
-      <header
-        class="sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
-      >
-        <h1 class="text-xl font-semibold">Manikure</h1>
+  <div class="flex flex-col min-h-screen">
+    <header
+      class="sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
+    >
+      <h1 class="text-xl font-semibold">Manikure</h1>
 
-        <!-- Buttons -->
-        <div>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            class="ml-auto gap-1.5 text-sm"
-            @click="copyToClipboard"
-          >
-            <Clipboard class="size-3.5" />
-            Copy
-          </Button>
-        </div>
-      </header>
-
-      <main
-        class="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3"
-      >
-        <ResourceForm
-          :initial-values="defaultValues"
-          @update:values="formValues = $event"
-        />
-
-        <div
-          class="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2"
+      <!-- Buttons -->
+      <div>
+        <Button
+          variant="outline"
+          size="sm"
+          class="ml-auto gap-1.5 text-sm"
+          @click="copyToClipboard"
         >
-          <Badge variant="outline" class="absolute right-3 top-3">
-            Output
-          </Badge>
+          <Clipboard class="size-3.5" />
+          Copy
+        </Button>
+      </div>
+    </header>
+
+    <main class="lg:flex lg:flex-1">
+
+      <!-- Editor panel -->
+      <div class="lg:flex lg:flex-col w-[400px]">
+        <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4">
+          <ResourceForm
+            :initial-values="defaultValues"
+            @update:values="formValues = $event"
+          />
+        </div>
+      </div>
+
+      <!-- Code panel -->
+      <div class="lg:flex lg:flex-col flex-1">
+        <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4 bg-muted">
+          <Badge variant="outline" class="absolute right-3 top-3">Output</Badge>
           <CodeViewer :code="formValues" />
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
+
+
   </div>
 </template>
