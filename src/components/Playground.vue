@@ -2,6 +2,17 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { ref } from "vue";
 import ResourceForm from "./ResourceForm.vue";
 import CodeViewer from "./CodeViewer.vue";
@@ -90,6 +101,15 @@ const removeResource = (id: string) => {
     activeResourceId.value = resources.value[0]?.id;
   }
 };
+
+const clearAll = () => {
+  resources.value = [{
+    id: generateId(),
+    type: 'Deployment',
+    values: defaultValues
+  }];
+  activeResourceId.value = resources.value[0].id;
+};
 </script>
 
 <template>
@@ -159,6 +179,29 @@ const removeResource = (id: string) => {
               ×
             </Button>
           </div>
+        </div>
+
+        <!-- Clear All Button -->
+        <div class="p-4 border-t mt-auto">
+          <AlertDialog>
+            <AlertDialogTrigger as-child>
+              <Button variant="destructive" size="sm" class="w-full">
+                Clear All
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will remove all resources from your current project. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction @click="clearAll">Clear All</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
 
