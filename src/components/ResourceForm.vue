@@ -22,6 +22,21 @@ const form = useForm({
   keepValuesOnUnmount: true,
 });
 
+// Watch for changes in initialValues and update form
+watch(
+  () => props.initialValues,
+  (newValues) => {
+    if (newValues) {
+      // Reset form with new values
+      form.resetForm({
+        values: newValues,
+      });
+    }
+  },
+  { deep: true }
+);
+
+// Watch form values for changes and emit updates
 watch(
   () => form.values,
   (newValues) => {
