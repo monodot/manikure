@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-vue-next";
@@ -84,7 +85,7 @@ const emit = defineEmits<{
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Button variant="outline" size="sm" class="gap-1.5">
+      <Button variant="outline" size="sm" class="gap-1.5 text-sm">
         <PlusCircle class="size-4" />
         New from Template
       </Button>
@@ -111,6 +112,11 @@ const emit = defineEmits<{
           </div>
         </div>
       </div>
+      <DialogFooter>
+        <Button type="submit">
+          Choose Template
+        </Button>
+      </DialogFooter>
     </DialogContent>
   </Dialog>
 </template>
