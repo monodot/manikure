@@ -78,6 +78,18 @@ const formValues = ref(defaultValues);
 
     <main class="lg:flex lg:flex-1">
 
+      <!-- Resources list -->
+      <div class="lg:flex lg:flex-col w-[200px]">
+        <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4">
+          <div>
+            <p>Resource 1</p>
+          </div>
+          <div>
+            <p>Resource 2</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Editor panel -->
       <div class="lg:flex lg:flex-col w-[400px]">
         <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4">
