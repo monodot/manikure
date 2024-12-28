@@ -1,10 +1,11 @@
 <script setup>
 import { Button } from '@/components/ui/button';
+import Playground from '@/components/Playground.vue';
 </script>
 
 <template>
   <main>
-    <Button>Click me</Button>
+    <Playground/>
   </main>
 </template>
 
