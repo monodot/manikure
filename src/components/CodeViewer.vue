@@ -6,7 +6,7 @@ defineProps<{
 }>();
 
 const formatYaml = (resources: Record<string, any>[]) => {
-  return resources.map(r => yaml.dump(r)).join('---\n');
+  return resources.filter(Boolean).map(r => yaml.dump(r)).join('---\n');
 };
 </script>
 

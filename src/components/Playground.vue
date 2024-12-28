@@ -220,7 +220,9 @@ const clearAll = () => {
       <div class="lg:flex lg:flex-col flex-1">
         <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4 bg-muted">
           <Badge variant="outline" class="absolute right-3 top-3">Output</Badge>
-          <CodeViewer :code="resources.map(r => r.values)" />
+          <CodeViewer 
+            :code="[resources.find(r => r.id === activeResourceId)?.values]" 
+          />
         </div>
       </div>
     </main>
