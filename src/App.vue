@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import DemoZodForm from './components/DemoZodForm.vue'
+import Playground from './components/Playground.vue'
 </script>
 
 <template>
-  <DemoZodForm/>
+  <Playground/>
 </template>
 
