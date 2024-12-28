@@ -35,9 +35,9 @@ const schema = z.object({
             containerPort: z.number(),
           })
         ),
-      })
-    ),
-  }),
+      }).describe("Container"),
+    ).describe("Containers"),
+  }).describe('Specification'),
 });
 
 const emit = defineEmits<{
