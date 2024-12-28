@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import { h } from "vue";
 import * as z from "zod";
+import { useForm } from 'vee-validate';
 
 enum Sports {
   Football = "Football/Soccer",
@@ -13,7 +14,14 @@ enum Sports {
   None = "I don't like sports",
 }
 
+enum ResourceTypes {
+  // For native enums, you can alternatively define a backed enum to set a custom label
+  Deployment = 'Deployment',
+}
+
 const schema = z.object({
+  // kind: z.nativeEnum(ResourceTypes),
+
   metadata: z.object({
     name: z.string().describe("Name"),
   }),
@@ -33,11 +41,18 @@ const schema = z.object({
         ports: z.array(
           z.object({
             containerPort: z.number(),
-          })
-        ),
+          }).describe("Port")
+        ).describe("Ports"),
       }).describe("Container"),
     ).describe("Containers"),
-  }).describe('Specification'),
+
+    initContainers: z.array(
+      z.object({
+        name: z.string(),
+        image: z.string(),
+      })
+    ).describe("Init containers")
+  }),
 });
 
 const props = defineProps<{
@@ -51,52 +66,43 @@ const emit = defineEmits<{
 function onSubmit(values: Record<string, any>) {
   emit('update:values', values);
 }
+
+const form = useForm({
+  validationSchema: schema,
+  initialValues: props.initialValues
+});
+
 </script>
 
 <template>
   <AutoForm
     class="w-full space-y-6"
+    :form="form"
     :schema="schema"
     :default-values="initialValues"
     :field-config="{
-      password: {
-        label: 'Your secure password',
-        inputProps: {
-          type: 'password',
-          placeholder: '••••••••',
+      metadata: {
+        description: 'eh',
+        name: {
+          description: 'Must be unique for this kind',
+        }
+      },
+      spec: {
+        replicas: {
+          description: 'How many instances of this application should be running'
         },
-      },
-      favouriteNumber: {
-        description: 'Your favourite number between 1 and 10.',
-      },
-      acceptTerms: {
-        label: 'Accept terms and conditions.',
-        inputProps: {
-          required: true,
+        containers: {
+          image: {
+            description: 'e.g. image:tag',
+            inputProps: {
+              placeholder: 'docker.io/library/nginx:latest',
+            }
+          }
         },
-      },
-
-      birthday: {
-        description: 'We need your birthday to send you a gift.',
-      },
-
-      sendMeMails: {
-        component: 'switch',
-      },
-
-      bio: {
-        component: 'textarea',
-      },
-
-      marshmallows: {
-        label: 'How many marshmallows fit in your mouth?',
-        component: 'radio',
-      },
-
-      file: {
-        label: 'Text file',
-        component: 'file',
-      },
+        initContainers: {
+          description: 'brenda'
+        },
+      }
     }"
     @submit="onSubmit"
   >

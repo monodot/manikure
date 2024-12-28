@@ -25,7 +25,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Bird,
   Book,
@@ -48,11 +48,13 @@ import {
 
 import ResourceForm from "./ResourceForm.vue";
 import CodeViewer from "./CodeViewer.vue";
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const defaultValues = {
+  apiVersion: "apps/v1",
+  kind: "Deployment",
   metadata: {
-    name: "nginx-deployment"
+    name: "my-nginx",
   },
   spec: {
     replicas: 1,
@@ -62,60 +64,41 @@ const defaultValues = {
         image: "docker.io/library/nginx:latest",
         ports: [
           {
-            containerPort: 80
-          }
-        ]
-      }
-    ]
-  }
+            containerPort: 80,
+          },
+        ],
+      },
+    ],
+  },
 };
 
 const formValues = ref(defaultValues);
-
-const resources = [
-  {
-    id: 1,
-    name: "brenda",
-    type: "Deployment",
-  },
-  {
-    id: 2,
-    name: "myservice",
-    type: "Service",
-  },
-];
 </script>
 
 <template>
   <div class="grid h-screen w-full">
-
     <!-- Main canvas -->
     <div class="flex flex-col">
       <header
         class="sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
       >
-        <h1 class="text-xl font-semibold">Manikure Studio</h1>
+        <h1 class="text-xl font-semibold">Manikure</h1>
 
         <!-- Buttons -->
-         <div>
-        <Button variant="outline" size="sm" class="ml-auto gap-1.5 text-sm">
-          <Clipboard class="size-3.5" />
-          Copy
-        </Button>
-        <Button variant="outline" size="sm" class="ml-auto gap-1.5 text-sm">
-          <Clipboard class="size-3.5" />
-          Reset
-        </Button>
-      </div>
-
+        <div>
+          <Button variant="outline" size="sm" class="ml-auto gap-1.5 text-sm">
+            <Clipboard class="size-3.5" />
+            Copy
+          </Button>
+        </div>
       </header>
 
       <main
         class="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3"
       >
-        <ResourceForm 
+        <ResourceForm
           :initial-values="defaultValues"
-          @update:values="formValues = $event" 
+          @update:values="formValues = $event"
         />
 
         <div
