@@ -222,6 +222,7 @@ const handleSelect = (template: typeof templates[0]) => {
 
 const handleSubmit = () => {
   if (selectedTemplate.value) {
+    console.log(selectedTemplate.value.resources);
     emit("select", selectedTemplate.value.resources);
     isOpen.value = false;
     selectedTemplate.value = null;

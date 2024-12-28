@@ -18,6 +18,8 @@ interface Resource {
 
 const { toast } = useToast();
 
+const generateId = () => crypto.randomUUID();
+
 const defaultValues = {
   apiVersion: "apps/v1",
   kind: "Deployment",
@@ -67,7 +69,7 @@ const copyToClipboard = () => {
 };
 
 const addResource = (type: string) => {
-  const id = crypto.randomUUID();
+  const id = generateId();
   resources.value.push({
     id,
     type,
@@ -100,24 +102,24 @@ const removeResource = (id: string) => {
 
       <!-- Buttons -->
       <div class="flex gap-2">
-        <TemplateDialog @select="(resources) => {
+        <TemplateDialog @select="(template) => {
           // Replace all resources with the template resources
-          resources.forEach((resource, index) => {
+          template.forEach((resource, index) => {
             if (index === 0) {
               // Update first resource
-              resources.value[0].type = resource.type;
-              resources.value[0].values = resource.values;
+              resources[0].type = resource.type;
+              resources[0].values = resource.values;
             } else {
               // Add additional resources
-              resources.value.push({
-                id: crypto.randomUUID(),
+              resources.push({
+                id: generateId(),
                 type: resource.type,
                 values: resource.values
               });
             }
           });
           // Set active resource to first one
-          activeResourceId.value = resources.value[0].id;
+          activeResourceId = resources[0].id;
         }" />
         <Button
           variant="outline"
