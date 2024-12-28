@@ -105,18 +105,12 @@ const removeResource = (id: string) => {
         <TemplateDialog @select="(template) => {
           // Replace all resources with the template resources
           template.forEach((resource, index) => {
-            if (index === 0) {
-              // Update first resource
-              resources[0].type = resource.type;
-              resources[0].values = resource.values;
-            } else {
-              // Add additional resources
-              resources.push({
-                id: generateId(),
-                type: resource.type,
-                values: resource.values
-              });
-            }
+            // Add additional resources
+            resources.push({
+              id: generateId(),
+              type: resource.type,
+              values: resource.values
+            });
           });
           // Set active resource to first one
           activeResourceId = resources[0].id;
