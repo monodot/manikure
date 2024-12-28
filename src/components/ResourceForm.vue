@@ -26,6 +26,7 @@ const form = useForm({
 watch(
   () => props.initialValues,
   (newValues) => {
+    console.log(`Receiving new values - ${JSON.stringify(newValues)}`);
     if (newValues) {
       // Reset form with new values
       form.resetForm({
