@@ -2,7 +2,7 @@
 import { AutoForm, AutoFormField } from "@/components/ui/auto-form";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
-import { h } from "vue";
+import { h, watch } from "vue";
 import * as z from "zod";
 import { useForm } from "vee-validate";
 
@@ -73,14 +73,19 @@ const emit = defineEmits<{
   (e: "update:values", values: Record<string, any>): void;
 }>();
 
-function onSubmit(values: Record<string, any>) {
-  emit("update:values", values);
-}
-
 const form = useForm({
   validationSchema: schema,
   initialValues: props.initialValues,
 });
+
+// Watch for form value changes and emit them
+watch(
+  () => form.values,
+  (newValues) => {
+    emit("update:values", newValues);
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -117,24 +122,7 @@ const form = useForm({
           },
         },
       }"
-      @submit="onSubmit"
     >
-      <template #acceptTerms="slotProps">
-        <AutoFormField v-bind="slotProps" />
-        <div class="!mt-2 text-sm">
-          I agree to the
-          <button class="text-primary underline">terms and conditions</button>.
-        </div>
-      </template>
-
-      <template #customParent="slotProps">
-        <div class="flex items-end space-x-2">
-          <AutoFormField v-bind="slotProps" class="w-full" />
-          <Button type="button"> Check </Button>
-        </div>
-      </template>
-
-      <Button type="submit"> Submit </Button>
     </AutoForm>
   </div>
 </template>
