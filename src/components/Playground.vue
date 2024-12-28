@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toast";
 import { ref } from "vue";
 import ResourceForm from "./ResourceForm.vue";
 import CodeViewer from "./CodeViewer.vue";
+import TemplateDialog from "./TemplateDialog.vue";
 import { useToast } from "@/components/ui/toast/use-toast";
 import { Clipboard } from "lucide-vue-next";
 
@@ -61,11 +62,12 @@ const formValues = ref(defaultValues);
       <h1 class="text-xl font-semibold">Manikure</h1>
 
       <!-- Buttons -->
-      <div>
+      <div class="flex gap-2">
+        <TemplateDialog @select="(template) => formValues = template.values" />
         <Button
           variant="outline"
           size="sm"
-          class="ml-auto gap-1.5 text-sm"
+          class="gap-1.5 text-sm"
           @click="copyToClipboard"
         >
           <Clipboard class="size-3.5" />
