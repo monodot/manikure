@@ -2,21 +2,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toast";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
 import { ref } from "vue";
 import ResourceForm from "./ResourceForm.vue";
 import CodeViewer from "./CodeViewer.vue";
 import TemplateDialog from "./TemplateDialog.vue";
+import ResourcesList from "./ResourcesList.vue";
 import { useToast } from "@/components/ui/toast/use-toast";
 import { Clipboard, PlusCircle } from "lucide-vue-next";
 import yaml from 'js-yaml';
@@ -149,61 +139,14 @@ const clearAll = () => {
 
     <main class="lg:flex lg:flex-1">
 
-      <!-- Resources list -->
-      <div class="lg:flex lg:flex-col w-[200px] border-r">
-        <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="font-medium">Resources</h3>
-            <Button variant="ghost" size="sm" @click="addResource('Deployment')">
-              <PlusCircle class="size-4" />
-            </Button>
-          </div>
-          
-          <div 
-            v-for="resource in resources" 
-            :key="resource.id"
-            @click="activeResourceId = resource.id"
-            class="flex items-center justify-between p-2 rounded cursor-pointer"
-            :class="{'bg-accent': activeResourceId === resource.id}"
-          >
-            <div>
-              <p class="font-medium">{{ resource.values.metadata?.name || 'Unnamed' }}</p>
-              <p class="text-sm text-muted-foreground">{{ resource.type }}</p>
-            </div>
-            <Button 
-              v-if="resources.length > 1"
-              variant="ghost" 
-              size="sm"
-              @click.stop="removeResource(resource.id)"
-            >
-              ×
-            </Button>
-          </div>
-        </div>
-
-        <!-- Clear All Button -->
-        <div class="p-4 border-t mt-auto">
-          <AlertDialog>
-            <AlertDialogTrigger as-child>
-              <Button variant="destructive" size="sm" class="w-full">
-                Clear All
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will remove all resources from your current project. This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction @click="clearAll">Clear All</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </div>
+      <ResourcesList 
+        :resources="resources"
+        :active-resource-id="activeResourceId"
+        @update:active-resource-id="activeResourceId = $event"
+        @add-resource="addResource"
+        @remove-resource="removeResource"
+        @clear-all="clearAll"
+      />
 
       <!-- Editor panel -->
       <div class="lg:flex lg:flex-col w-[400px]">
