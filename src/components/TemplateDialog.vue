@@ -8,6 +8,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { ref } from "vue";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-vue-next";
 
@@ -77,13 +78,28 @@ const templates = [
   },
 ];
 
+const isOpen = ref(false);
+const selectedTemplate = ref<typeof templates[0] | null>(null);
+
 const emit = defineEmits<{
   (e: "select", template: typeof templates[0]): void;
 }>();
+
+const handleSelect = (template: typeof templates[0]) => {
+  selectedTemplate.value = template;
+};
+
+const handleSubmit = () => {
+  if (selectedTemplate.value) {
+    emit("select", selectedTemplate.value);
+    isOpen.value = false;
+    selectedTemplate.value = null;
+  }
+};
 </script>
 
 <template>
-  <Dialog>
+  <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
       <Button variant="outline" size="sm" class="gap-1.5 text-sm">
         <PlusCircle class="size-4" />
@@ -102,7 +118,8 @@ const emit = defineEmits<{
           v-for="template in templates"
           :key="template.name"
           class="flex items-center gap-4 rounded-lg border p-4 hover:bg-accent cursor-pointer"
-          @click="emit('select', template)"
+          @click="handleSelect(template)"
+          :class="{ 'ring-2 ring-primary': selectedTemplate?.name === template.name }"
         >
           <div>
             <h4 class="font-medium leading-none">{{ template.name }}</h4>
@@ -113,7 +130,7 @@ const emit = defineEmits<{
         </div>
       </div>
       <DialogFooter>
-        <Button type="submit">
+        <Button @click="handleSubmit" :disabled="!selectedTemplate">
           Choose Template
         </Button>
       </DialogFooter>
