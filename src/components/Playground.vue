@@ -49,6 +49,18 @@ import {
 import ResourceForm from "./ResourceForm.vue";
 import CodeViewer from "./CodeViewer.vue";
 import { ref } from "vue";
+import { Toaster } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/toast/use-toast";
+
+const { toast } = useToast();
+
+const copyToClipboard = () => {
+  navigator.clipboard.writeText(JSON.stringify(formValues.value, null, 2));
+  toast({
+    title: "Copied to clipboard",
+    description: "The manifest has been copied to your clipboard",
+  });
+};
 
 const defaultValues = {
   apiVersion: "apps/v1",
@@ -77,6 +89,7 @@ const formValues = ref(defaultValues);
 
 <template>
   <div class="grid h-screen w-full">
+    <Toaster />
     <!-- Main canvas -->
     <div class="flex flex-col">
       <header
@@ -86,7 +99,12 @@ const formValues = ref(defaultValues);
 
         <!-- Buttons -->
         <div>
-          <Button variant="outline" size="sm" class="ml-auto gap-1.5 text-sm">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            class="ml-auto gap-1.5 text-sm"
+            @click="copyToClipboard"
+          >
             <Clipboard class="size-3.5" />
             Copy
           </Button>
