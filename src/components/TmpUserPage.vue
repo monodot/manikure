@@ -11,8 +11,10 @@
     <ResizableHandle />
 
     <ResizablePanel :default-size="40">
+      <!-- Key is used to force re-rendering of the component when the selected user changes -->
       <TmpUserEditor
           v-if="selectedUser"
+          :key="selectedUserId || 0"
           :modelValue="selectedUser"
           @update:modelValue="updateUser"
       />
@@ -40,14 +42,18 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
+import type {Resource} from "@/types/resource.ts";
 
 const users = ref([
   { id: 1, name: "John Doe", email: "john@example.com", role: "user" },
   { id: 2, name: "Jane Smith", email: "jane@example.com", role: "admin" },
+  { id: 3, name: "Bernard Cribbins", email: "bernard@example.com", role: "user" },
+  { id: 4, name: "Zod", email: "zod@example.com", role: "lord" },
+  { id: 5, name: "Zeinab Badawi", email: "zeinab@channel4.com", role: "user" },
 ]);
-// const users = ref([
-//   { id: 1, kind: "Deployment", manifest: { apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "my-app"} } },
-//   { id: 2, kind: "Service", manifest: { apiVersion: "v1", kind: "Service", metadata: { name: "my-service"} } },
+// const users = ref<Resource[]>([
+//   { id: 1, manifest: { apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "egg-app"} } },
+//   { id: 2, manifest: { apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "chicken-app"} } },
 // ])
 const selectedUserId = ref<number | null>(null);
 
@@ -56,11 +62,15 @@ const selectedUser = computed(() => {
 })
 
 // Receives a whole updated user object, and replaces the old one
+// This function is also called whenever a new user is selected (WHY?)
 const updateUser = (updatedUser: { id: number; name: string; email: string; role: string }) => {
   const index = users.value.findIndex(user => user.id === updatedUser.id);
+  console.log('Users, pre-update:', users.value);
+  console.log('Updating object at index', index, 'with', JSON.stringify(updatedUser));
   if (index !== -1) {
     users.value[index] = updatedUser;
   }
+  console.log('Users, post-update:', users.value);
 };
 
 </script>
