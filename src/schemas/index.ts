@@ -6,6 +6,7 @@ export const schemas = {
   Deployment: deploymentSchema,
   Service: serviceSchema,
   Ingress: ingressSchema,
+  default: {},
 } as const;
 
 export type ResourceType = keyof typeof schemas;

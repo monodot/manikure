@@ -13,6 +13,7 @@
     "@vueuse/core": "^12.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "js-yaml": "^4.1.0",
     "lucide-vue-next": "^0.469.0",
     "radix-vue": "^1.9.11",
     "tailwind-merge": "^2.6.0",
@@ -23,6 +24,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
@@ -30,6 +32,7 @@
     "tailwindcss": "^3.4.17",
     "typescript": "~5.6.2",
     "vite": "^6.0.5",
+    "vite-plugin-vue-devtools": "^7.6.8",
     "vue-tsc": "^2.2.0"
   }
 }
