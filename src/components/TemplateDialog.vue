@@ -235,7 +235,7 @@ const handleSubmit = () => {
     <DialogTrigger as-child>
       <Button variant="outline" size="sm" class="gap-1.5 text-sm">
         <PlusCircle class="size-4" />
-        New from Template
+        Add to Project
       </Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[425px]">
@@ -263,7 +263,7 @@ const handleSubmit = () => {
       </div>
       <DialogFooter>
         <Button @click="handleSubmit" :disabled="!selectedTemplate">
-          Clear & Apply Template
+          Add to Project
         </Button>
       </DialogFooter>
     </DialogContent>

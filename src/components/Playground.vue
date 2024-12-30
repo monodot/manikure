@@ -41,7 +41,7 @@ const updateResource = (updatedResource: Resource) => {
   }
 }
 
-const generateId = () => crypto.randomUUID();
+const generateId = () => Date.now();
 
 const copyToClipboard = () => {
   const yamlDocs = resources.value.map(r => dump(r.manifest)).join('---\n');
@@ -70,12 +70,11 @@ const copyToClipboard = () => {
       <div class="flex gap-2 items-center">
         <TemplateDialog @select="(template) => {
           // Replace all resources with the template resources
-          template.forEach((resource, index) => {
+          template.forEach((resource, _index) => {
             // Add additional resources
             resources.push({
               id: generateId(),
-              type: resource.type,
-              values: resource.values
+              manifest: resource
             });
           });
           // Set active resource to first one

@@ -19,7 +19,7 @@ defineProps<{
   selectedResourceId: number | null;
 }>();
 
-defineEmits(['select', 'removeResource']);
+defineEmits(['select', 'removeResource', 'clearAll', 'addResource']);
 </script>
 
 <template>
@@ -27,7 +27,7 @@ defineEmits(['select', 'removeResource']);
     <div class="p-4 lg:flex-auto overflow-y-auto space-y-4">
       <div class="flex justify-between items-center mb-4">
         <h3 class="font-medium">Resources</h3>
-        <Button variant="ghost" size="sm" @click="emit('addResource', 'Deployment')">
+        <Button variant="ghost" size="sm" @click="$emit('addResource', 'Deployment')">
           <PlusCircle class="size-4" />
         </Button>
       </div>
@@ -71,7 +71,7 @@ defineEmits(['select', 'removeResource']);
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction @click="emit('clearAll')">Clear All</AlertDialogAction>
+            <AlertDialogAction @click="$emit('clearAll')">Clear All</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
