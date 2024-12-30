@@ -32,6 +32,9 @@ const schema = z.object({
   name: z.string().describe("Name"),
   email: z.string().email().describe("Email"),
   role: z.enum(["user", "admin"]).describe("Role"),
+  metadata: z.object({
+    region: z.enum(["AMER", "EMEA", "APAC"]).describe("Region"),
+  })
 
   // id: z.string().describe("ID"),
   // manifest: z.object({
@@ -50,19 +53,25 @@ form.setValues(props.modelValue);
 
 // Watch for updates to the modelValue prop, and update the form values
 // This happens whenever the parent component changes the selected user
-watch(() => props.modelValue, (newValue) => {
-  // form.setValues(newValue);
-  form.resetForm({
-    values: newValue
-  })
-  console.debug('Changed user? Form has been reset: ', newValue);
-});
+watch(
+    () => props.modelValue,
+    (oldValue, newValue) => {
+      // form.setValues(newValue);
+      if (oldValue.id !== newValue.id) {
+        form.resetForm({
+          values: newValue
+        });
+        console.debug('Changed user? Form has been reset: ', newValue);
+      }
+    },
+    {deep: true}
+);
 
 // Watch for updates to form values, and emit an event with the entire updated object
 // The parent component can then replace the old object with the new one
 watch(form.values, (newValues) => {
   emit('update:modelValue', newValues);
-  console.debug('Emitted update:modelValue', newValues);
+  console.debug('Emitted event update:modelValue', newValues);
 });
 
 </script>

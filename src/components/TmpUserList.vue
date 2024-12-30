@@ -15,6 +15,10 @@
         <p class="font-medium">{{ user.name }}</p>
         <p class="text-sm text-muted-foreground">{{ user.email }}</p>
       </div>
+<!--      <div>-->
+<!--        <p class="font-medium">{{ user.manifest.metadata.name }}</p>-->
+<!--        <p class="text-sm text-muted-foreground">{{ user.manifest.kind }}</p>-->
+<!--      </div>-->
     </div>
 
   </div>

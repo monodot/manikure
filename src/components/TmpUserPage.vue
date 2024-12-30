@@ -47,9 +47,9 @@ import type {Resource} from "@/types/resource.ts";
 const users = ref([
   { id: 1, name: "John Doe", email: "john@example.com", role: "user" },
   { id: 2, name: "Jane Smith", email: "jane@example.com", role: "admin" },
-  { id: 3, name: "Bernard Cribbins", email: "bernard@example.com", role: "user" },
-  { id: 4, name: "Zod", email: "zod@example.com", role: "lord" },
-  { id: 5, name: "Zeinab Badawi", email: "zeinab@channel4.com", role: "user" },
+  { id: 3, name: "Bernard Cribbins", email: "bernard@example.com", role: "user", metadata: { region: "AMER" } },
+  { id: 4, name: "Zod", email: "zod@example.com", role: "lord", metadata: { region: "APAC" } },
+  { id: 5, name: "Zeinab Badawi", email: "zeinab@channel4.com", role: "user", metadata: { region: "EMEA" } },
 ]);
 // const users = ref<Resource[]>([
 //   { id: 1, manifest: { apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "egg-app"} } },
