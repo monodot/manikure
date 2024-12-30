@@ -14,14 +14,9 @@ const emit = defineEmits(['update:modelValue']);
 // TODO: Reinstate this bit, to load the schema dynamically
 // const schema = computed(() => schemas[props.type]);
 const schema = z.object({
-  id: z.string().describe("ID"),
-  manifest: z.object({
-    apiVersion: z.string().describe("API Version"),
-    kind: z.string().describe("Kind"),
-    metadata: z.object({
-      name: z.string().describe("Name"),
-    }).describe("Metadata"),
-  }).describe("Manifest"),
+  metadata: z.object({
+    name: z.string().describe("Name"),
+  }).describe("Metadata"),
 });
 
 const form = useForm({
@@ -55,7 +50,7 @@ watch(form.values, (newValues) => {
 
 <template>
   <div class="p-4">
-    <h1>{{ modelValue.manifest.metadata.name }}</h1>
+    <h1>{{ modelValue.metadata.name }}</h1>
     <hr/>
 
     <AutoForm

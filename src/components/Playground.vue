@@ -25,8 +25,8 @@ defineProps<PlaygroundProps>();
 const { toast } = useToast();
 
 const resources = ref<Resource[]>([
-  { id: 1, manifest: { apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "egg-app"} } },
-  { id: 2, manifest: { apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "chicken-app"} } },
+  { id: 1, apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "egg-app"} },
+  { id: 2, apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "chicken-app"} },
 ]);
 const selectedResourceId = ref<number | null>(null);
 
@@ -67,7 +67,7 @@ const clearAll = () => {
 const generateId = () => Date.now();
 
 const copyToClipboard = () => {
-  const yamlDocs = resources.value.map(r => dump(r.manifest)).join('---\n');
+  const yamlDocs = resources.value.map(r => dump(r)).join('---\n');
   navigator.clipboard.writeText(yamlDocs);
   toast({
     description: "Resources copied to your clipboard!",
@@ -93,12 +93,15 @@ const copyToClipboard = () => {
       <div class="flex gap-2 items-center">
         <TemplateDialog @select="(template) => {
           // Replace all resources with the template resources
-          template.forEach((resource, _index) => {
+          template.forEach((_resource, _index) => {
             // Add additional resources
             resources.push({
               id: generateId(),
-              manifest: resource
-            });
+              apiVersion: 'apps/v1',
+              kind: 'Deployment',
+              metadata: {},
+              spec: {},
+            }); // TODO - Add spec
           });
           // Set active resource to first one
           // activeResourceId = resources[0].id;

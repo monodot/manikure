@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
 import type {Resource} from "@/types/resource.ts";
-import { PlusCircle, X } from "lucide-vue-next";
+import { X } from "lucide-vue-next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,8 +40,8 @@ defineEmits(['select', 'removeResource', 'clearAll', 'addResource']);
         @click="$emit('select', resource.id)"
       >
         <div>
-          <p class="font-medium">{{ resource.manifest.metadata?.name || 'Unnamed' }}</p>
-          <p class="text-sm text-muted-foreground">{{ resource.manifest.kind }}</p>
+          <p class="font-medium">{{ resource.metadata?.name || 'Unnamed' }}</p>
+          <p class="text-sm text-muted-foreground">{{ resource.kind }}</p>
         </div>
         <Button 
           v-if="resources.length > 1"
