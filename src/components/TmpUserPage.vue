@@ -42,7 +42,6 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
-import type {Resource} from "@/types/resource.ts";
 
 const users = ref([
   { id: 1, name: "John Doe", email: "john@example.com", role: "user" },

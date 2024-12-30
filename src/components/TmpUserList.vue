@@ -25,18 +25,13 @@
 
 </template>
 
-<script>
-export default {
-  props: {
-    users: {
-      type: Array,
-      required: true,
-    },
-    selectedUserId: {
-      type: Number,
-      default: null,
-    },
-  },
-  emits: ["select"],
-};
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
+
+defineProps<{
+  users: Array<any>;
+  selectedUserId: number | null;
+}>();
+
+const emit = defineEmits(['select']);
 </script>

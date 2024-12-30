@@ -19,6 +19,7 @@ import * as z from "zod";
 
 const props = defineProps<{
   modelValue: {
+    id: number,
     name: string,
     email: string,
     role: string,
