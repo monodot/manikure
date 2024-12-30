@@ -41,6 +41,29 @@ const updateResource = (updatedResource: Resource) => {
   }
 }
 
+const removeResource = (id: number) => {
+  const index = resources.value.findIndex(r => r.id === id);
+  resources.value.splice(index, 1);
+  if (selectedResourceId.value === id) {
+    selectedResourceId.value = resources.value[0]?.id;
+  }
+};
+
+const clearAll = () => {
+  resources.value = [{
+    id: 1,
+    manifest: {
+      apiVersion: "apps/v1",
+      kind: "Deployment",
+      metadata: {
+        name: "my-app"
+      }
+    }
+  }];
+  selectedResourceId.value = resources.value[0].id;
+};
+
+
 const generateId = () => Date.now();
 
 const copyToClipboard = () => {
@@ -104,6 +127,8 @@ const copyToClipboard = () => {
             :resources="resources"
             :selectedResourceId="selectedResourceId"
             @select="selectedResourceId = $event"
+            @remove-resource="removeResource"
+            @clear-all="clearAll"
             />
         </ResizablePanel>
 
