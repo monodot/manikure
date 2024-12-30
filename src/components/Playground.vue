@@ -113,8 +113,9 @@ const copyToClipboard = () => {
           Copy all
         </Button>
 
-        <a href="https://github.com/monodot/manikure" class="text-sm px-2">
-          GitHub<ExternalLink class="size-3" />
+        <a href="https://github.com/monodot/manikure" class="text-sm font-medium px-2 flex items-center gap-1">
+          <span>GitHub</span>
+          <ExternalLink class="size-3" />
         </a>
       </div>
     </header>
