@@ -2,104 +2,55 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toast";
-import { ref } from "vue";
-import ResourceForm from "./ResourceForm.vue";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable';
+import {computed, ref} from "vue";
 import CodeViewer from "./CodeViewer.vue";
 import TemplateDialog from "./TemplateDialog.vue";
 import ResourcesList from "./ResourcesList.vue";
 import { useToast } from "@/components/ui/toast/use-toast";
-import { Clipboard, PlusCircle } from "lucide-vue-next";
-import yaml from 'js-yaml';
+import { Clipboard, ExternalLink } from "lucide-vue-next";
+import { dump } from 'js-yaml';
+import type {Resource} from "@/types/resource.ts";
+import ResourceForm from "@/components/ResourceForm.vue";
 
-interface Resource {
-  id: string;
-  type: string;
-  values: Record<string, any>;
+interface PlaygroundProps {
+  resources: Resource[];
 }
+defineProps<PlaygroundProps>();
 
 const { toast } = useToast();
 
+const resources = ref<Resource[]>([
+  { id: 1, manifest: { apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "egg-app"} } },
+  { id: 2, manifest: { apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "chicken-app"} } },
+]);
+const selectedResourceId = ref<number | null>(null);
+
+const selectedResource = computed(() => {
+  return resources.value.find((resource) => resource.id === selectedResourceId.value) || null;
+})
+
+const updateResource = (updatedResource: Resource) => {
+  const index = resources.value.findIndex((resource) => resource.id === updatedResource.id);
+  if (index !== -1) {
+    resources.value[index] = updatedResource;
+  }
+}
+
 const generateId = () => crypto.randomUUID();
 
-const defaultValues = {
-  apiVersion: "apps/v1",
-  kind: "Deployment",
-  metadata: {
-    name: "my-nginx",
-  },
-  spec: {
-    replicas: 1,
-    containers: [
-      {
-        name: "nginx",
-        image: "docker.io/library/nginx:latest",
-        env: [
-            {
-                name: "DEBUG",
-                value: "true"
-            },
-            {
-                name: "LOG_LEVEL",
-                value: "TRACE",
-            }
-        ],
-        ports: [
-          {
-            containerPort: 80,
-          },
-        ],
-      },
-    ],
-  },
-};
-
-const resources = ref<Resource[]>([{
-  id: '1',
-  type: 'Deployment',
-  values: defaultValues
-}]);
-
-const activeResourceId = ref<string>('1');
-
 const copyToClipboard = () => {
-  const yamlDocs = resources.value.map(r => yaml.dump(r.values)).join('---\n');
+  const yamlDocs = resources.value.map(r => dump(r.manifest)).join('---\n');
   navigator.clipboard.writeText(yamlDocs);
   toast({
     description: "Resources copied to your clipboard!",
   });
 };
 
-const addResource = (type: string) => {
-  const id = generateId();
-  resources.value.push({
-    id,
-    type,
-    values: {
-      apiVersion: "apps/v1",
-      kind: type,
-      metadata: { name: "" },
-      spec: {}
-    }
-  });
-  activeResourceId.value = id;
-};
-
-const removeResource = (id: string) => {
-  const index = resources.value.findIndex(r => r.id === id);
-  resources.value.splice(index, 1);
-  if (activeResourceId.value === id) {
-    activeResourceId.value = resources.value[0]?.id;
-  }
-};
-
-const clearAll = () => {
-  resources.value = [{
-    id: generateId(),
-    type: 'Deployment',
-    values: defaultValues
-  }];
-  activeResourceId.value = resources.value[0].id;
-};
 </script>
 
 <template>
@@ -108,10 +59,15 @@ const clearAll = () => {
     <header
       class="sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
     >
-      <h1 class="text-xl font-semibold">Manikure</h1>
+      <div class="flex items-center gap-2">
+      <h1 class="text-xl font-semibold">
+        Manikure Studio
+      </h1>
+      <Badge variant="outline" class="text-xs">Preview</Badge>
+      </div>
 
       <!-- Buttons -->
-      <div class="flex gap-2">
+      <div class="flex gap-2 items-center">
         <TemplateDialog @select="(template) => {
           // Replace all resources with the template resources
           template.forEach((resource, index) => {
@@ -123,7 +79,7 @@ const clearAll = () => {
             });
           });
           // Set active resource to first one
-          activeResourceId = resources[0].id;
+          // activeResourceId = resources[0].id;
         }" />
         <Button
           variant="outline"
@@ -134,41 +90,45 @@ const clearAll = () => {
           <Clipboard class="size-3.5" />
           Copy all
         </Button>
+
+        <a href="https://github.com/monodot/manikure" class="text-sm px-2">
+          GitHub<ExternalLink class="size-3" />
+        </a>
       </div>
     </header>
 
     <main class="lg:flex lg:flex-1">
 
-      <ResourcesList 
-        :resources="resources"
-        :active-resource-id="activeResourceId"
-        @update:active-resource-id="activeResourceId = $event"
-        @add-resource="addResource"
-        @remove-resource="removeResource"
-        @clear-all="clearAll"
-      />
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel :default-size="20">
+          <ResourcesList
+            :resources="resources"
+            :selectedResourceId="selectedResourceId"
+            @select="selectedResourceId = $event"
+            />
+        </ResizablePanel>
 
-      <!-- Editor panel -->
-      <div class="lg:flex lg:flex-col w-[400px]">
-        <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4">
+        <ResizableHandle />
+
+        <ResizablePanel :default-size="40">
           <ResourceForm
-            v-if="activeResourceId"
-            :initial-values="resources.find(r => r.id === activeResourceId)?.values"
-            :type="resources.find(r => r.id === activeResourceId)?.type as ResourceType"
-            @update:values="resources.find(r => r.id === activeResourceId)!.values = $event"
+              v-if="selectedResource"
+              :key="selectedResourceId || 0"
+              :modelValue="selectedResource"
+              @update:modelValue="updateResource"
           />
-        </div>
-      </div>
+        </ResizablePanel>
 
-      <!-- Code panel -->
-      <div class="lg:flex lg:flex-col flex-1">
-        <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4 bg-muted">
-          <Badge variant="outline" class="absolute right-3 top-3">Output</Badge>
-          <CodeViewer 
-            :code="[resources.find(r => r.id === activeResourceId)?.values]" 
-          />
-        </div>
-      </div>
+        <ResizableHandle />
+
+        <ResizablePanel :default-size="40">
+          <CodeViewer v-if="selectedResource"
+                      :resource="selectedResource"
+                      />
+        </ResizablePanel>
+
+      </ResizablePanelGroup>
+
     </main>
 
 

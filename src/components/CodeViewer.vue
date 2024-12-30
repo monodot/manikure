@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import yaml from 'js-yaml';
+import { dump } from 'js-yaml';
+import type {Resource} from "@/types/resource.ts";
 
 defineProps<{
-  code: Record<string, any>[]
+  resource: Resource
 }>();
 
-const formatYaml = (resources: Record<string, any>[]) => {
-  return resources.filter(Boolean).map(r => yaml.dump(r)).join('---\n');
+const formatYaml = (resource: Resource) => {
+  return dump(resource);
 };
 </script>
 
 <template>
-  <pre class="text-sm"><code>{{ formatYaml(code) }}</code></pre>
+  <pre class="text-sm"><code>{{ formatYaml(resource) }}</code></pre>
 </template>

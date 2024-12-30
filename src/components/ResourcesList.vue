@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-vue-next";
+import type {Resource} from "@/types/resource.ts";
+import { PlusCircle, X } from "lucide-vue-next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,28 +14,17 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 
-interface Resource {
-  id: string;
-  type: string;
-  values: Record<string, any>;
-}
-
-const props = defineProps<{
+defineProps<{
   resources: Resource[];
-  activeResourceId: string;
+  selectedResourceId: number | null;
 }>();
 
-const emit = defineEmits<{
-  (e: "update:activeResourceId", id: string): void;
-  (e: "addResource", type: string): void;
-  (e: "removeResource", id: string): void;
-  (e: "clearAll"): void;
-}>();
+defineEmits(['select', 'removeResource']);
 </script>
 
 <template>
-  <div class="lg:flex lg:flex-col w-[200px] border-r">
-    <div class="p-4 lg:flex-auto lg:w-auto h-0 overflow-y-auto space-y-4">
+  <div class="lg:flex lg:flex-col">
+    <div class="p-4 lg:flex-auto overflow-y-auto space-y-4">
       <div class="flex justify-between items-center mb-4">
         <h3 class="font-medium">Resources</h3>
         <Button variant="ghost" size="sm" @click="emit('addResource', 'Deployment')">
@@ -45,21 +35,21 @@ const emit = defineEmits<{
       <div 
         v-for="resource in resources" 
         :key="resource.id"
-        @click="emit('update:activeResourceId', resource.id)"
         class="flex items-center justify-between p-2 rounded cursor-pointer"
-        :class="{'bg-accent': activeResourceId === resource.id}"
+        :class="{'bg-accent': resource.id === selectedResourceId}"
+        @click="$emit('select', resource.id)"
       >
         <div>
-          <p class="font-medium">{{ resource.values.metadata?.name || 'Unnamed' }}</p>
-          <p class="text-sm text-muted-foreground">{{ resource.type }}</p>
+          <p class="font-medium">{{ resource.manifest.metadata?.name || 'Unnamed' }}</p>
+          <p class="text-sm text-muted-foreground">{{ resource.manifest.kind }}</p>
         </div>
         <Button 
           v-if="resources.length > 1"
           variant="ghost" 
           size="sm"
-          @click.stop="emit('removeResource', resource.id)"
+          @click.stop="$emit('removeResource', resource.id)"
         >
-          ×
+          <X class="size-4" />
         </Button>
       </div>
     </div>

@@ -1,62 +1,67 @@
 <script setup lang="ts">
 import { AutoForm } from "@/components/ui/auto-form";
-import { watch } from "vue";
+import {watch} from "vue";
 import { useForm } from "vee-validate";
-import { schemas } from "@/schemas";
-import type { ResourceType } from "@/schemas";
+import type {Resource} from "@/types/resource.ts";
+import * as z from "zod";
 
 const props = defineProps<{
-  initialValues?: Record<string, any>;
-  type: ResourceType;
+  modelValue: Resource
 }>();
 
-const emit = defineEmits<{
-  (e: "update:values", values: Record<string, any>): void;
-}>();
+const emit = defineEmits(['update:modelValue']);
 
-const schema = schemas[props.type];
-
-const form = useForm({
-  validationSchema: schema,
-  initialValues: props.initialValues,
-  keepValuesOnUnmount: true,
+// TODO: Reinstate this bit, to load the schema dynamically
+// const schema = computed(() => schemas[props.type]);
+const schema = z.object({
+  id: z.string().describe("ID"),
+  manifest: z.object({
+    apiVersion: z.string().describe("API Version"),
+    kind: z.string().describe("Kind"),
+    metadata: z.object({
+      name: z.string().describe("Name"),
+    }).describe("Metadata"),
+  }).describe("Manifest"),
 });
 
-// Watch for changes in initialValues and update form
+const form = useForm({
+  keepValuesOnUnmount: true,
+});
+form.setValues(props.modelValue);
+
+// Watch for updates to the modelValue prop, and update the form values
+// This happens whenever the parent component changes the selected user
 watch(
-  () => props.initialValues,
-  (newValues) => {
-    console.log(`Receiving new values - ${JSON.stringify(newValues)}`);
-    if (newValues) {
-      // Reset form with new values
-      form.resetForm({
-        values: newValues,
-      });
-    }
-  },
-  { deep: true }
+    () => props.modelValue,
+    (oldValue, newValue) => {
+      // form.setValues(newValue);
+      if (oldValue.id !== newValue.id) {
+        form.resetForm({
+          values: newValue
+        });
+        console.debug('Changed resource? Form has been reset: ', newValue);
+      }
+    },
+    {deep: true}
 );
 
-// Watch form values for changes and emit updates
-watch(
-  () => form.values,
-  (newValues) => {
-    emit("update:values", newValues);
-  },
-  { deep: true }
-);
+// Watch for updates to form values, and emit an event with the entire updated object
+// The parent component can then replace the old object with the new one
+watch(form.values, (newValues) => {
+  emit('update:modelValue', newValues);
+  console.debug('Emitted event update:modelValue', newValues);
+});
 </script>
 
 <template>
-  <div>
-    <h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">
-      {{ type }}
-    </h3>
+  <div class="p-4">
+    <h1>{{ modelValue.manifest.metadata.name }}</h1>
+    <hr/>
+
     <AutoForm
       class="w-full space-y-6"
       :form="form"
       :schema="schema"
-      :default-values="initialValues"
     />
   </div>
 </template>
