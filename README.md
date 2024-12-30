@@ -27,7 +27,7 @@ npm install
 Compile and hot-reload for development (starts a web server and enables hot-reload):
 
 ```
-npm run serve
+npm run dev
 ```
 
 Compile and minify for production (builds the application into the `dist/` folder):
@@ -36,18 +36,14 @@ Compile and minify for production (builds the application into the `dist/` folde
 npm run build
 ```
 
-Do some linting or something:
-
-```
-npm run lint
-```
-
 ## Licence
 
-(c) 2020 Tom Donohue and authors. This software is shared here under the [GPL-3.0 License](LICENSE). You are free to copy, distribute or modify, by following the terms of the licence.
+(c) 2020-2024 Tom Donohue and authors. This software is shared here under the [AGPL-3.0 License](LICENSE). You are free to copy, distribute or modify, by following the terms of the licence.
 
 ### What does this licence mean?
 
-You may copy, distribute and modify the software as long as you track changes/dates in source files. **Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.**
+You may copy, distribute and modify the software as long as you make your modifications available under the AGPL, along with build & install instructions.
 
-For a plain English explanation of the licence, see [this guide](https://www.tldrlegal.com/license/gnu-general-public-license-v3-gpl-3).
+In addition, if the software is being provided over a network, the corresponding source code of modified versions of the software must be prominently offered to all users who interact with it.
+
+For a plain English explanation of the licence, see [this guide](https://www.tldrlegal.com/license/gnu-affero-general-public-license-v3-agpl-3-0).
