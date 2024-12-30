@@ -3,41 +3,19 @@
     <h1>{{ modelValue.name }}</h1>
     <hr/>
 
-    <form @submit.prevent>
-      <div class="form-group">
-        <label>Name:</label>
-        <input
-          type="text"
-          :value="modelValue.name"
-          @input="updateField('name', $event.target.value)"
-        />
-      </div>
-
-      <div class="form-group">
-        <label>Email:</label>
-        <input
-          type="email"
-          :value="modelValue.email"
-          @input="updateField('email', $event.target.value)"
-        />
-      </div>
-
-      <div class="form-group">
-        <label>Role:</label>
-        <select
-          :value="modelValue.role"
-          @change="updateField('role', $event.target.value)"
-        >
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-    </form>
+    <AutoForm
+        class="w-full space-y-6"
+        :form="form"
+        :schema="schema"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import {defineProps, defineEmits, watch} from 'vue';
+import {AutoForm} from "@/components/ui/auto-form";
+import {useForm} from "vee-validate";
+import * as z from "zod";
 
 const props = defineProps<{
   modelValue: {
@@ -49,30 +27,22 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue']);
 
-const updateField = (field: string, value: string) => {
-  emit('update:modelValue', {
-    ...props.modelValue,
-    [field]: value,
-  });
-};
+const schema = z.object({
+  id: z.string().describe("ID"),
+  name: z.string().describe("Name"),
+  email: z.string().email().describe("Email"),
+  role: z.enum(["user", "admin"]).describe("Role"),
+});
 
-// export default {
-//   props: {
-//     modelValue: {
-//       type: Object,
-//       required: true,
-//     },
-//   },
-//
-//   emits: ["update:modelValue"],
-//
-//   methods: {
-//     updateField(field, value) {
-//       this.$emit("update:modelValue", {
-//         ...this.modelValue,
-//         [field]: value,
-//       });
-//     },
-//   },
-// };
+const form = useForm({
+  keepValuesOnUnmount: true,
+});
+form.setValues(props.modelValue);
+
+// Watch for updates to form values, and emit an event with the entire updated object
+// The parent component can then replace the old object with the new one
+watch(form.values, (newValues) => {
+  emit('update:modelValue', newValues);
+});
+
 </script>
