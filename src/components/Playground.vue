@@ -78,7 +78,7 @@ const copyToClipboard = () => {
 
 <template>
   <Toaster />
-  <div class="flex flex-col min-h-screen">
+  <div class="flex flex-col h-screen">
     <header
       class="sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
     >
