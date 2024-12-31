@@ -1,0 +1,102 @@
+[
+  {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+      "name": "web-app",
+      "labels": {
+        "app": "web-app"
+      }
+    },
+    "spec": {
+      "replicas": 3,
+      "selector": {
+        "matchLabels": {
+          "app": "web-app"
+        }
+      },
+      "template": {
+        "metadata": {
+          "labels": {
+            "app": "web-app"
+          }
+        },
+        "spec": {
+          "containers": [
+            {
+              "name": "web-app",
+              "image": "nginx:latest",
+              "ports": [
+                {
+                  "containerPort": 80
+                }
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": "500m",
+                  "memory": "512Mi"
+                },
+                "requests": {
+                  "cpu": "200m",
+                  "memory": "256Mi"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": {
+      "name": "web-app-service"
+    },
+    "spec": {
+      "selector": {
+        "app": "web-app"
+      },
+      "ports": [
+        {
+          "protocol": "TCP",
+          "port": 80,
+          "targetPort": 80
+        }
+      ],
+      "type": "ClusterIP"
+    }
+  },
+  {
+    "apiVersion": "networking.k8s.io/v1",
+    "kind": "Ingress",
+    "metadata": {
+      "name": "web-app-ingress",
+      "annotations": {
+        "nginx.ingress.kubernetes.io/rewrite-target": "/"
+      }
+    },
+    "spec": {
+      "rules": [
+        {
+          "http": {
+            "paths": [
+              {
+                "path": "/",
+                "pathType": "Prefix",
+                "backend": {
+                  "service": {
+                    "name": "web-app-service",
+                    "port": {
+                      "number": 80
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
