@@ -78,7 +78,7 @@ const copyToClipboard = () => {
       <h1 class="text-xl font-semibold">
         Manikure Studio
       </h1>
-      <Badge variant="outline" class="text-xs">Preview</Badge>
+      <Badge variant="secondary" class="text-xs">Preview</Badge>
       </div>
 
       <!-- Buttons -->
