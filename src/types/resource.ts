@@ -1,4 +1,7 @@
 export interface Resource {
   id: number;
-  manifest: any;
+  apiVersion: string;
+  kind: string;
+  metadata: any;
+  spec?: any;
 }

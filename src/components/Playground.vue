@@ -28,16 +28,18 @@ const resources = ref<Resource[]>([
   { id: 1, apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "egg-app"} },
   { id: 2, apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "chicken-app"} },
 ]);
-const selectedResourceId = ref<number | null>(null);
 
+const selectedResourceId = ref<number | null>(1);
 const selectedResource = computed(() => {
   return resources.value.find((resource) => resource.id === selectedResourceId.value) || null;
 })
 
 const updateResource = (updatedResource: Resource) => {
-  const index = resources.value.findIndex((resource) => resource.id === updatedResource.id);
+  const plainResource = JSON.parse(JSON.stringify(updatedResource)); // Create a plain object copy without reactive wrapping
+  const index = resources.value.findIndex((resource) => resource.id === plainResource.id);
   if (index !== -1) {
-    resources.value[index] = updatedResource;
+    resources.value[index] = plainResource;
+    console.debug('Updated resource: ', plainResource);
   }
 }
 
