@@ -16,6 +16,7 @@ import { Clipboard, ExternalLink } from "lucide-vue-next";
 import { dump } from 'js-yaml';
 import type {Resource} from "@/types/resource.ts";
 import ResourceForm from "@/components/ResourceForm.vue";
+import { generateId } from "@/lib/utils.ts";
 
 interface PlaygroundProps {
   resources: Resource[];
@@ -47,7 +48,7 @@ const removeResource = (id: number) => {
   const index = resources.value.findIndex(r => r.id === id);
   resources.value.splice(index, 1);
   if (selectedResourceId.value === id) {
-    selectedResourceId.value = resources.value[0]?.id;
+    selectedResourceId.value = resources.value[0]?.id || null;
   }
 };
 
@@ -60,11 +61,8 @@ const clearAll = () => {
       name: "my-app"
     }
   }];
-  selectedResourceId.value = resources.value[0].id;
+  selectedResourceId.value = resources.value[0].id || null; // Or null, because Resource type's ID field is nullable
 };
-
-
-const generateId = () => Date.now();
 
 const copyToClipboard = () => {
   const yamlDocs = resources.value.map(r => dump(r)).join('---\n');
@@ -92,19 +90,12 @@ const copyToClipboard = () => {
       <!-- Buttons -->
       <div class="flex gap-2 items-center">
         <TemplateDialog @select="(template) => {
-          // Replace all resources with the template resources
-          template.forEach((_resource, _index) => {
-            // Add additional resources
+          template.forEach((resource, _index) => {
             resources.push({
-              id: generateId(),
-              apiVersion: 'apps/v1',
-              kind: 'Deployment',
-              metadata: {},
-              spec: {},
-            }); // TODO - Add spec
+              id: generateId(resources),
+              ...resource,
+            });
           });
-          // Set active resource to first one
-          // activeResourceId = resources[0].id;
         }" />
         <Button
           variant="outline"
