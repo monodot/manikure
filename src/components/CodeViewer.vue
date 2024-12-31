@@ -12,7 +12,7 @@ const formatYaml = (resource: Resource) => {
 </script>
 
 <template>
-  <div class="p-4 bg-gray-100">
+  <div class="p-4 bg-gray-100 h-full">
     <pre class="text-sm"><code>{{ formatYaml(resource) }}</code></pre>
   </div>
 </template>
