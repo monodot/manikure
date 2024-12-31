@@ -7,7 +7,8 @@ defineProps<{
 }>();
 
 const formatYaml = (resource: Resource) => {
-  return dump(resource);
+  const { id, ...resourceWithoutId } = resource;
+  return dump(resourceWithoutId);
 };
 </script>
 
