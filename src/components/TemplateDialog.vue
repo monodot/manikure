@@ -219,14 +219,14 @@ const handleSubmit = () => {
     <DialogTrigger as-child>
       <Button variant="outline" size="sm" class="gap-1.5 text-sm">
         <PlusCircle class="size-4"/>
-        Add to Project
+        Add from Gallery
       </Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Choose Template</DialogTitle>
+        <DialogTitle>Template Gallery</DialogTitle>
         <DialogDescription>
-          Select a template to start with a pre-configured deployment
+          Select a template from the gallery to add to your project.
         </DialogDescription>
       </DialogHeader>
       <div class="grid gap-4 py-4">
