@@ -72,7 +72,7 @@ const copyToClipboard = () => {
   <Toaster />
   <div class="flex flex-col h-screen">
     <header
-      class="sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
+      class="flex-none sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
     >
       <div class="flex items-center gap-2">
       <h1 class="text-xl font-semibold">
