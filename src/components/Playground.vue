@@ -10,6 +10,7 @@ import {
 import {computed, ref} from "vue";
 import CodeViewer from "./CodeViewer.vue";
 import TemplateDialog from "./TemplateDialog.vue";
+import ImportDialog from "@/components/ImportDialog.vue";
 import ResourcesList from "./ResourcesList.vue";
 import { useToast } from "@/components/ui/toast/use-toast";
 import { Clipboard, ExternalLink } from "lucide-vue-next";
@@ -84,6 +85,14 @@ const copyToClipboard = () => {
 
       <!-- Buttons -->
       <div class="flex gap-2 items-center">
+        <ImportDialog @select="(template) => {
+          template.forEach((resource, _index) => {
+            resources.push({
+              id: generateId(resources),
+              ...resource,
+            });
+          });
+        }" />
         <TemplateDialog @select="(template) => {
           template.forEach((resource, _index) => {
             resources.push({
