@@ -64,7 +64,8 @@ const templates = [
               port: 80,
               targetPort: 80
             }
-          ]
+          ],
+          type: "ClusterIP"
         }
       },
       {

@@ -17,18 +17,12 @@ import { dump } from 'js-yaml';
 import type {Resource} from "@/types/resource.ts";
 import ResourceForm from "@/components/ResourceForm.vue";
 import { generateId } from "@/lib/utils.ts";
+import { resources as defaultResources } from "@/templates/default"; // Load an initial/default set of resources
 
-interface PlaygroundProps {
-  resources: Resource[];
-}
-defineProps<PlaygroundProps>();
 
 const { toast } = useToast();
 
-const resources = ref<Resource[]>([
-  { id: 1, apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "egg-app"} },
-  { id: 2, apiVersion: "apps/v1", kind: "Deployment", metadata: { name: "chicken-app"} },
-]);
+const resources = ref<Resource[]>(defaultResources);
 
 const selectedResourceId = ref<number | null>(1);
 const selectedResource = computed(() => {

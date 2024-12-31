@@ -49,8 +49,8 @@ export const resources = [
       },
       ports: [
         {
-          port: 80,
-          targetPort: 80,
+          port: 8080,
+          targetPort: 8080,
         },
       ],
       type: "ClusterIP",
