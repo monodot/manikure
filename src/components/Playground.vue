@@ -54,12 +54,10 @@ const removeResource = (id: number) => {
 const clearAll = () => {
   resources.value = [{
     id: 1,
-    manifest: {
-      apiVersion: "apps/v1",
-      kind: "Deployment",
-      metadata: {
-        name: "my-app"
-      }
+    apiVersion: "apps/v1",
+    kind: "Deployment",
+    metadata: {
+      name: "my-app"
     }
   }];
   selectedResourceId.value = resources.value[0].id;
