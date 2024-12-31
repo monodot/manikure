@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {AutoForm} from "@/components/ui/auto-form";
-import {onMounted, watch} from "vue";
+import {watch} from "vue";
 import {useForm} from "vee-validate";
 import type {Resource} from "@/types/resource.ts";
 import * as z from "zod";
@@ -23,36 +23,37 @@ const schema = z.object({
 
 const form = useForm({
   keepValuesOnUnmount: true, // when this is set to false, navigating away from the component destroys the form values
+  initialValues: props.modelValue,
 });
-console.debug("Setting form values to: ", props.modelValue); // NOTE: on subsequent edits, this sets: "Setting form values to: Proxy { <target>: Proxy, <handler>: {…} }"
-form.setValues(props.modelValue);
+
+// Compare objects deeply to prevent unnecessary updates
+const isEqual = (obj1: any, obj2: any) => {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+};
 
 // Watch for updates to the modelValue prop, and update the form values
-// This happens whenever the parent component changes the selected user
+// This happens whenever the parent changes the resource
 watch(
     () => props.modelValue,
-    (newValue, oldValue) => {
-      console.debug('modelValue changed: ', newValue);
-      // form.setValues(newValue);
-      if (oldValue?.id !== newValue.id) {
-        form.resetForm({
-          values: newValue
-        });
-        console.debug('Changed resource? Form has been reset: ', newValue);
+    (newValue) => {
+      if (!isEqual(newValue, form.values)) {
+        form.resetForm({ values: newValue });
       }
-    },
+      console.debug('Form reset with new values');
+    }
 );
 
 // Watch for updates to form values, and emit an event with the entire updated object
 // The parent component can then replace the old object with the new one
-watch(form.values, (newValues) => {
-  emit('update:modelValue', newValues);
-  console.debug('Emitted event update:modelValue', newValues);
-});
-
-onMounted(() => {
-  console.debug('ResourceForm mounted');
-})
+watch(
+    () => form.values,
+    (newValues) => {
+      if (newValues && !isEqual(newValues, props.modelValue)) {
+        emit('update:modelValue', { ...newValues }); // use the spread operator (...) to create a new object reference; basically a shallow copy
+      }
+    },
+    { deep: true }
+);
 
 </script>
 
