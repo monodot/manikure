@@ -1,25 +1,24 @@
 <script setup lang="ts">
 import {AutoForm} from "@/components/ui/auto-form";
-import {watch} from "vue";
+import {computed, watch} from "vue";
 import {useForm} from "vee-validate";
 import type {Resource} from "@/types/resource.ts";
-import * as z from "zod";
+import {schemas} from "@/schemas";
+import type { ResourceType } from "@/schemas";
 
 const props = defineProps<{
-  modelValue: Resource
+  modelValue: Resource;
 }>();
 
 const emit = defineEmits(['update:modelValue']);
 
-// TODO: Reinstate this bit, to load the schema dynamically
-// const schema = computed(() => schemas[props.type]);
-const schema = z.object({
-  kind: z.string().describe("Kind"),
-  apiVersion: z.string().describe("API Version"),
-  metadata: z.object({
-    name: z.string().describe("Name"),
-  }).describe("Metadata"),
-});
+// Load the schema for the current 'Kind' of resource, or a fallback schema
+const schema = computed(() => {
+  if (props.modelValue.kind in schemas) {
+    return schemas[props.modelValue.kind as ResourceType];
+  }
+  return schemas.default; // Returns a fallback schema if we don't know what this 'Kind' is
+})
 
 const form = useForm({
   keepValuesOnUnmount: true, // when this is set to false, navigating away from the component destroys the form values
