@@ -18,7 +18,7 @@ import type {Resource} from "@/types/resource.ts";
 import ResourceForm from "@/components/ResourceForm.vue";
 import { generateId } from "@/lib/utils.ts";
 import { resources as defaultResources } from "@/templates/default"; // Load an initial/default set of resources
-
+import WelcomeDialog from "@/components//WelcomeDialog.vue";
 
 const { toast } = useToast();
 
@@ -70,6 +70,7 @@ const copyToClipboard = () => {
 
 <template>
   <Toaster />
+  <WelcomeDialog />
   <div class="flex flex-col h-screen">
     <header
       class="flex-none sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
