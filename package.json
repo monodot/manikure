@@ -9,12 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/pako": "^2.0.3",
     "@vee-validate/zod": "^4.15.0",
     "@vueuse/core": "^12.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "js-yaml": "^4.1.0",
     "lucide-vue-next": "^0.469.0",
+    "pako": "^2.1.0",
     "radix-vue": "^1.9.11",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",

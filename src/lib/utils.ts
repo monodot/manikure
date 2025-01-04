@@ -7,6 +7,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function generateId(resources: Resource[]) {
-  const maxId = resources.reduce((max, resource) => Math.max(max, resource.id ?? 0), 0);
-  return maxId + 1;
+  const nextId = resources.reduce((max, resource) => Math.max(max, resource.id ?? 0), 0) + 1;
+  return nextId;
 }
