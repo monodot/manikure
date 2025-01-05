@@ -7,6 +7,7 @@ import AutoFormFieldFile from './AutoFormFieldFile.vue'
 import AutoFormFieldInput from './AutoFormFieldInput.vue'
 import AutoFormFieldNumber from './AutoFormFieldNumber.vue'
 import AutoFormFieldObject from './AutoFormFieldObject.vue'
+import AutoFormFieldRecord from '@/components/AutoFormFieldRecord.vue'
 
 export const INPUT_COMPONENTS: InputComponents = {
   date: AutoFormFieldDate,
@@ -20,6 +21,7 @@ export const INPUT_COMPONENTS: InputComponents = {
   file: AutoFormFieldFile,
   array: AutoFormFieldArray,
   object: AutoFormFieldObject,
+  record: AutoFormFieldRecord,
 }
 
 /**
@@ -37,4 +39,5 @@ export const DEFAULT_ZOD_HANDLERS: {
   ZodNumber: 'number',
   ZodArray: 'array',
   ZodObject: 'object',
+  ZodRecord: 'record',
 }

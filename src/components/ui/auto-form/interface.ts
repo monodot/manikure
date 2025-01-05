@@ -30,6 +30,7 @@ export interface InputComponents {
   file: Component;
   array: Component;
   object: Component;
+  record: Component;
 }
 
 export interface ConfigItem {
