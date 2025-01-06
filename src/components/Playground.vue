@@ -20,7 +20,7 @@ import {decodeResources} from "@/lib/sharing.ts";
 import ShareButton from "@/components/ShareButton.vue";
 import {ScrollArea} from "@/components/ui/scroll-area";
 
-const { toast } = useToast();
+const {toast} = useToast();
 
 const resources = ref<Resource[]>(defaultResources);
 
@@ -65,7 +65,7 @@ const loadSharedResources = () => {
 
   if (!shared) return;
 
-  const { resources: decodedResources, errors } = decodeResources(shared);
+  const {resources: decodedResources, errors} = decodeResources(shared);
 
   if (errors.length > 0) {
     toast({
@@ -99,17 +99,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <Toaster />
-  <WelcomeDialog />
+  <Toaster/>
+  <WelcomeDialog/>
   <div class="flex flex-col h-screen">
     <header
-      class="flex-none sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
+        class="flex-none sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
     >
       <div class="flex items-center gap-2">
-      <h1 class="text-xl font-semibold">
-        Manikure Studio
-      </h1>
-      <Badge variant="secondary" class="text-xs">Preview</Badge>
+        <h1 class="text-xl font-semibold">
+          Manikure Studio
+        </h1>
+        <Badge variant="secondary" class="text-xs">Preview</Badge>
       </div>
 
       <!-- Buttons -->
@@ -121,7 +121,7 @@ onMounted(() => {
               ...resource,
             });
           });
-        }" />
+        }"/>
         <TemplateDialog @select="(template) => {
           template.forEach((resource, _index) => {
             resources.push({
@@ -129,7 +129,7 @@ onMounted(() => {
               ...resource,
             });
           });
-        }" />
+        }"/>
 
         <ShareButton
             :resources="resources"
@@ -141,13 +141,13 @@ onMounted(() => {
             class="gap-1.5 text-sm"
             @click="copyToClipboard"
         >
-          <Clipboard class="size-3.5" />
+          <Clipboard class="size-3.5"/>
           Copy YAML
         </Button>
 
         <a href="https://github.com/monodot/manikure" class="text-sm font-medium px-2 flex items-center gap-1">
           <span>GitHub</span>
-          <ExternalLink class="size-3" />
+          <ExternalLink class="size-3"/>
         </a>
       </div>
     </header>
@@ -167,7 +167,7 @@ onMounted(() => {
           </ScrollArea>
         </ResizablePanel>
 
-        <ResizableHandle />
+        <ResizableHandle/>
 
         <ResizablePanel :default-size="40">
           <ScrollArea class="h-full">
@@ -180,7 +180,7 @@ onMounted(() => {
           </ScrollArea>
         </ResizablePanel>
 
-        <ResizableHandle />
+        <ResizableHandle/>
 
         <ResizablePanel :default-size="40">
           <ScrollArea class="h-full">
