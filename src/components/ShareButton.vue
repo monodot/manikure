@@ -1,39 +1,39 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Button } from '@/components/ui/button';
-import { Share, AlertCircle, Copy, Check } from 'lucide-vue-next';
+import {ref} from 'vue';
+import {Button} from '@/components/ui/button';
+import {Share, AlertCircle, Clipboard, Check} from 'lucide-vue-next';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useToast } from '@/components/ui/toast';
+import {Alert, AlertDescription} from '@/components/ui/alert';
+import {Label} from '@/components/ui/label';
+import {useToast} from '@/components/ui/toast';
 
 const props = defineProps<{
   resources: any[];
   onShare?: () => void;
 }>();
 
-const { toast } = useToast();
+const {toast} = useToast();
 const showDialog = ref(false);
 const copied = ref(false);
 const shareUrl = ref<string>('');
 const urlTooLong = ref(false);
 
 // Import these from your sharing utilities
-import { encodeResources, checkUrlLength } from '@/lib/sharing';
+import {encodeResources, checkUrlLength} from '@/lib/sharing';
 
 const generateShareUrl = () => {
   try {
     console.debug('Generating share URL...');
     const encoded = encodeResources(props.resources);
     const baseUrl = `${window.location.origin}${window.location.pathname}`;
-    const { valid } = checkUrlLength(baseUrl, encoded);
+    const {valid} = checkUrlLength(baseUrl, encoded);
 
     urlTooLong.value = !valid;
     shareUrl.value = valid ? `${baseUrl}?resources=${encoded}` : '';
@@ -83,58 +83,58 @@ const handleDialogOpen = () => {
           class="gap-1.5 text-sm"
           :disabled="resources.length === 0"
       >
-        <Share class="size-3.5" />
+        <Share class="size-3.5"/>
         Share
       </Button>
     </DialogTrigger>
 
     <DialogContent class="sm:max-w-md">
       <DialogHeader>
-        <DialogTitle>Share Project</DialogTitle>
+        <DialogTitle>Share project as link</DialogTitle>
         <DialogDescription>
-          Share your Kubernetes resources with others using this URL
+          Your project resources are not stored online. However, anyone with this link will be able to view your project resources.
+          Be careful not to share sensitive information, such as inside Secrets.
         </DialogDescription>
       </DialogHeader>
 
-      <div class="flex items-center space-x-2">
-        <div v-if="urlTooLong" class="flex-1">
-          <Alert variant="destructive">
-            <AlertCircle class="size-4" />
-            <AlertDescription>
-              Project is too large to share via URL. Try reducing the number of resources.
-            </AlertDescription>
-          </Alert>
-        </div>
-        <div v-else-if="shareUrl" class="grid flex-1 gap-4">
-          <div class="flex items-center">
-            <input
-                class="flex-1 truncate rounded-md border px-3 py-2 text-sm"
-                :value="shareUrl"
-                readonly
-            />
-          </div>
-        </div>
+      <div v-if="urlTooLong" class="flex-1">
+        <Alert variant="destructive">
+          <AlertCircle class="size-4"/>
+          <AlertDescription>
+            Project is too large to share via URL. Try reducing the number of resources.
+          </AlertDescription>
+        </Alert>
       </div>
+      <div v-else-if="shareUrl" class="flex items-center space-x-2">
+        <div class="grid flex-1 gap-2">
+          <Label for="link" class="sr-only">
+            Link
+          </Label>
+          <input
+              class="flex-1 truncate rounded-md border px-3 py-2 text-sm"
+              :value="shareUrl"
+              readonly
+          />
 
-      <DialogFooter className="sm:justify-start">
+        </div>
         <Button
             v-if="!urlTooLong && shareUrl"
-            type="button"
-            variant="secondary"
-            size="sm"
-            class="gap-1.5"
+            variant="outline"
+            class="w-32"
             @click="copyToClipboard"
         >
-          <span v-if="!copied">
-            <Copy class="size-3.5" />
+          <template v-if="!copied">
+            <Clipboard class="w-4 h-4"/>
             Copy URL
-          </span>
-          <span v-else>
-            <Check class="size-3.5" />
+          </template>
+          <template v-else>
+            <Check class="w-4 h-4"/>
             Copied!
-          </span>
+          </template>
         </Button>
-      </DialogFooter>
+
+      </div>
+
     </DialogContent>
   </Dialog>
 </template>
