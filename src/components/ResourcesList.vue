@@ -44,8 +44,7 @@ defineEmits(['select', 'removeResource', 'clearAll', 'addResource']);
           <p class="text-sm text-muted-foreground">{{ resource.kind }}</p>
         </div>
         <Button 
-          v-if="resources.length > 1"
-          variant="ghost" 
+          variant="ghost"
           size="sm"
           @click.stop="$emit('removeResource', resource.id)"
         >
