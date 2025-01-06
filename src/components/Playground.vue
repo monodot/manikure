@@ -18,6 +18,7 @@ import {resources as defaultResources} from "@/templates/default"; // Load an in
 import WelcomeDialog from "@/components/WelcomeDialog.vue";
 import {decodeResources} from "@/lib/sharing.ts";
 import ShareButton from "@/components/ShareButton.vue";
+import {ScrollArea} from "@/components/ui/scroll-area";
 
 const { toast } = useToast();
 
@@ -151,36 +152,42 @@ onMounted(() => {
       </div>
     </header>
 
-    <main class="lg:flex lg:flex-1">
+    <main class="lg:flex lg:flex-1 min-h-0">
 
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel :default-size="20">
-          <ResourcesList
-            :resources="resources"
-            :selectedResourceId="selectedResourceId"
-            @select="selectedResourceId = $event"
-            @remove-resource="removeResource"
-            @clear-all="clearAll"
+          <ScrollArea class="h-full">
+            <ResourcesList
+                :resources="resources"
+                :selectedResourceId="selectedResourceId"
+                @select="selectedResourceId = $event"
+                @remove-resource="removeResource"
+                @clear-all="clearAll"
             />
+          </ScrollArea>
         </ResizablePanel>
 
         <ResizableHandle />
 
         <ResizablePanel :default-size="40">
-          <ResourceForm
-              v-if="selectedResource"
-              :key="selectedResourceId || 0"
-              :modelValue="selectedResource"
-              @update:modelValue="updateResource"
-          />
+          <ScrollArea class="h-full">
+            <ResourceForm
+                v-if="selectedResource"
+                :key="selectedResourceId || 0"
+                :modelValue="selectedResource"
+                @update:modelValue="updateResource"
+            />
+          </ScrollArea>
         </ResizablePanel>
 
         <ResizableHandle />
 
         <ResizablePanel :default-size="40">
-          <CodeViewer v-if="selectedResource"
-                      :resource="selectedResource"
-                      />
+          <ScrollArea class="h-full">
+            <CodeViewer v-if="selectedResource"
+                        :resource="selectedResource"
+            />
+          </ScrollArea>
         </ResizablePanel>
 
       </ResizablePanelGroup>
