@@ -18,8 +18,15 @@ export const deploymentSchema = z.object({
         containers: z.array(z.object({
           name: z.string(),
           image: z.string(),
+          command: z.array(z.string()).optional().describe("Container entrypoint command"),
+          env: z.array(z.object({
+            name: z.string(),
+            value: z.string(),
+          }).optional().describe("Environment variable")),
           ports: z.array(z.object({
             containerPort: z.number(),
+            name: z.string().optional(),
+            protocol: z.enum(["TCP", "UDP", "SCTP"]).optional(),
           }).optional().describe("Port")),
         }).describe("Container")).describe("List of containers"),
       }).describe("Pod specification"),
@@ -33,4 +40,15 @@ export const deploymentFieldConfig = {
       description: "Must be unique within a namespace.",
     },
   },
+  spec: {
+    template: {
+      spec: {
+        containers: {
+          command: {
+            description: "Entrypoint command",
+          }
+        }
+      }
+    }
+  }
 };
