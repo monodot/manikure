@@ -3,7 +3,7 @@ import {AutoForm} from "@/components/ui/auto-form";
 import {computed, watch} from "vue";
 import {useForm} from "vee-validate";
 import type {Resource} from "@/types/resource.ts";
-import {schemas} from "@/schemas";
+import {schemas, configs} from "@/schemas";
 import type { ResourceType } from "@/schemas";
 
 const props = defineProps<{
@@ -19,6 +19,13 @@ const schema = computed(() => {
   }
   return schemas.default; // Returns a fallback schema if we don't know what this 'Kind' is
 })
+
+const fieldConfig = computed(() => {
+  if (props.modelValue.kind in configs) {
+    return configs[props.modelValue.kind as ResourceType];
+  }
+  return configs.default;
+});
 
 const form = useForm({
   keepValuesOnUnmount: true, // when this is set to false, navigating away from the component destroys the form values
@@ -65,6 +72,7 @@ watch(
         class="w-full space-y-6"
         :form="form"
         :schema="schema"
+        :field-config="fieldConfig"
     />
   </div>
 </template>

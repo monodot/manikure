@@ -52,3 +52,10 @@ export const deploymentSchema = z.object({
   }),
 });
 
+export const deploymentFieldConfig = {
+  metadata: {
+    name: {
+      description: "Must be unique within a namespace.",
+    },
+  },
+};
