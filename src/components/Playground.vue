@@ -46,14 +46,7 @@ const removeResource = (id: number) => {
 };
 
 const clearAll = () => {
-  resources.value = [{
-    id: 1,
-    apiVersion: "apps/v1",
-    kind: "Deployment",
-    metadata: {
-      name: "my-app"
-    }
-  }];
+  resources.value = [];
   selectedResourceId.value = resources.value[0].id || null; // Or null, because Resource type's ID field is nullable
 };
 
