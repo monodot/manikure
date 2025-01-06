@@ -1,55 +1,30 @@
-import * as z from "zod";
-
-enum ImagePullPolicyTypes {
-  IfNotPresent = "IfNotPresent",
-  Always = "Always",
-  Never = "Never",
-}
+import {z} from "zod";
 
 export const deploymentSchema = z.object({
   metadata: z.object({
     name: z.string().describe("Name"),
+    labels: z.record(z.string()).optional().describe("Labels"),
   }),
-
   spec: z.object({
-    replicas: z.coerce
-      .number({
-        invalid_type_error: "Replicas must be a number.",
-      })
-      .default(1)
-      .optional(),
-    
+    replicas: z.number().default(1),
+    selector: z.object({
+      matchLabels: z.record(z.string()),
+    }).describe("Label selector"),
     template: z.object({
       metadata: z.object({
-        labels: z.record(z.string()).optional(),
+        labels: z.record(z.string()),
       }),
-      
       spec: z.object({
-        containers: z
-          .array(
-            z.object({
-              name: z.string(),
-              image: z.string(),
-              imagePullPolicy: z.nativeEnum(ImagePullPolicyTypes),
-              env: z.array(
-                z.object({
-                  name: z.string(),
-                  value: z.string(),
-                }).describe("Environment variable")
-              ).describe("Environment variables"),
-              ports: z
-                .array(
-                  z.object({
-                    containerPort: z.number(),
-                  }).describe("Port")
-                )
-                .describe("Ports"),
-            }).describe("Container")
-          )
-          .describe("Containers"),
-      }),
-    }),
-  }),
+        containers: z.array(z.object({
+          name: z.string(),
+          image: z.string(),
+          ports: z.array(z.object({
+            containerPort: z.number(),
+          }).optional().describe("Port")),
+        }).describe("Container")).describe("List of containers"),
+      }).describe("Pod specification"),
+    }).describe("Pod template"),
+  }).describe("Specification"),
 });
 
 export const deploymentFieldConfig = {
