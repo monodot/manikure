@@ -5,6 +5,10 @@ export const resources = [
     kind: "Deployment",
     metadata: {
       name: "egg-app",
+      labels: {
+        app: "egg-app",
+        environment: "dev",
+      },
     },
     spec: {
       replicas: 3,
