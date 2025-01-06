@@ -39,18 +39,18 @@ const handleDismiss = () => {
       </DialogHeader>
       <div class="py-4">
         <p class="mb-4">
-          Manikure Studio helps you create and edit Kubernetes resources with ease.
+          Manikure Studio helps you create and edit Kubernetes resources quickly and easily.
           Here's how to get started:
         </p>
         <ul class="space-y-2 list-disc pl-6">
           <li>Use the left panel to manage your resources</li>
-          <li>Click "Add to Project" to use pre-made templates</li>
-          <li>Edit resources using the form in the middle panel</li>
+          <li>Click "Add from Gallery" to use pre-made templates</li>
+          <li>Edit resources using the form in the centre panel</li>
           <li>View the YAML output in the right panel</li>
-          <li>Click Copy All to copy YAML for all resources</li>
+          <li>Click Copy All to copy all resources as YAML</li>
         </ul>
         <p class="mt-4">
-          Thanks for trying out the app! Please share feedback/issues by clicking the <strong>GitHub</strong> link in the app.
+          Thanks for trying out the app! Please share feedback or issues by clicking the <strong>GitHub</strong> link in the app.
         </p>
       </div>
       <DialogFooter>
