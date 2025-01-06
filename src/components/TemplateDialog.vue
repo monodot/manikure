@@ -22,7 +22,7 @@ const templates = [
         apiVersion: "apps/v1",
         kind: "Deployment",
         metadata: {
-          name: "nginx-deployment",
+          name: "nginx",
         },
         spec: {
           replicas: 1,
@@ -53,7 +53,7 @@ const templates = [
         apiVersion: "v1",
         kind: "Service",
         metadata: {
-          name: "nginx-service",
+          name: "nginx",
         },
         spec: {
           selector: {
@@ -72,7 +72,7 @@ const templates = [
         apiVersion: "networking.k8s.io/v1",
         kind: "Ingress",
         metadata: {
-          name: "nginx-ingress",
+          name: "nginx",
         },
         spec: {
           rules: [
@@ -217,7 +217,7 @@ const handleSubmit = () => {
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="outline" size="sm" class="gap-1.5 text-sm">
+      <Button variant="secondary" size="sm" class="gap-1.5 text-sm">
         <PlusCircle class="size-4"/>
         Add from Gallery
       </Button>
