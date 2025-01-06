@@ -78,7 +78,7 @@ const handleDialogOpen = () => {
   <Dialog v-model:open="showDialog" @update:open="handleDialogOpen">
     <DialogTrigger asChild>
       <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
           class="gap-1.5 text-sm"
           :disabled="resources.length === 0"

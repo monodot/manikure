@@ -136,19 +136,20 @@ onMounted(() => {
             });
           });
         }" />
-        <Button
-          variant="outline"
-          size="sm"
-          class="gap-1.5 text-sm"
-          @click="copyToClipboard"
-        >
-          <Clipboard class="size-3.5" />
-          Copy all
-        </Button>
 
         <ShareButton
             :resources="resources"
         />
+
+        <Button
+            variant="default"
+            size="sm"
+            class="gap-1.5 text-sm"
+            @click="copyToClipboard"
+        >
+          <Clipboard class="size-3.5" />
+          Copy YAML
+        </Button>
 
         <a href="https://github.com/monodot/manikure" class="text-sm font-medium px-2 flex items-center gap-1">
           <span>GitHub</span>
