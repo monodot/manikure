@@ -63,7 +63,7 @@ provide(FieldContextKey, fieldContext)
         <FormItem>
           <AccordionItem :value="fieldName" class="border-none">
             <AccordionTrigger>
-              <AutoFormLabel class="text-base" :required="required" :documentation="config?.documentation">
+              <AutoFormLabel class="text-base" :required="required" :documentation="documentation">
                 {{ schema?.description || beautifyObjectName(fieldName) }}
               </AutoFormLabel>
             </AccordionTrigger>
