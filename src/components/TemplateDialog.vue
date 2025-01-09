@@ -19,6 +19,7 @@ const templates = [
     description: "A simple web application with a frontend container exposed to the internet",
     resources: [
       {
+        apiVersion: "apps/v1",
         kind: "Deployment",
         metadata: {
           name: "frontend",
@@ -56,6 +57,7 @@ const templates = [
         }
       },
       {
+        apiVersion: "v1",
         kind: "Service",
         metadata: {
           name: "frontend-svc"
@@ -73,6 +75,7 @@ const templates = [
         }
       },
       {
+        apiVersion: "networking.k8s.io/v1",
         kind: "Ingress",
         metadata: {
           name: "frontend-ingress"
@@ -107,12 +110,10 @@ const templates = [
     description: "A two-tier application with separate frontend and backend services",
     resources: [
       {
+        apiVersion: "apps/v1",
         kind: "Deployment",
         metadata: {
           name: "frontend",
-          // labels: {
-          //   app: "frontend"
-          // }
         },
         spec: {
           replicas: 2,
@@ -158,6 +159,7 @@ const templates = [
         }
       },
       {
+        apiVersion: "apps/v1",
         kind: "Deployment",
         metadata: {
           name: "backend",
@@ -218,6 +220,7 @@ const templates = [
         }
       },
       {
+        apiVersion: "v1",
         kind: "Service",
         metadata: {
           name: "frontend-svc"
@@ -235,6 +238,7 @@ const templates = [
         }
       },
       {
+        apiVersion: "v1",
         kind: "Service",
         metadata: {
           name: "backend-svc"
@@ -252,6 +256,7 @@ const templates = [
         }
       },
       {
+        apiVersion: "networking.k8s.io/v1",
         kind: "Ingress",
         metadata: {
           name: "app-ingress",
@@ -301,6 +306,7 @@ const templates = [
     description: "A production-grade web deployment with health checks, resource limits, and custom domains",
     resources: [
       {
+        apiVersion: "apps/v1",
         kind: "Deployment",
         metadata: {
           name: "web",
@@ -364,6 +370,7 @@ const templates = [
         }
       },
       {
+        apiVersion: "v1",
         kind: "Service",
         metadata: {
           name: "web-svc",
@@ -385,6 +392,7 @@ const templates = [
         }
       },
       {
+        apiVersion: "networking.k8s.io/v1",
         kind: "Ingress",
         metadata: {
           name: "web-ingress",
