@@ -29,6 +29,12 @@ export const resources = [
               name: "egg-app",
               image: "docker.io/library/python:3.9-slim",
               command: ["python", "-m", "http.server", "8080"],
+              env: [
+                {
+                  name: "SERVER_PORT",
+                  value: "8080",
+                },
+              ],
               ports: [
                 {
                   containerPort: 8080,
