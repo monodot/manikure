@@ -76,8 +76,8 @@ watch(
   <div class="p-4">
     <h1 class="text-lg font-semibold">{{ modelValue.kind }}</h1>
     <hr/>
-
     <AutoForm
+        ref="formRef"
         class="w-full space-y-6"
         :form="form"
         :schema="schema"
