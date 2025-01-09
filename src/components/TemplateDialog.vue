@@ -15,64 +15,67 @@ import type {Resource} from "@/types/resource.ts";
 
 const templates = [
   {
-    name: "Nginx",
-    description: "Nginx web server with Service and Ingress",
+    name: "Basic Web App",
+    description: "A simple web application with a frontend container exposed to the internet",
     resources: [
       {
-        apiVersion: "apps/v1",
         kind: "Deployment",
         metadata: {
-          name: "nginx",
+          name: "frontend",
+          labels: {
+            app: "frontend"
+          }
         },
         spec: {
           replicas: 1,
           selector: {
             matchLabels: {
-              app: "nginx"
+              app: "frontend"
             }
           },
           template: {
             metadata: {
               labels: {
-                app: "nginx"
+                app: "frontend"
               }
             },
             spec: {
               containers: [
                 {
                   name: "nginx",
-                  image: "docker.io/library/nginx:latest",
-                  ports: [{containerPort: 80}],
-                },
-              ],
+                  image: "nginx:1.25",
+                  ports: [
+                    {
+                      containerPort: 80
+                    }
+                  ]
+                }
+              ]
             }
           }
-        },
+        }
       },
       {
-        apiVersion: "v1",
         kind: "Service",
         metadata: {
-          name: "nginx",
+          name: "frontend-svc"
         },
         spec: {
           selector: {
-            app: "nginx"
+            app: "frontend"
           },
           ports: [
             {
               port: 80,
               targetPort: 80
             }
-          ],
-          type: "ClusterIP"
+          ]
         }
       },
       {
-        apiVersion: "networking.k8s.io/v1",
         kind: "Ingress",
         metadata: {
-          name: "nginx",
+          name: "frontend-ingress"
         },
         spec: {
           rules: [
@@ -84,7 +87,7 @@ const templates = [
                     pathType: "Prefix",
                     backend: {
                       service: {
-                        name: "nginx-service",
+                        name: "frontend-svc",
                         port: {
                           number: 80
                         }
@@ -100,54 +103,193 @@ const templates = [
     ]
   },
   {
-    name: "Redis",
-    description: "Redis database with Service",
+    name: "Microservices Demo",
+    description: "A two-tier application with separate frontend and backend services",
     resources: [
       {
-        apiVersion: "apps/v1",
         kind: "Deployment",
         metadata: {
-          name: "redis-deployment",
+          name: "frontend",
+          // labels: {
+          //   app: "frontend"
+          // }
         },
         spec: {
-          replicas: 1,
+          replicas: 2,
           selector: {
             matchLabels: {
-              app: "redis"
+              app: "frontend"
             }
           },
           template: {
             metadata: {
               labels: {
-                app: "redis"
+                app: "frontend"
               }
             },
             spec: {
               containers: [
                 {
-                  name: "redis",
-                  image: "docker.io/library/redis:latest",
-                  ports: [{containerPort: 6379}],
-                },
-              ],
+                  name: "frontend",
+                  image: "nginx:1.25",
+                  env: [
+                    {
+                      name: "NODE_ENV",
+                      value: "production"
+                    },
+                    {
+                      name: "API_URL",
+                      value: "http://backend-svc:3000"
+                    },
+                    {
+                      name: "LOG_LEVEL",
+                      value: "info"
+                    }
+                  ],
+                  ports: [
+                    {
+                      containerPort: 80
+                    }
+                  ]
+                }
+              ]
             }
           }
-        },
+        }
       },
       {
-        apiVersion: "v1",
+        kind: "Deployment",
+        metadata: {
+          name: "backend",
+          labels: {
+            app: "backend"
+          }
+        },
+        spec: {
+          replicas: 2,
+          selector: {
+            matchLabels: {
+              app: "backend"
+            }
+          },
+          template: {
+            metadata: {
+              labels: {
+                app: "backend"
+              }
+            },
+            spec: {
+              containers: [
+                {
+                  name: "backend",
+                  image: "node:18-alpine",
+                  env: [
+                    {
+                      name: "NODE_ENV",
+                      value: "production"
+                    },
+                    {
+                      name: "DATABASE_URL",
+                      value: "postgresql://dbuser:dbpass@postgres-svc:5432/myapp"
+                    },
+                    {
+                      name: "REDIS_URL",
+                      value: "redis://redis-svc:6379"
+                    },
+                    {
+                      name: "JWT_SECRET",
+                      valueFrom: {
+                        secretKeyRef: {
+                          name: "app-secrets",
+                          key: "jwt-secret"
+                        }
+                      }
+                    }
+                  ],
+                  ports: [
+                    {
+                      containerPort: 3000
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
         kind: "Service",
         metadata: {
-          name: "redis-service",
+          name: "frontend-svc"
         },
         spec: {
           selector: {
-            app: "redis"
+            app: "frontend"
           },
           ports: [
             {
-              port: 6379,
-              targetPort: 6379
+              port: 80,
+              targetPort: 80
+            }
+          ]
+        }
+      },
+      {
+        kind: "Service",
+        metadata: {
+          name: "backend-svc"
+        },
+        spec: {
+          selector: {
+            app: "backend"
+          },
+          ports: [
+            {
+              port: 3000,
+              targetPort: 3000
+            }
+          ]
+        }
+      },
+      {
+        kind: "Ingress",
+        metadata: {
+          name: "app-ingress",
+          annotations: {
+            "nginx.ingress.kubernetes.io/rewrite-target": "/$2"
+          }
+        },
+        spec: {
+          rules: [
+            {
+              http: {
+                paths: [
+                  {
+                    path: "/()(.*)",
+                    pathType: "Prefix",
+                    backend: {
+                      service: {
+                        name: "frontend-svc",
+                        port: {
+                          number: 80
+                        }
+                      }
+                    }
+                  },
+                  {
+                    path: "/api(/|$)(.*)",
+                    pathType: "Prefix",
+                    backend: {
+                      service: {
+                        name: "backend-svc",
+                        port: {
+                          number: 3000
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
             }
           ]
         }
@@ -155,40 +297,133 @@ const templates = [
     ]
   },
   {
-    name: "Alpine",
-    description: "Minimal Alpine Linux container",
+    name: "Production Ready Web",
+    description: "A production-grade web deployment with health checks, resource limits, and custom domains",
     resources: [
       {
-        apiVersion: "apps/v1",
         kind: "Deployment",
         metadata: {
-          name: "alpine-deployment",
+          name: "web",
+          labels: {
+            app: "web"
+          }
         },
         spec: {
-          replicas: 1,
+          replicas: 3,
           selector: {
             matchLabels: {
-              app: "alpine"
+              app: "web"
             }
           },
           template: {
             metadata: {
               labels: {
-                app: "alpine"
+                app: "web"
               }
             },
             spec: {
               containers: [
                 {
-                  name: "alpine",
-                  image: "docker.io/library/alpine:latest",
-                  command: ["tail", "-f", "/dev/null"],
-                },
-              ],
+                  name: "web",
+                  image: "nginx:1.25",
+                  resources: {
+                    limits: {
+                      cpu: "500m",
+                      memory: "512Mi"
+                    },
+                    requests: {
+                      cpu: "200m",
+                      memory: "256Mi"
+                    }
+                  },
+                  ports: [
+                    {
+                      containerPort: 80
+                    }
+                  ],
+                  livenessProbe: {
+                    httpGet: {
+                      path: "/healthz",
+                      port: 80
+                    },
+                    initialDelaySeconds: 3,
+                    periodSeconds: 3
+                  },
+                  readinessProbe: {
+                    httpGet: {
+                      path: "/ready",
+                      port: 80
+                    },
+                    initialDelaySeconds: 5,
+                    periodSeconds: 5
+                  }
+                }
+              ]
             }
           }
+        }
+      },
+      {
+        kind: "Service",
+        metadata: {
+          name: "web-svc",
+          annotations: {
+            "prometheus.io/scrape": "true",
+            "prometheus.io/port": "80"
+          }
         },
+        spec: {
+          selector: {
+            app: "web"
+          },
+          ports: [
+            {
+              port: 80,
+              targetPort: 80
+            }
+          ]
+        }
+      },
+      {
+        kind: "Ingress",
+        metadata: {
+          name: "web-ingress",
+          annotations: {
+            "cert-manager.io/cluster-issuer": "letsencrypt-prod",
+            "kubernetes.io/tls-acme": "true"
+          }
+        },
+        spec: {
+          tls: [
+            {
+              hosts: ["example.com"],
+              secretName: "example-tls"
+            }
+          ],
+          rules: [
+            {
+              host: "example.com",
+              http: {
+                paths: [
+                  {
+                    path: "/",
+                    pathType: "Prefix",
+                    backend: {
+                      service: {
+                        name: "web-svc",
+                        port: {
+                          number: 80
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
       }
+
     ]
   },
 ];
