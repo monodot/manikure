@@ -1,18 +1,10 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import {Button} from '@/components/ui/button';
-import {Share, AlertCircle, Clipboard, Check} from 'lucide-vue-next';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import {Alert, AlertDescription} from '@/components/ui/alert';
+import {Share, CopyIcon} from 'lucide-vue-next';
 import {Label} from '@/components/ui/label';
 import {useToast} from '@/components/ui/toast';
+import {Input} from '@/components/ui/input';
 
 const props = defineProps<{
   resources: any[];
@@ -27,6 +19,7 @@ const urlTooLong = ref(false);
 
 // Import these from your sharing utilities
 import {encodeResources, checkUrlLength} from '@/lib/sharing';
+import {Popover, PopoverTrigger, PopoverContent} from "@/components/ui/popover";
 
 const generateShareUrl = () => {
   try {
@@ -75,8 +68,8 @@ const handleDialogOpen = () => {
 </script>
 
 <template>
-  <Dialog v-model:open="showDialog" @update:open="handleDialogOpen">
-    <DialogTrigger asChild>
+  <Popover @update:open="handleDialogOpen">
+    <PopoverTrigger as-child>
       <Button
           variant="secondary"
           size="sm"
@@ -86,55 +79,33 @@ const handleDialogOpen = () => {
         <Share class="size-3.5"/>
         Share
       </Button>
-    </DialogTrigger>
-
-    <DialogContent class="sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle>Share project as link</DialogTitle>
-        <DialogDescription>
-          Your project resources are not stored online. However, anyone with this link will be able to view your project resources.
-          Be careful not to share sensitive information, such as inside Secrets.
-        </DialogDescription>
-      </DialogHeader>
-
-      <div v-if="urlTooLong" class="flex-1">
-        <Alert variant="destructive">
-          <AlertCircle class="size-4"/>
-          <AlertDescription>
-            Project is too large to share via URL. Try reducing the number of resources.
-          </AlertDescription>
-        </Alert>
+    </PopoverTrigger>
+    <PopoverContent align="end" class="w-[520px]">
+      <div class="flex flex-col space-y-2 text-center sm:text-left">
+        <h3 class="text-lg font-semibold">
+          Share project
+        </h3>
+        <p class="text-sm text-muted-foreground">
+          Anyone who has this link will be able to view your resources. Be careful not to share sensitive information.
+        </p>
       </div>
-      <div v-else-if="shareUrl" class="flex items-center space-x-2">
+      <div class="flex items-center space-x-2 pt-4">
         <div class="grid flex-1 gap-2">
           <Label for="link" class="sr-only">
             Link
           </Label>
-          <input
-              class="flex-1 truncate rounded-md border px-3 py-2 text-sm"
-              :value="shareUrl"
-              readonly
+          <Input
+              id="link"
+              read-only
+              v-model="shareUrl"
           />
-
         </div>
-        <Button
-            v-if="!urlTooLong && shareUrl"
-            variant="outline"
-            class="w-32"
-            @click="copyToClipboard"
-        >
-          <template v-if="!copied">
-            <Clipboard class="w-4 h-4"/>
-            Copy URL
-          </template>
-          <template v-else>
-            <Check class="w-4 h-4"/>
-            Copied!
-          </template>
+        <Button type="submit" size="sm" class="px-3" @click="copyToClipboard">
+          <span class="sr-only">Copy</span>
+          <CopyIcon class="h-4 w-4" />
         </Button>
-
       </div>
+    </PopoverContent>
+  </Popover>
 
-    </DialogContent>
-  </Dialog>
 </template>
