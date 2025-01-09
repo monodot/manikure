@@ -19,6 +19,7 @@ import WelcomeDialog from "@/components/WelcomeDialog.vue";
 import {decodeResources} from "@/lib/sharing.ts";
 import ShareButton from "@/components/ShareButton.vue";
 import {ScrollArea} from "@/components/ui/scroll-area";
+import DarkModeButton from "@/components/DarkModeButton.vue";
 
 const {toast} = useToast();
 
@@ -145,7 +146,9 @@ onMounted(() => {
           Copy YAML
         </Button>
 
-        <a href="https://github.com/monodot/manikure" class="text-sm font-medium px-2 flex items-center gap-1">
+        <DarkModeButton/>
+
+        <a href="https://github.com/monodot/manikure" class="text-sm font-medium px-2 flex items-center gap-1 hover:underline">
           <span>GitHub</span>
           <ExternalLink class="size-3"/>
         </a>
@@ -183,7 +186,7 @@ onMounted(() => {
         <ResizableHandle/>
 
         <ResizablePanel :default-size="40">
-          <ScrollArea class="h-full">
+          <ScrollArea class="bg-muted h-full">
             <CodeViewer v-if="selectedResource"
                         :resource="selectedResource"
             />

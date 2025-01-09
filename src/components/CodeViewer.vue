@@ -14,7 +14,7 @@ const formatYaml = (resource: Resource) => {
 </script>
 
 <template>
-  <div class="p-4 bg-gray-100 h-full relative">
+  <div class="p-4 h-full relative">
     <Badge variant="outline" class="absolute right-3 top-3">
       Output
     </Badge>
