@@ -23,19 +23,19 @@ defineEmits(['select', 'removeResource', 'clearAll', 'addResource']);
 </script>
 
 <template>
-  <div class="lg:flex lg:flex-col">
-    <div class="p-4 lg:flex-auto overflow-y-auto space-y-4">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="font-medium">Resources</h3>
-        <Button variant="ghost" size="sm" @click="$emit('addResource', 'Deployment')">
-          <PlusCircle class="size-4" />
-        </Button>
+  <div class="lg:flex lg:flex-col justify-between">
+    <div class="lg:flex-auto overflow-y-auto">
+      <div class="flex justify-between items-center px-4 py-3 border-b">
+        <h3 class="font-medium">Project Resources</h3>
+<!--        <Button variant="ghost" size="sm" @click="$emit('addResource', 'Deployment')">-->
+<!--          <PlusCircle class="size-4" />-->
+<!--        </Button>-->
       </div>
       
       <div 
         v-for="resource in resources" 
         :key="resource.id"
-        class="flex items-center justify-between p-2 rounded cursor-pointer"
+        class="flex items-center justify-between px-4 py-3 cursor-pointer"
         :class="{'bg-accent': resource.id === selectedResourceId}"
         @click="$emit('select', resource.id)"
       >
@@ -51,14 +51,19 @@ defineEmits(['select', 'removeResource', 'clearAll', 'addResource']);
           <X class="size-4" />
         </Button>
       </div>
+
+      <div v-if="!resources.length" class="p-4 text-muted-foreground text-center">
+        <p><strong>Empty project</strong></p>
+        <p>You can add resources to the project by clicking <em>Add from Gallery</em>.</p>
+        </div>
     </div>
 
-    <!-- Clear All Button -->
+    <!-- Bottom menu -->
     <div class="p-4 border-t mt-auto">
       <AlertDialog>
         <AlertDialogTrigger as-child>
-          <Button variant="destructive" size="sm" class="w-full">
-            Clear All
+          <Button variant="destructive" class="w-full">
+            Delete All
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
@@ -70,7 +75,7 @@ defineEmits(['select', 'removeResource', 'clearAll', 'addResource']);
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction @click="$emit('clearAll')">Clear All</AlertDialogAction>
+            <AlertDialogAction @click="$emit('clearAll')">Delete All</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
