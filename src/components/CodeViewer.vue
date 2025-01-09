@@ -2,6 +2,7 @@
 import { dump } from 'js-yaml';
 import type {Resource} from "@/types/resource.ts";
 import {Badge} from "@/components/ui/badge";
+import { cleanupEmptyValues } from '@/lib/utils';
 
 defineProps<{
   resource: Resource
@@ -9,7 +10,8 @@ defineProps<{
 
 const formatYaml = (resource: Resource) => {
   const { id, ...resourceWithoutId } = resource;
-  return dump(resourceWithoutId);
+  const cleaned = cleanupEmptyValues(resourceWithoutId);
+  return dump(cleaned);
 };
 </script>
 

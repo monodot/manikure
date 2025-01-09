@@ -13,7 +13,7 @@ import {Clipboard, ExternalLink} from "lucide-vue-next";
 import {dump} from 'js-yaml';
 import type {Resource} from "@/types/resource.ts";
 import ResourceForm from "@/components/ResourceForm.vue";
-import {generateId} from "@/lib/utils.ts";
+import {cleanupEmptyValues, generateId} from "@/lib/utils.ts";
 import {resources as defaultResources} from "@/templates/default"; // Load an initial/default set of resources
 import WelcomeDialog from "@/components/WelcomeDialog.vue";
 import {decodeResources} from "@/lib/sharing.ts";
@@ -53,7 +53,11 @@ const clearAll = () => {
 };
 
 const copyToClipboard = () => {
-  const yamlDocs = resources.value.map(r => dump(r)).join('---\n');
+  const yamlDocs = resources.value.map(r => {
+    const { id, ...resourceWithoutId } = r;
+    const cleaned = cleanupEmptyValues(resourceWithoutId);
+    return dump(cleaned);
+  }).join('---\n');
   navigator.clipboard.writeText(yamlDocs);
   toast({
     description: "Resources copied to your clipboard!",
