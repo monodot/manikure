@@ -1,6 +1,6 @@
 import { deploymentSchema, deploymentFieldConfig } from './deployment';
 import { serviceSchema } from './service';
-import { ingressSchema } from './ingress';
+import {ingressFieldConfig, ingressSchema} from './ingress';
 import {z} from "zod";
 
 export const schemas = {
@@ -13,7 +13,7 @@ export const schemas = {
 export const configs = {
   Deployment: deploymentFieldConfig,
   Service: {},
-  Ingress: {},
+  Ingress: ingressFieldConfig,
   default: {}
 } as const;
 
