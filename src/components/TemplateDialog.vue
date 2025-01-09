@@ -222,31 +222,33 @@ const handleSubmit = () => {
         Add from Gallery
       </Button>
     </DialogTrigger>
-    <DialogContent class="sm:max-w-[425px]">
-      <DialogHeader>
+    <DialogContent class="p-0 sm:max-w-4xl grid-rows-[auto_minmax(0,1fr)_auto] max-h-[90dvh]">
+      <DialogHeader class="p-6">
         <DialogTitle>Template Gallery</DialogTitle>
         <DialogDescription>
           Select a template from the gallery to add to your project.
         </DialogDescription>
       </DialogHeader>
-      <div class="grid gap-4 py-4">
-        <div
-            v-for="template in templates"
-            :key="template.name"
-            class="flex items-center gap-4 rounded-lg border p-4 hover:bg-accent cursor-pointer"
-            @click="handleSelect(template)"
-            :class="{ 'ring-2 ring-primary': selectedTemplate?.name === template.name }"
-        >
-          <div>
-            <h4 class="font-medium leading-none">{{ template.name }}</h4>
-            <p class="text-sm text-muted-foreground mt-1">
-              {{ template.description }}
-            </p>
+      <div class="py-1 px-6 grid gap-4 overflow-y-auto">
+        <div class="grid grid-cols-3 gap-4">
+          <div
+              v-for="template in templates"
+              :key="template.name"
+              class="rounded-lg border p-4 hover:bg-accent cursor-pointer"
+              @click="handleSelect(template)"
+              :class="{ 'ring-2 ring-primary': selectedTemplate?.name === template.name }"
+          >
+            <div>
+              <h4 class="font-medium leading-none">{{ template.name }}</h4>
+              <p class="text-sm text-muted-foreground mt-2">
+                {{ template.description }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-      <DialogFooter>
-        <Button @click="handleSubmit" :disabled="!selectedTemplate">
+      <DialogFooter class="p-6 items-center">
+        <Button @click="handleSubmit" :disabled="!selectedTemplate" class="ml-4">
           Add to Project
         </Button>
       </DialogFooter>
