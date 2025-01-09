@@ -35,20 +35,36 @@ export const deploymentSchema = z.object({
 });
 
 export const deploymentFieldConfig = {
-  metadata: {
-    name: {
-      description: "Must be unique within a namespace.",
+    metadata: {
+        name: {
+            documentation: {
+                details: "Name must be unique within a namespace. Is required when creating resources, although some resources may allow a client to request the generation of an appropriate name automatically. Name is primarily intended for creation idempotence and configuration definition. Cannot be updated once the resource has been created in the cluster.",
+                links: [
+                    {url: "https://kubernetes.io/docs/concepts/overview/working-with-objects/names", title: "Names"}
+                ],
+            },
+        },
     },
-  },
-  spec: {
-    template: {
-      spec: {
-        containers: {
-          command: {
-            description: "Entrypoint command",
-          }
+    spec: {
+        selector: {
+            matchLabels: {
+                documentation: {
+                    details: "These labels are used to select the pods managed by the deployment.",
+                    links: [
+                        {
+                            url: "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels",
+                            title: "Labels"
+                        }
+                    ]
+                }
+            }
+        },
+        template: {
+            spec: {
+                containers: {
+                    command: {}
+                }
+            }
         }
-      }
     }
-  }
 };

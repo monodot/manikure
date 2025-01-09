@@ -11,6 +11,7 @@ import * as z from 'zod'
 import AutoFormField from './AutoFormField.vue'
 import AutoFormLabel from './AutoFormLabel.vue'
 import { beautifyObjectName, getBaseType } from './utils'
+import type {FieldDocumentation} from "@/types/field.ts";
 
 const props = defineProps<{
   fieldName: string
@@ -18,6 +19,7 @@ const props = defineProps<{
   config?: Config<T>
   schema?: z.ZodArray<T>
   disabled?: boolean
+  documentation?: FieldDocumentation
 }>()
 
 function isZodArray(
@@ -61,7 +63,7 @@ provide(FieldContextKey, fieldContext)
         <FormItem>
           <AccordionItem :value="fieldName" class="border-none">
             <AccordionTrigger>
-              <AutoFormLabel class="text-base" :required="required">
+              <AutoFormLabel class="text-base" :required="required" :documentation="config?.documentation">
                 {{ schema?.description || beautifyObjectName(fieldName) }}
               </AutoFormLabel>
             </AccordionTrigger>

@@ -27,7 +27,7 @@ const booleanComponent = computed(() => props.config?.component === 'switch' ? S
             />
           </slot>
         </FormControl>
-        <AutoFormLabel v-if="!config?.hideLabel" :required="required">
+        <AutoFormLabel v-if="!config?.hideLabel" :required="required" :documentation="config?.documentation">
           {{ config?.label || beautifyObjectName(label ?? fieldName) }}
         </AutoFormLabel>
       </div>

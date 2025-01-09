@@ -1,6 +1,7 @@
 import type { Component, InputHTMLAttributes } from 'vue'
 import type { z, ZodAny } from 'zod'
 import type { INPUT_COMPONENTS } from './constant'
+import type {FieldDocumentation} from "@/types/field.ts";
 
 export interface FieldProps {
   fieldName: string
@@ -43,6 +44,8 @@ export interface ConfigItem {
   /** Hide `FormLabel`. */
   hideLabel?: boolean
   inputProps?: InputHTMLAttributes
+
+  documentation?: FieldDocumentation
 }
 
 // Define a type to unwrap an array
