@@ -51,6 +51,15 @@ watch(
 
 // Watch for updates to form values, and emit an event with the entire updated object
 // The parent component can then replace the old object with the new one
+
+/**
+ * This is a deep watcher, which means it will watch for changes in nested objects
+ *
+ * It seems to be executed multiple times, initially with env name/value only visible,
+ * then with env.valueFrom, then env.valueFrom.configMapKeyRef, then env.valueFrom.secretKeyRef
+ *
+ * So there is some sort of progressive rendering happening
+ */
 watch(
     () => form.values,
     (newValues) => {
@@ -58,7 +67,7 @@ watch(
         emit('update:modelValue', { ...newValues }); // use the spread operator (...) to create a new object reference; basically a shallow copy
       }
     },
-    { deep: true }
+    { deep: true } // This is mandatory, without this setting, any edits you make to the resource are not propagated to the output window
 );
 
 </script>
