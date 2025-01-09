@@ -84,7 +84,8 @@ const handleSubmit = () => {
       <DialogHeader>
         <DialogTitle>Import resources from JSON</DialogTitle>
         <DialogDescription>
-          Paste your JSON resources here, as a single array, e.g. <code>[{"apiVersion":"v1","kind":"Pod","metadata":{"name":"my-pod"}}]</code>
+          <p>Paste your JSON resources here, as a single array, e.g. <code>[{"apiVersion":"v1","kind":"Pod","metadata":{"name":"my-pod"}}]</code></p>
+          <p>To fetch resources from an existing cluster in this format, use this command: <code>kubectl -n NAMESPACE get deploy,svc,ingress -o json</code></p>
         </DialogDescription>
       </DialogHeader>
       <div class="grid gap-4 py-4">
