@@ -1,5 +1,19 @@
 import {z} from "zod";
 
+const httpGetAction = z.object({
+    path: z.string().describe("Path to access on the HTTP server"),
+    port: z.string().describe("Port to access on the container"),
+}).describe("HTTP Get probe configuration");
+
+const probeSchema = z.object({
+    initialDelaySeconds: z.number().optional().describe("Number of seconds after container starts before probe is initiated"),
+    periodSeconds: z.number().optional().describe("How often (in seconds) to perform the probe"),
+    timeoutSeconds: z.number().optional().describe("Number of seconds after which the probe times out"),
+    successThreshold: z.number().optional().describe("Minimum consecutive successes for the probe to be considered successful"),
+    failureThreshold: z.number().optional().describe("Number of times probe is allowed to fail before giving up"),
+    httpGet: httpGetAction.optional(),
+});
+
 enum PortProtocolTypes {
     TCP = "TCP",
     UDP = "UDP",
@@ -51,6 +65,8 @@ export const deploymentSchema = z.object({
                         name: z.string().optional(),
                         protocol: z.nativeEnum(PortProtocolTypes).optional(),
                     }).optional().describe("Port")),
+                    livenessProbe: probeSchema.optional().describe("Liveness probe"),
+                    readinessProbe: probeSchema.optional().describe("Readiness probe"),
                     resources: z.object({
                         requests: z.object({
                             cpu: z.string().optional().describe("CPU request (e.g. '100m', '0.5')"),
@@ -96,6 +112,39 @@ export const deploymentFieldConfig = {
             spec: {
                 containers: {
                     command: {},
+                    livenessProbe: {
+                        documentation: {
+                            details: "Periodic probe of container liveness. Container will be restarted if the probe fails.",
+                            links: [
+                                {
+                                    url: "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+                                    title: "Configure Liveness, Readiness and Startup Probes"
+                                }
+                            ]
+                        }
+                    },
+                    readinessProbe: {
+                        documentation: {
+                            details: "Periodic probe of container service readiness. Container will be removed from service endpoints if the probe fails.",
+                            links: [
+                                {
+                                    url: "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+                                    title: "Configure Liveness, Readiness and Startup Probes"
+                                }
+                            ]
+                        }
+                    },
+                    startupProbe: {
+                        documentation: {
+                            details: "Indicates whether the application within the container is started. All other probes are disabled if a startup probe is provided, until it succeeds.",
+                            links: [
+                                {
+                                    url: "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+                                    title: "Configure Liveness, Readiness and Startup Probes"
+                                }
+                            ]
+                        }
+                    },
                     resources: {
                         requests: {
                             documentation: {
