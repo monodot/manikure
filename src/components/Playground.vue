@@ -169,7 +169,7 @@ onMounted(() => {
     <main class="lg:flex lg:flex-1 min-h-0">
 
       <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel :default-size="17">
+        <ResizablePanel :default-size="15">
           <ScrollArea class="h-full">
             <ResourcesList
                 :resources="resources"
@@ -183,7 +183,7 @@ onMounted(() => {
 
         <ResizableHandle/>
 
-        <ResizablePanel :default-size="43">
+        <ResizablePanel :default-size="35">
           <ScrollArea class="h-full">
             <ResourceForm
                 v-if="selectedResource"
@@ -196,7 +196,7 @@ onMounted(() => {
 
         <ResizableHandle/>
 
-        <ResizablePanel :default-size="40">
+        <ResizablePanel :default-size="50">
           <ScrollArea class="bg-muted h-full">
             <CodeViewer v-if="selectedResource"
                         :resource="selectedResource"
