@@ -3,7 +3,7 @@ import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import {Toaster} from "@/components/ui/toast";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup,} from '@/components/ui/resizable';
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import CodeViewer from "@/components/CodeViewer.vue";
 import TemplateDialog from "@/components/TemplateDialog.vue";
 import ImportDialog from "@/components/ImportDialog.vue";
@@ -14,17 +14,26 @@ import {dump} from 'js-yaml';
 import type {Resource} from "@/types/resource.ts";
 import ResourceForm from "@/components/ResourceForm.vue";
 import {cleanupEmptyValues, generateId} from "@/lib/utils.ts";
-import {resources as defaultResources} from "@/templates/default"; // Load an initial/default set of resources
 import WelcomeDialog from "@/components/WelcomeDialog.vue";
-import {decodeResources} from "@/lib/sharing.ts";
 import ShareButton from "@/components/ShareButton.vue";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import DarkModeButton from "@/components/DarkModeButton.vue";
 import AboutBox from "@/components/AboutBox.vue";
+import {loadProject, saveProject} from "@/lib/store.ts";
+import {loadSharedResources} from "@/lib/project.ts";
 
 const {toast} = useToast();
 
-const resources = ref<Resource[]>(defaultResources);
+const resources = ref<Resource[]>(loadProject());
+
+watch(
+    resources,
+    (newResources) => {
+      saveProject(newResources);
+    },
+    {deep: true}
+);
+
 
 const selectedResourceId = ref<number | null>(1);
 const selectedResource = computed(() => {
@@ -65,41 +74,19 @@ const copyToClipboard = () => {
   });
 };
 
-const loadSharedResources = () => {
-  const params = new URLSearchParams(window.location.search);
-  const shared = params.get('resources');
-
-  if (!shared) return;
-
-  const {resources: decodedResources, errors} = decodeResources(shared);
-
-  if (errors.length > 0) {
-    toast({
-      variant: "destructive",
-      description: "Failed to load some shared resources. They may be invalid or corrupted.",
-    });
-    console.error('Share decode errors:', errors);
-  }
-
-  if (decodedResources.length > 0) {
-    // TODO: Merge this with the code in "ImportDialog", because they basically do the same thing
-    resources.value = []; // reset
-    decodedResources.forEach(resource => {
-      resources.value.push({
-        id: generateId(resources.value),
-        ...resource
-      });
-    })
-    selectedResourceId.value = resources.value[0].id || null;
-
-    toast({
-      description: `Loaded ${decodedResources.length} shared resources!`,
-    });
+const loadSharedResourcesFromUrl = () => {
+  const { resources: sharedResources, selectedId } = loadSharedResources(
+    new URLSearchParams(window.location.search)
+  );
+    
+  if (sharedResources.length > 0) {
+    resources.value = sharedResources;
+    selectedResourceId.value = selectedId;
   }
 };
 
 onMounted(() => {
-  loadSharedResources();
+  loadSharedResourcesFromUrl();
 });
 
 </script>
