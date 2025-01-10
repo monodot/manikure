@@ -31,16 +31,17 @@ const isOpen = ref(false);
             <span class="text-muted-foreground font-thin">%BUILD%</span>
           </h1>
           <p class="text-sm text-muted-foreground">A manifest editor for Kubernetes resources</p>
+          <p class="text-sm">
+            <a href="https://github.com/monodot/manikure" target="_blank" class="text-primary hover:underline">https://github.com/monodot/manikure</a>
+          </p>
+
           <div class="flex flex-col my-4 text-sm gap-y-2">
             <p>
-              Created by <a href="https://tomd.xyz" target="_blank" class="text-primary hover:underline">Tom Donohue</a>
+              Created by <a href="https://tomd.xyz" target="_blank" class="text-primary hover:underline">Tom Donohue</a>.
+              <a href="https://bsky.app/profile/monodot.bsky.social" target="_blank" class="text-primary hover:underline">@monodot.bsky.social</a>
             </p>
             <p>
               Released under the terms of the GNU Affero General Public License (AGPL-3.0).
-            </p>
-            <p>
-              <a href="https://github.com/monodot/manikure" target="_blank" class="text-primary hover:underline">Get the
-                source on GitHub</a>
             </p>
             <p class="text-muted-foreground">
               Contains documentation from <a href="https://kubernetes.io" target="_blank"
