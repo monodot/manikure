@@ -11,12 +11,7 @@ import { beautifyObjectName } from './utils'
 const props = defineProps<FieldProps>()
 
 const pairs = computed(() => {
-  const value = props.fieldName || {}
-  if (typeof value !== 'object') return []
-  return Object.entries(value).map(([key, value]) => ({
-    key,
-    value: String(value)
-  }))
+  return []  // Initialize with empty array for new records
 })
 </script>
 
@@ -33,35 +28,34 @@ const pairs = computed(() => {
       <FormControl>
         <div class="space-y-3">
           <div 
-            v-for="(pair, index) in pairs" 
+            v-for="(pair, index) in (slotProps.componentField.modelValue ? Object.entries(slotProps.componentField.modelValue) : [])" 
             :key="index" 
             class="flex items-center gap-2"
           >
             <Input
-              :model-value="pair.key"
+              :model-value="pair[0]"
               placeholder="Key"
               class="flex-1"
               :disabled="disabled"
               @update:model-value="(newKey) => {
-                const newPairs = [...pairs]
-                newPairs[index].key = newKey
-                slotProps.componentField.onChange(
-                  Object.fromEntries(newPairs.map(p => [p.key, p.value]))
-                )
+                const currentValue = { ...(slotProps.componentField.modelValue || {}) }
+                const oldKey = pair[0]
+                const value = currentValue[oldKey]
+                delete currentValue[oldKey]
+                currentValue[newKey] = value
+                slotProps.componentField.onChange(currentValue)
               }"
             />
             <span class="text-muted-foreground">=</span>
             <Input
-              :model-value="pair.value"
+              :model-value="pair[1]"
               placeholder="Value"
               class="flex-1"
               :disabled="disabled"
               @update:model-value="(newValue) => {
-                const newPairs = [...pairs]
-                newPairs[index].value = newValue
-                slotProps.componentField.onChange(
-                  Object.fromEntries(newPairs.map(p => [p.key, p.value]))
-                )
+                const currentValue = { ...(slotProps.componentField.modelValue || {}) }
+                currentValue[pair[0]] = newValue
+                slotProps.componentField.onChange(currentValue)
               }"
             />
             <Button
@@ -70,10 +64,9 @@ const pairs = computed(() => {
               size="icon"
               :disabled="disabled"
               @click="() => {
-                const newPairs = pairs.filter((_, i) => i !== index)
-                slotProps.componentField.onChange(
-                  Object.fromEntries(newPairs.map(p => [p.key, p.value]))
-                )
+                const currentValue = { ...(slotProps.componentField.modelValue || {}) }
+                delete currentValue[pair[0]]
+                slotProps.componentField.onChange(currentValue)
               }"
             >
               <TrashIcon class="h-4 w-4" />
@@ -87,10 +80,9 @@ const pairs = computed(() => {
             class="mt-2"
             :disabled="disabled"
             @click="() => {
-              const newPairs = [...pairs, { key: '', value: '' }]
-              slotProps.componentField.onChange(
-                Object.fromEntries(newPairs.map(p => [p.key, p.value]))
-              )
+              const currentValue = { ...(slotProps.componentField.modelValue || {}) }
+              currentValue[''] = ''
+              slotProps.componentField.onChange(currentValue)
             }"
           >
             <PlusIcon class="mr-2 h-4 w-4" />

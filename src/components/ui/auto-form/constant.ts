@@ -7,7 +7,7 @@ import AutoFormFieldFile from './AutoFormFieldFile.vue'
 import AutoFormFieldInput from './AutoFormFieldInput.vue'
 import AutoFormFieldNumber from './AutoFormFieldNumber.vue'
 import AutoFormFieldObject from './AutoFormFieldObject.vue'
-import AutoFormFieldRecord from '@/components/AutoFormFieldRecord.vue'
+import AutoFormFieldRecord from './AutoFormFieldRecord.vue'
 
 export const INPUT_COMPONENTS: InputComponents = {
   date: AutoFormFieldDate,
