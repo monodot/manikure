@@ -4,9 +4,9 @@ export const resources = [
     apiVersion: "apps/v1",
     kind: "Deployment",
     metadata: {
-      name: "egg-app",
+      name: "default-app",
       labels: {
-        app: "egg-app",
+        app: "default-app",
         environment: "dev",
       },
     },
@@ -14,19 +14,19 @@ export const resources = [
       replicas: 3,
       selector: {
         matchLabels: {
-          app: "egg-app",
+          app: "default-app",
         },
       },
       template: {
         metadata: {
           labels: {
-            app: "egg-app",
+            app: "default-app",
           },
         },
         spec: {
           containers: [
             {
-              name: "egg-app",
+              name: "default-app",
               image: "docker.io/library/python:3.9-slim",
               command: ["python", "-m", "http.server", "8080"],
               env: [
@@ -51,11 +51,11 @@ export const resources = [
     apiVersion: "v1",
     kind: "Service",
     metadata: {
-      name: "egg-service",
+      name: "default-service",
     },
     spec: {
       selector: {
-        app: "egg-app",
+        app: "default-app",
       },
       ports: [
         {
