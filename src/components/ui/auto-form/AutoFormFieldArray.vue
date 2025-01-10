@@ -59,7 +59,7 @@ provide(FieldContextKey, fieldContext)
 <template>
   <FieldArray v-slot="{ fields, remove, push }" as="section" :name="fieldName">
     <slot v-bind="props">
-      <Accordion type="multiple" class="w-full" collapsible :disabled="disabled" :default-value="fieldName" as-child>
+      <Accordion type="multiple" class="w-full" collapsible :disabled="disabled" :default-value="[fieldName]" as-child>
         <FormItem>
           <AccordionItem :value="fieldName" class="border-none">
             <AccordionTrigger>
