@@ -20,6 +20,7 @@ import {decodeResources} from "@/lib/sharing.ts";
 import ShareButton from "@/components/ShareButton.vue";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import DarkModeButton from "@/components/DarkModeButton.vue";
+import AboutBox from "@/components/AboutBox.vue";
 
 const {toast} = useToast();
 
@@ -161,6 +162,8 @@ onMounted(() => {
           <span>GitHub</span>
           <ExternalLink class="size-3"/>
         </a>
+
+        <AboutBox/>
       </div>
     </header>
 
