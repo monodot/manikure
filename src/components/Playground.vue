@@ -148,7 +148,6 @@ onMounted(() => {
 
         <Button
             variant="default"
-            size="sm"
             class="gap-1.5 text-sm"
             @click="copyToClipboard"
         >

@@ -75,7 +75,7 @@ const handleSubmit = () => {
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="secondary" size="sm" class="gap-1.5 text-sm">
+      <Button variant="outline" class="gap-1.5">
         <Import class="size-4"/>
         Import
       </Button>

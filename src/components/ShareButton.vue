@@ -71,12 +71,11 @@ const handleDialogOpen = () => {
   <Popover @update:open="handleDialogOpen">
     <PopoverTrigger as-child>
       <Button
-          variant="secondary"
-          size="sm"
-          class="gap-1.5 text-sm"
+          variant="outline"
+          class="gap-1.5"
           :disabled="resources.length === 0"
       >
-        <Share class="size-3.5"/>
+        <Share/>
         Share
       </Button>
     </PopoverTrigger>
