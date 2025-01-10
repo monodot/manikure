@@ -59,7 +59,7 @@ const removeResource = (id: number) => {
 
 const clearAll = () => {
   resources.value = [];
-  selectedResourceId.value = resources.value[0].id || null; // Or null, because Resource type's ID field is nullable
+  selectedResourceId.value = null;
 };
 
 const copyToClipboard = () => {
@@ -75,8 +75,9 @@ const copyToClipboard = () => {
 };
 
 const loadSharedResourcesFromUrl = () => {
-  const { resources: sharedResources, selectedId } = loadSharedResources();
-    
+  // TODO: Maybe add a confirmation dialog here - "will replace existing resources. Are you sure?"
+  const { resources: sharedResources, selectedId: selectedId } = loadSharedResources();
+
   if (sharedResources.length > 0) {
     resources.value = sharedResources;
     selectedResourceId.value = selectedId;

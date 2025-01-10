@@ -1,5 +1,4 @@
 import type { Resource } from "@/types/resource.ts";
-import { generateId } from "@/lib/utils";
 import { decodeResources } from "@/lib/sharing";
 import { toast } from "@/components/ui/toast";
 import { saveProject } from "@/lib/store";
@@ -12,6 +11,8 @@ export const loadSharedResources = (): { resources: Resource[], selectedId: numb
         return { resources: [], selectedId: null };
     }
 
+    history.replaceState(null, '', window.location.pathname);
+
     const { resources: decodedResources, errors } = decodeResources(hash);
 
     if (errors.length > 0) {
@@ -23,11 +24,11 @@ export const loadSharedResources = (): { resources: Resource[], selectedId: numb
     }
 
     if (decodedResources.length > 0) {
-        const resources = decodedResources.map(resource => ({
-            id: generateId(decodedResources),
+        const resources = decodedResources.map((resource, index) => ({
+            id: index,
             ...resource
         }));
-        
+
         // Save the shared resources
         saveProject(resources);
 
@@ -37,7 +38,7 @@ export const loadSharedResources = (): { resources: Resource[], selectedId: numb
 
         return {
             resources,
-            selectedId: resources[0]?.id || null
+            selectedId: resources[0]?.id ?? null // nullish coalescing operator, because the ID could be 0
         };
     }
 
