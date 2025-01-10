@@ -8,6 +8,7 @@ import { computed, provide } from 'vue'
 import AutoFormField from './AutoFormField.vue'
 import AutoFormLabel from './AutoFormLabel.vue'
 import { beautifyObjectName, getBaseSchema, getBaseType, getDefaultValueInZodStack } from './utils'
+import type {FieldDocumentation} from "@/types/field.ts";
 
 const props = defineProps<{
   fieldName: string
@@ -56,7 +57,7 @@ provide(FieldContextKey, fieldContext)
         <FormItem>
           <AccordionItem :value="fieldName" class="border-none">
             <AccordionTrigger>
-              <AutoFormLabel class="text-base" :required="required">
+              <AutoFormLabel class="text-base" :required="required" :documentation="(config?.documentation as FieldDocumentation | undefined)">
                 {{ schema?.description || beautifyObjectName(fieldName) }}
               </AutoFormLabel>
             </AccordionTrigger>
