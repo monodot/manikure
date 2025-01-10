@@ -4,14 +4,15 @@ import { decodeResources } from "@/lib/sharing";
 import { toast } from "@/components/ui/toast";
 import { saveProject } from "@/lib/store";
 
-export const loadSharedResources = (urlParams: URLSearchParams): { resources: Resource[], selectedId: number | null } => {
-    const shared = urlParams.get('resources'); // TODO: Change this to anchor-based sharing
+export const loadSharedResources = (): { resources: Resource[], selectedId: number | null } => {
+    // Get the hash without the # symbol
+    const hash = window.location.hash.slice(1);
     
-    if (!shared) {
+    if (!hash) {
         return { resources: [], selectedId: null };
     }
 
-    const { resources: decodedResources, errors } = decodeResources(shared);
+    const { resources: decodedResources, errors } = decodeResources(hash);
 
     if (errors.length > 0) {
         toast({

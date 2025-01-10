@@ -27,7 +27,7 @@ const generateShareUrl = () => {
     const {valid} = checkUrlLength(baseUrl, encoded);
 
     urlTooLong.value = !valid;
-    shareUrl.value = valid ? `${baseUrl}?resources=${encoded}` : '';
+    shareUrl.value = valid ? `${baseUrl}#${encoded}` : '';
 
     return valid;
   } catch (err) {

@@ -75,9 +75,7 @@ const copyToClipboard = () => {
 };
 
 const loadSharedResourcesFromUrl = () => {
-  const { resources: sharedResources, selectedId } = loadSharedResources(
-    new URLSearchParams(window.location.search)
-  );
+  const { resources: sharedResources, selectedId } = loadSharedResources();
     
   if (sharedResources.length > 0) {
     resources.value = sharedResources;
