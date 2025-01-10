@@ -5,6 +5,8 @@ import {Share, CopyIcon} from 'lucide-vue-next';
 import {Label} from '@/components/ui/label';
 import {useToast} from '@/components/ui/toast';
 import {Input} from '@/components/ui/input';
+import {encodeResources, checkUrlLength} from '@/lib/sharing';
+import {Popover, PopoverTrigger, PopoverContent} from "@/components/ui/popover";
 
 const props = defineProps<{
   resources: any[];
@@ -16,10 +18,6 @@ const showDialog = ref(false);
 const copied = ref(false);
 const shareUrl = ref<string>('');
 const urlTooLong = ref(false);
-
-// Import these from your sharing utilities
-import {encodeResources, checkUrlLength} from '@/lib/sharing';
-import {Popover, PopoverTrigger, PopoverContent} from "@/components/ui/popover";
 
 const generateShareUrl = () => {
   try {
