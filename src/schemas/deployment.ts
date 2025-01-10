@@ -169,7 +169,7 @@ export const deploymentFieldConfig = {
                         },
                         limits: {
                             documentation: {
-                                details: "When you specify a resource limit for a container, the kubelet enforces those limits so that the running container is not allowed to use more of that resource than the limit you set.",
+                                details: "Describes the maximum resources that this pod can use. Resource limits are enforced by the kubelet, so that the running container is not allowed to use more of each resource than the limits set by you.",
                                 links: [
                                     {
                                         url: "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
