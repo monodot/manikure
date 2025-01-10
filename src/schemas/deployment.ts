@@ -51,7 +51,17 @@ export const deploymentSchema = z.object({
                         name: z.string().optional(),
                         protocol: z.nativeEnum(PortProtocolTypes).optional(),
                     }).optional().describe("Port")),
-                }).describe("Container")).describe("List of containers"),
+                    resources: z.object({
+                        requests: z.object({
+                            cpu: z.string().optional().describe("CPU request (e.g. '100m', '0.5')"),
+                            memory: z.string().optional().describe("Memory request (e.g. '256Mi', '1Gi')"),
+                        }).optional().describe("Requests"),
+                        limits: z.object({
+                            cpu: z.string().optional().describe("CPU limit (e.g. '200m', '1.0')"),
+                            memory: z.string().optional().describe("Memory limit (e.g. '512Mi', '2Gi')"),
+                        }).optional().describe("Limits"),
+                    }).optional().describe("Compute resources"),
+                }).describe("Container")).describe("Containers in this pod"),
             }).describe("Pod specification"),
         }).describe("Pod template"),
     }).describe("Specification"),
@@ -85,7 +95,52 @@ export const deploymentFieldConfig = {
         template: {
             spec: {
                 containers: {
-                    command: {}
+                    command: {},
+                    resources: {
+                        requests: {
+                            documentation: {
+                                details: "Describes the minimum amount of compute resources required by this Pod. The kube-scheduler uses this information to decide which node to place the Pod on.",
+                                links: [
+                                    {
+                                        url: "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+                                        title: "Managing Resources for Containers"
+                                    }
+                                ]
+                            },
+                            cpu: {
+                                inputProps: {
+                                    placeholder: "100m, 0.5"
+                                },
+                            },
+                            memory: {
+                                inputProps: {
+                                    placeholder: "256Mi, 1Gi"
+                                }
+                            }
+                        },
+                        limits: {
+                            documentation: {
+                                details: "When you specify a resource limit for a container, the kubelet enforces those limits so that the running container is not allowed to use more of that resource than the limit you set.",
+                                links: [
+                                    {
+                                        url: "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+                                        title: "Managing Resources for Containers"
+                                    }
+                                ]
+                            },
+                            cpu: {
+                                inputProps: {
+                                    placeholder: "100m, 0.5"
+                                },
+                            },
+                            memory: {
+                                inputProps: {
+                                    placeholder: "256Mi, 1Gi"
+                                }
+                            }
+                        },
+                    }
+
                 }
             }
         }
