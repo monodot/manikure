@@ -157,7 +157,7 @@ onMounted(() => {
 
         <DarkModeButton/>
 
-        <a href="https://github.com/monodot/manikure" class="text-sm font-medium px-2 flex items-center gap-1 hover:underline">
+        <a href="https://github.com/monodot/manikure" target="_blank" class="text-sm font-medium px-2 flex items-center gap-1 hover:underline">
           <span>GitHub</span>
           <ExternalLink class="size-3"/>
         </a>
