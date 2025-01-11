@@ -5,6 +5,8 @@ import {useForm} from "vee-validate";
 import type {Resource} from "@/types/resource.ts";
 import {schemas, configs} from "@/schemas";
 import type { ResourceType } from "@/schemas";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {CircleAlert} from "lucide-vue-next";
 
 const props = defineProps<{
   modelValue: Resource;
@@ -82,6 +84,18 @@ watch(
         :form="form"
         :schema="schema"
         :field-config="fieldConfig"
+        v-if="schema.description !== 'Unknown'"
     />
+    <div v-else
+      class="py-4">
+      <Alert>
+        <CircleAlert class="h-4 w-4" />
+        <AlertTitle>Unsupported resource type</AlertTitle>
+        <AlertDescription>
+          Oops, we can't show you an edit form here, because we don't currently support this resource type.
+          We currently support Deployments, Services and Ingresses.
+        </AlertDescription>
+      </Alert>
+    </div>
   </div>
 </template>

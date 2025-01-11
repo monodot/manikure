@@ -7,7 +7,7 @@ export const schemas = {
   Deployment: deploymentSchema,
   Service: serviceSchema,
   Ingress: ingressSchema,
-  default: z.object({}).describe("Unknown Resource Type"), // TODO: Flesh this out
+  default: z.object({}).describe("Unknown"),
 } as const;
 
 export const configs = {
