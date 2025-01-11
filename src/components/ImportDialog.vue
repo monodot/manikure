@@ -41,7 +41,7 @@ watch(jsonInput, (newValue) => {
     }
 
     // Convert single object to array
-    const resources = Array.isArray(parsed) ? parsed : [parsed];
+    let resources = Array.isArray(parsed) ? parsed : [parsed];
     
     // If it's a List kind, use its items
     if (parsed.kind === 'List' && Array.isArray(parsed.items)) {
@@ -78,7 +78,7 @@ const handleSubmit = () => {
       parsed = parseYAML(jsonInput.value);
     }
     
-    const resources = Array.isArray(parsed) ? parsed : [parsed];
+    let resources = Array.isArray(parsed) ? parsed : [parsed];
     if (parsed.kind === 'List' && Array.isArray(parsed.items)) {
       resources = parsed.items;
     }
