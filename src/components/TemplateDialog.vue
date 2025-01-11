@@ -14,34 +14,58 @@ import {PlusCircle} from "lucide-vue-next";
 import type {Resource} from "@/types/resource.ts";
 import {Separator} from "@/components/ui/separator";
 
-const resources = [
+interface Template {
+  name: string;
+  description: string;
+  resources: Resource[];
+}
+
+const singleResources: Template[] = [
   {
-    apiVersion: "v1",
-    kind: "Deployment",
-    metadata: {
-      name: "deployment"
-    },
-    spec: {}
+    name: "Deployment",
+    description: "Manages a replicated application",
+    resources: [
+      {
+        apiVersion: "v1",
+        kind: "Deployment",
+        metadata: {
+          name: "deployment"
+        },
+        spec: {}
+      },
+    ]
   },
   {
-    apiVersion: "v1",
-    kind: "Service",
-    metadata: {
-      name: "service"
-    },
-    spec: {}
+    name: "Service",
+    description: "Exposes an application running on a set of pods as a network service",
+    resources: [
+      {
+        apiVersion: "v1",
+        kind: "Service",
+        metadata: {
+          name: "service"
+        },
+        spec: {}
+      },
+    ]
   },
   {
-    apiVersion: "networking.k8s.io/v1",
-    kind: "Ingress",
-    metadata: {
-      name: "ingress"
-    },
-    spec: {}
+    name: "Ingress",
+    description: "Exposes HTTP and HTTPS routes from outside the cluster to services within the cluster",
+    resources: [
+      {
+        apiVersion: "networking.k8s.io/v1",
+        kind: "Ingress",
+        metadata: {
+          name: "ingress"
+        },
+        spec: {}
+      }
+    ]
   }
 ];
 
-const templates = [
+const templates: Template[] = [
   {
     name: "Basic Web App",
     description: "A simple web application with a frontend container exposed to the internet",
@@ -504,13 +528,13 @@ const handleSubmit = () => {
         <h3 class="text-center font-semibold">Add a single resource</h3>
         <div class="grid grid-cols-3 gap-4">
           <button
-              v-for="resource in resources"
-              :key="resource.kind"
+              v-for="resource in singleResources"
+              :key="resource.name"
               class="rounded-lg border p-4 hover:bg-accent cursor-pointer text-left"
-              @click="handleSelect({ name: resource.kind, description: resource.metadata?.name, resources: [resource] })"
-              :class="{ 'ring-2 ring-primary': selectedTemplate?.name === resource.kind }"
+              @click="handleSelect(resource)"
+              :class="{ 'ring-2 ring-primary': selectedTemplate?.name === resource.name }"
           >
-            <h4 class="font-medium leading-none">{{ resource.kind }}</h4>
+            <h4 class="font-medium leading-none">{{ resource.name }}</h4>
           </button>
         </div>
         <Separator label="Or" />
