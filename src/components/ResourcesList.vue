@@ -41,7 +41,7 @@ defineEmits<{
         :key="resource.id"
         class="flex items-center justify-between px-4 py-3 cursor-pointer"
         :class="{'bg-accent': resource.id === selectedResourceId}"
-        @click="$emit('select', resource.id)"
+        @click="$emit('select', resource.id!)"
       >
         <div>
           <p class="font-medium">{{ resource.metadata?.name || 'Unnamed' }}</p>
@@ -50,7 +50,7 @@ defineEmits<{
         <Button 
           variant="ghost"
           size="sm"
-          @click.stop="$emit('removeResource', resource.id)"
+          @click.stop="$emit('removeResource', resource.id!)"
         >
           <X class="size-4" />
         </Button>
