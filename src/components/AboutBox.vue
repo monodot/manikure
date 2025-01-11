@@ -2,8 +2,12 @@
 import {
   Dialog,
   DialogContent,
-  DialogTrigger
+  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
+  DialogHeader
 } from "@/components/ui/dialog";
+import {VisuallyHidden} from 'radix-vue';
 import {ref} from "vue";
 import {Button} from "@/components/ui/button";
 import {CircleHelp} from "lucide-vue-next";
@@ -16,11 +20,21 @@ const isOpen = ref(false);
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button size="icon" variant="ghost">
+      <Button size="icon" variant="ghost" aria-label="About" title="About">
         <CircleHelp/>
       </Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[600px]">
+      <VisuallyHidden as-child>
+        <DialogHeader>
+          <DialogTitle>
+            About Manikure Studio
+          </DialogTitle>
+          <DialogDescription>
+            Information about this application
+          </DialogDescription>
+        </DialogHeader>
+      </VisuallyHidden>
       <div class="flex gap-6 items-center">
         <div class="flex-none w-1/3">
           <img :src="logo" alt="Manikure Studio" class="w-full"/>
@@ -38,7 +52,8 @@ const isOpen = ref(false);
           <div class="flex flex-col my-4 text-sm gap-y-2">
             <p>
               Created by <a href="https://tomd.xyz" target="_blank" class="text-primary hover:underline">Tom Donohue</a>.
-              <a href="https://bsky.app/profile/monodot.bsky.social" target="_blank" class="text-primary hover:underline">@monodot.bsky.social</a>
+              <a href="https://bsky.app/profile/monodot.bsky.social" target="_blank"
+                 class="text-primary hover:underline">@monodot.bsky.social</a>
             </p>
             <p>
               Released under the terms of the GNU Affero General Public License (AGPL-3.0).
