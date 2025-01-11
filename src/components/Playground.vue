@@ -44,7 +44,7 @@ const updateResource = (updatedResource: Resource) => {
   const index = resources.value.findIndex((resource) => resource.id === plainResource.id);
   if (index !== -1) {
     resources.value[index] = plainResource;
-    console.debug('Updated resource: ', plainResource);
+    // console.debug('Updated resource: ', plainResource);
   }
 }
 

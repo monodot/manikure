@@ -45,7 +45,7 @@ watch(
       if (!isEqual(newValue, form.values)) {
         form.resetForm({ values: newValue });
       }
-      console.debug('Form reset with new values');
+      // console.debug('Form reset with new values');
     }
 );
 
