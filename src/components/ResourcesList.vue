@@ -20,7 +20,12 @@ defineProps<{
   selectedResourceId: number | null;
 }>();
 
-defineEmits(['select', 'removeResource', 'clearAll', 'addResource']);
+defineEmits<{
+  (e: 'select', id: number): void
+  (e: 'removeResource', id: number): void
+  (e: 'clearAll'): void
+  (e: 'addResource', resources: Resource[]): void
+}>();
 </script>
 
 <template>
@@ -28,7 +33,7 @@ defineEmits(['select', 'removeResource', 'clearAll', 'addResource']);
     <div class="lg:flex-auto overflow-y-auto">
       <div class="flex justify-between items-center px-4 py-3 border-b">
         <h3 class="font-medium">Project Resources</h3>
-        <TemplateDialog @select="(template) => $emit('addResource', template)" />
+        <TemplateDialog @select="(resources) => $emit('addResource', resources)" />
       </div>
       
       <div 

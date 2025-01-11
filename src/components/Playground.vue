@@ -156,6 +156,14 @@ onMounted(() => {
                 @select="selectedResourceId = $event"
                 @remove-resource="removeResource"
                 @clear-all="clearAll"
+                @add-resource="(template) => {
+                  template.forEach((resource) => {
+                    resources.push({
+                      id: generateId(resources),
+                      ...resource,
+                    });
+                  });
+                }"
             />
           </ScrollArea>
         </ResizablePanel>
