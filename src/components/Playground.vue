@@ -5,7 +5,6 @@ import {Toaster} from "@/components/ui/toast";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup,} from '@/components/ui/resizable';
 import {computed, onMounted, ref, watch} from "vue";
 import CodeViewer from "@/components/CodeViewer.vue";
-import TemplateDialog from "@/components/TemplateDialog.vue";
 import ImportDialog from "@/components/ImportDialog.vue";
 import ResourcesList from "@/components/ResourcesList.vue";
 import {useToast} from "@/components/ui/toast/use-toast";
@@ -121,15 +120,6 @@ onMounted(() => {
             });
           });
         }"/>
-        <TemplateDialog @select="(template) => {
-          template.forEach((resource, _index) => {
-            resources.push({
-              id: generateId(resources),
-              ...resource,
-            });
-          });
-        }"/>
-
         <ShareButton
             :resources="resources"
         />

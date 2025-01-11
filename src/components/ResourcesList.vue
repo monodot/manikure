@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
 import type {Resource} from "@/types/resource.ts";
-import { X } from "lucide-vue-next";
+import { X, PlusCircle } from "lucide-vue-next";
+import TemplateDialog from "@/components/TemplateDialog.vue";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,9 +28,7 @@ defineEmits(['select', 'removeResource', 'clearAll', 'addResource']);
     <div class="lg:flex-auto overflow-y-auto">
       <div class="flex justify-between items-center px-4 py-3 border-b">
         <h3 class="font-medium">Project Resources</h3>
-<!--        <Button variant="ghost" size="sm" @click="$emit('addResource', 'Deployment')">-->
-<!--          <PlusCircle class="size-4" />-->
-<!--        </Button>-->
+        <TemplateDialog @select="(template) => $emit('addResource', template)" />
       </div>
       
       <div 
