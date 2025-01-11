@@ -12,6 +12,34 @@ import {ref} from "vue";
 import {Button} from "@/components/ui/button";
 import {PlusCircle} from "lucide-vue-next";
 import type {Resource} from "@/types/resource.ts";
+import {Separator} from "@/components/ui/separator";
+
+const resources = [
+  {
+    apiVersion: "v1",
+    kind: "Deployment",
+    metadata: {
+      name: "deployment"
+    },
+    spec: {}
+  },
+  {
+    apiVersion: "v1",
+    kind: "Service",
+    metadata: {
+      name: "service"
+    },
+    spec: {}
+  },
+  {
+    apiVersion: "networking.k8s.io/v1",
+    kind: "Ingress",
+    metadata: {
+      name: "ingress"
+    },
+    spec: {}
+  }
+];
 
 const templates = [
   {
@@ -462,32 +490,45 @@ const handleSubmit = () => {
     <DialogTrigger as-child>
       <Button variant="outline" class="gap-1.5">
         <PlusCircle class="size-4"/>
-        Add from Gallery
+        Add
       </Button>
     </DialogTrigger>
     <DialogContent class="p-0 sm:max-w-4xl grid-rows-[auto_minmax(0,1fr)_auto] max-h-[90dvh]">
       <DialogHeader class="p-6">
-        <DialogTitle>Template Gallery</DialogTitle>
+        <DialogTitle>Add to Project</DialogTitle>
         <DialogDescription>
-          Select a template from the gallery to add to your project.
+          Select a resource or quickstart template to add to your project.
         </DialogDescription>
       </DialogHeader>
-      <div class="py-1 px-6 grid gap-4 overflow-y-auto">
+      <div class="py-1 px-6 flex flex-col gap-6 overflow-y-auto">
+        <h3 class="text-center font-semibold">Add a single resource</h3>
         <div class="grid grid-cols-3 gap-4">
-          <div
+          <button
+              v-for="resource in resources"
+              :key="resource.kind"
+              class="rounded-lg border p-4 hover:bg-accent cursor-pointer text-left"
+              @click="handleSelect({ name: resource.kind, description: resource.metadata?.name, resources: [resource] })"
+              :class="{ 'ring-2 ring-primary': selectedTemplate?.name === resource.kind }"
+          >
+            <h4 class="font-medium leading-none">{{ resource.kind }}</h4>
+          </button>
+        </div>
+        <Separator label="Or" />
+        <h3 class="text-center font-semibold">Choose a quickstart template</h3>
+        <div class="grid grid-cols-3 gap-4">
+          <button
               v-for="template in templates"
+              variant="secondary"
               :key="template.name"
-              class="rounded-lg border p-4 hover:bg-accent cursor-pointer"
+              class="flex flex-col rounded-lg border p-4 hover:bg-accent cursor-pointer text-left"
               @click="handleSelect(template)"
               :class="{ 'ring-2 ring-primary': selectedTemplate?.name === template.name }"
           >
-            <div>
-              <h4 class="font-medium leading-none">{{ template.name }}</h4>
-              <p class="text-sm text-muted-foreground mt-2">
-                {{ template.description }}
-              </p>
-            </div>
-          </div>
+            <h4 class="font-medium leading-none">{{ template.name }}</h4>
+            <p class="text-sm text-muted-foreground mt-2">
+              {{ template.description }}
+            </p>
+          </button>
         </div>
       </div>
       <DialogFooter class="p-6 items-center">
