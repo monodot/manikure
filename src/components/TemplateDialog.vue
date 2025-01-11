@@ -542,7 +542,6 @@ const handleSubmit = () => {
         <div class="grid grid-cols-3 gap-4">
           <button
               v-for="template in templates"
-              variant="secondary"
               :key="template.name"
               class="flex flex-col rounded-lg border p-4 hover:bg-accent cursor-pointer text-left"
               @click="handleSelect(template)"
