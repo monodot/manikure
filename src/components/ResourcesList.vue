@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
 import type {Resource} from "@/types/resource.ts";
-import { X, PlusCircle } from "lucide-vue-next";
+import { X } from "lucide-vue-next";
 import TemplateDialog from "@/components/TemplateDialog.vue";
 import {
   AlertDialog,
@@ -32,7 +32,7 @@ defineEmits<{
   <div class="lg:flex lg:flex-col justify-between">
     <div class="lg:flex-auto overflow-y-auto">
       <div class="flex justify-between items-center px-4 py-3 border-b">
-        <h3 class="font-medium">Project Resources</h3>
+        <h3 class="font-medium">Resources</h3>
         <TemplateDialog @select="(resources) => $emit('addResource', resources)" />
       </div>
       
@@ -59,7 +59,7 @@ defineEmits<{
       <div v-if="!resources.length" class="p-4 text-muted-foreground text-center">
         <p><strong>Empty project</strong></p>
         <p>You can add resources to the project by clicking <em>Add from Gallery</em>.</p>
-        </div>
+      </div>
     </div>
 
     <!-- Bottom menu -->
