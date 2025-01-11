@@ -8,7 +8,8 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-import {ref, watch} from "vue";
+import { ref, watch } from "vue";
+import { parse as parseYAML } from 'yaml';
 import {Button} from "@/components/ui/button";
 import {Import} from "lucide-vue-next";
 import type {Resource} from "@/types/resource.ts";
@@ -31,16 +32,24 @@ watch(jsonInput, (newValue) => {
       return;
     }
     
-    const parsed = JSON.parse(newValue);
+    // Try parsing as JSON first, fall back to YAML
+    let parsed;
+    try {
+      parsed = JSON.parse(newValue);
+    } catch {
+      parsed = parseYAML(newValue);
+    }
+
+    // Convert single object to array
+    const resources = Array.isArray(parsed) ? parsed : [parsed];
     
-    if (!Array.isArray(parsed)) {
-      isImportValid.value = false;
-      validationError.value = "Input must be a JSON array";
-      return;
+    // If it's a List kind, use its items
+    if (parsed.kind === 'List' && Array.isArray(parsed.items)) {
+      resources = parsed.items;
     }
     
     // Basic validation of required K8s fields
-    const isValid = parsed.every(resource => 
+    const isValid = resources.every(resource => 
       resource.apiVersion && 
       resource.kind && 
       resource.metadata?.name
@@ -62,7 +71,17 @@ watch(jsonInput, (newValue) => {
 
 const handleSubmit = () => {
   try {
-    const resources = JSON.parse(jsonInput.value);
+    let parsed;
+    try {
+      parsed = JSON.parse(jsonInput.value);
+    } catch {
+      parsed = parseYAML(jsonInput.value);
+    }
+    
+    const resources = Array.isArray(parsed) ? parsed : [parsed];
+    if (parsed.kind === 'List' && Array.isArray(parsed.items)) {
+      resources = parsed.items;
+    }
     emit("select", resources);
     isOpen.value = false;
     jsonInput.value = ""; // Clear the input after successful import
@@ -82,10 +101,16 @@ const handleSubmit = () => {
     </DialogTrigger>
     <DialogContent class="sm:max-w-[625px]">
       <DialogHeader>
-        <DialogTitle>Import resources from JSON</DialogTitle>
+        <DialogTitle>Import resources</DialogTitle>
         <DialogDescription>
-          <p>Paste your JSON resources here, as a single array, e.g. <code>[{"apiVersion":"v1","kind":"Pod","metadata":{"name":"my-pod"}}]</code></p>
-          <p>To fetch resources from an existing cluster in this format, use this command: <code>kubectl -n NAMESPACE get deploy,svc,ingress -o json</code></p>
+          <p>Import your existing resources into this project, in JSON or YAML format. You can paste:</p>
+          <ul class="list-disc list-inside space-y-1 mt-2">
+            <li>A single Kubernetes resource</li>
+            <li>Multiple Kubernetes resources as an array</li>
+            <li>A Kubernetes List object</li>
+          </ul>
+          <p class="mt-2">For example, to get resources from an existing cluster, run this command against your cluster, and then paste the output here:</p>
+          <code>kubectl -n NAMESPACE get deploy,svc,ingress -o yaml</code>
         </DialogDescription>
       </DialogHeader>
       <div class="grid gap-4 py-4">
@@ -93,7 +118,7 @@ const handleSubmit = () => {
           <textarea
             v-model="jsonInput"
             rows="10"
-            placeholder="Paste your Kubernetes JSON here..."
+            placeholder="Paste your Kubernetes resources in JSON or YAML format..."
             class="w-full p-2 font-mono text-sm border rounded-md"
           ></textarea>
           <p v-if="validationError" class="text-sm text-red-500">
