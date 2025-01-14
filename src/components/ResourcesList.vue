@@ -13,29 +13,67 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+} from '@/components/ui/alert-dialog';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {computed} from "vue";
 
-defineProps<{
+const props = defineProps<{
   resources: Resource[];
   selectedResourceId: number | null;
 }>();
 
-defineEmits<{
+const selectedValue = computed(() => props.selectedResourceId?.toString() || '');
+
+const emit = defineEmits<{
   (e: 'select', id: number): void
   (e: 'removeResource', id: number): void
   (e: 'clearAll'): void
   (e: 'addResource', resources: Resource[]): void
 }>();
+
+const handleSelect = (value: string) => {
+  const numericId = parseInt(value, 10);
+  if (!isNaN(numericId)) {
+    emit('select', numericId);
+  }
+};
 </script>
 
 <template>
-  <div class="lg:flex lg:flex-col justify-between">
-    <div class="lg:flex-auto overflow-y-auto">
-      <div class="flex justify-between items-center px-4 py-3 border-b">
-        <h3 class="font-medium">Resources</h3>
-        <TemplateDialog @select="(resources) => $emit('addResource', resources)" />
+  <div class="lg:flex lg:flex-col lg:w-[225px] lg:justify-between">
+
+    <div class="flex justify-between items-center px-3 py-3 border-b gap-6">
+      <h3 class="hidden lg:display font-medium">Resources</h3>
+      <div class="flex-1">
+        <Select :model-value="selectedValue"
+                @update:model-value="handleSelect">
+          <SelectTrigger aria-label="Select a resource">
+            <SelectValue placeholder="Select a resource" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem
+                  v-for="resource in resources"
+                  :key="resource.id"
+                  :value="resource.id?.toString()"
+              >
+                {{ resource.metadata?.name || 'Unnamed' }}
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
-      
+      <TemplateDialog @select="(resources) => $emit('addResource', resources)" />
+    </div>
+    <div class="hidden lg:display lg:flex-auto overflow-y-auto">
+
       <div 
         v-for="resource in resources" 
         :key="resource.id"
@@ -63,7 +101,7 @@ defineEmits<{
     </div>
 
     <!-- Bottom menu -->
-    <div class="p-4 border-t mt-auto">
+    <div class="hidden lg:block p-4 border-t mt-auto">
       <AlertDialog>
         <AlertDialogTrigger as-child>
           <Button variant="destructive" class="w-full">
