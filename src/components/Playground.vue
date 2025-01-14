@@ -2,7 +2,6 @@
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import {Toaster} from "@/components/ui/toast";
-import {ResizableHandle, ResizablePanel, ResizablePanelGroup,} from '@/components/ui/resizable';
 import {computed, onMounted, ref, watch} from "vue";
 import CodeViewer from "@/components/CodeViewer.vue";
 import ImportDialog from "@/components/ImportDialog.vue";
@@ -15,7 +14,6 @@ import ResourceForm from "@/components/ResourceForm.vue";
 import {cleanupEmptyValues, generateId} from "@/lib/utils.ts";
 import WelcomeDialog from "@/components/WelcomeDialog.vue";
 import ShareButton from "@/components/ShareButton.vue";
-import {ScrollArea} from "@/components/ui/scroll-area";
 import DarkModeButton from "@/components/DarkModeButton.vue";
 import AboutBox from "@/components/AboutBox.vue";
 import {loadProject, saveProject} from "@/lib/store.ts";
@@ -147,16 +145,13 @@ onMounted(() => {
 
     <main class="lg:flex lg:flex-1 min-h-0">
 
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel :default-size="15">
-          <ScrollArea class="h-full">
-            <ResourcesList
-                :resources="resources"
-                :selectedResourceId="selectedResourceId"
-                @select="selectedResourceId = $event"
-                @remove-resource="removeResource"
-                @clear-all="clearAll"
-                @add-resource="(template) => {
+        <ResourcesList
+            :resources="resources"
+            :selectedResourceId="selectedResourceId"
+            @select="selectedResourceId = $event"
+            @remove-resource="removeResource"
+            @clear-all="clearAll"
+            @add-resource="(template) => {
                   template.forEach((resource) => {
                     resources.push({
                       id: generateId(resources),
@@ -164,34 +159,18 @@ onMounted(() => {
                     });
                   });
                 }"
-            />
-          </ScrollArea>
-        </ResizablePanel>
+        />
 
-        <ResizableHandle/>
+        <ResourceForm
+            v-if="selectedResource"
+            :key="selectedResourceId || 0"
+            :modelValue="selectedResource"
+            @update:modelValue="updateResource"
+        />
 
-        <ResizablePanel :default-size="35">
-          <ScrollArea class="h-full">
-            <ResourceForm
-                v-if="selectedResource"
-                :key="selectedResourceId || 0"
-                :modelValue="selectedResource"
-                @update:modelValue="updateResource"
-            />
-          </ScrollArea>
-        </ResizablePanel>
-
-        <ResizableHandle/>
-
-        <ResizablePanel :default-size="50">
-          <ScrollArea class="bg-muted h-full">
-            <CodeViewer v-if="selectedResource"
-                        :resource="selectedResource"
-            />
-          </ScrollArea>
-        </ResizablePanel>
-
-      </ResizablePanelGroup>
+        <CodeViewer v-if="selectedResource"
+                    :resource="selectedResource"
+        />
 
     </main>
 
