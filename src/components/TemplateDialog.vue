@@ -526,7 +526,7 @@ const handleSubmit = () => {
       </DialogHeader>
       <div class="py-1 px-6 flex flex-col gap-6 overflow-y-auto">
         <h3 class="text-center font-semibold">Add a single resource</h3>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid gap-4 lg:grid-cols-3">
           <button
               v-for="resource in singleResources"
               :key="resource.name"
@@ -539,7 +539,7 @@ const handleSubmit = () => {
         </div>
         <Separator label="Or" />
         <h3 class="text-center font-semibold">Choose a quickstart template</h3>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid gap-4 lg:grid-cols-3">
           <button
               v-for="template in templates"
               :key="template.name"
