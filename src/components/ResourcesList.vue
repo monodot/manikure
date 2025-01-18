@@ -64,7 +64,7 @@ const handleSelect = (value: string) => {
               <SelectItem
                   v-for="resource in resources"
                   :key="resource.id"
-                  :value="resource.id?.toString()"
+                  :value="resource.id!.toString()"
               >
                 {{ resource.metadata?.name || 'Unnamed' }}
               </SelectItem>
