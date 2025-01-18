@@ -2,6 +2,12 @@
   output: application.png
   width: 1280
   height: 800
-  wait: 2000
+  wait: 1000
   javascript: |
-    document.querySelector('button[aria-label="Get started"]').click();
+    new Promise(takeShot => {
+      document.querySelector('button[aria-label="Get started"]').click();
+      setTimeout(() => {
+        // Resolving the promise takes the shot
+        takeShot();
+      }, 1000);
+    });

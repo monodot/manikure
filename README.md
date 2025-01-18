@@ -7,6 +7,9 @@
 <hr/>
 
 <p align="center">
+    <img src="./application.png" alt="Screenshot of Manikure" width="80%"/>
+</p>
+<p align="center">
     <a href="https://manikure.netlify.app"><strong>👉 Try it out now: manikure.netlify.app 👈</strong></a>
 </p>
 
