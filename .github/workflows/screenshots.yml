@@ -3,7 +3,6 @@
 name: screenshots
 
 on:
-  push:
   workflow_dispatch:
 
 permissions:
