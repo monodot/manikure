@@ -1,11 +1,31 @@
-# 💅 manikure - Manifest Builder for Kubernetes Resources
-### **Try it out:** https://manikure.netlify.app
+<div style="text-align: center">
+    <h1>💅 manikure</h1>
+    <p><strong>Interactive Editor for Kubernetes resources</strong></p>
+    <p><strong>Design and validate your Kubernetes configurations without writing YAML</strong></p>
+</div>
 
-🔎 **Manikure is a single-page web application for creating Kubernetes resource definitions (JSON/YAML manifests).** It's built with VueJS, TailwindCSS, blood, sweat and tears.
+<hr/>
 
-> This is a personal project, developed when I grew fed up of writing Kubernetes manifests all the time. This project is also my playground for learning modern front-end development (I'm normally a back-end engineer so this is a bit of a change for me!) 👴 I don't work on this project regularly, but in fits and starts. I come back to it infrequently, to update and add new features. Your issues and pull requests are welcome!
+<p style="text-align: center">
+    <a href="https://manikure.netlify.app"><strong>👉 Try it out now: manikure.netlify.app 👈</strong></a>
+</p>
 
-**Latest news (06/01/2025):** Updated the app to use shadcn-vue components, and Zod schema.
+<hr/>
+
+<div style="text-align: center">
+    <img alt="GitHub License" src="https://img.shields.io/github/license/monodot/manikure">
+</div>
+
+🔎 **Manikure is a single-page web application for designing Kubernetes resource definitions (JSON/YAML manifests).** It's ideal for when you're learning how to write Kubernetes resources, or when you want to quickly prototype a new resource.
+
+## Features
+
+- **Interactive editor:** Design your Kubernetes resources using a visual editor, without writing YAML.
+- **Templates:** Use pre-defined templates to get started quickly. Choose from a set of typical Kubernetes scenarios.
+- **Export:** Export your resources as YAML, ready to apply to your Kubernetes cluster.
+- **Share:** Share your resources with others, by exporting them as a URL.
+- **Dark mode:** Because everyone loves dark mode.
+- **No server required:** The app runs entirely in your browser, with no server-side processing.
 
 ## Future roadmap
 
