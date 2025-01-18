@@ -2,3 +2,6 @@
   output: application.png
   width: 1280
   height: 800
+  wait: 500
+  javascript: |
+    document.querySelector('button[aria-label="Get started"]').click();

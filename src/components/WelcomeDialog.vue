@@ -68,7 +68,7 @@ const handleDismiss = () => {
 
       </div>
       <DialogFooter class="p-6 pt-0">
-        <Button @click="handleDismiss">
+        <Button @click="handleDismiss" aria-label="Get started">
           Get started
         </Button>
       </DialogFooter>
