@@ -35,7 +35,7 @@ const handleDismiss = () => {
     <DialogContent class="sm:max-w-[600px] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90dvh]">
       <DialogHeader class="p-6 pb-0">
         <DialogTitle class="flex items-center gap-2">
-          Welcome to Manikure Studio!
+          Welcome to Manikure!
           <Badge variant="secondary">Preview</Badge>
         </DialogTitle>
         <DialogDescription>
@@ -53,7 +53,7 @@ const handleDismiss = () => {
         </div>
 
         <p>
-          Manikure Studio is a tool to help you create and edit Kubernetes manifests more easily.
+          Manikure is a tool to help you create and edit Kubernetes manifests more easily.
         </p>
         <ul class="space-y-2 list-disc pl-6">
           <li>Use the resources list to manage your resources</li>

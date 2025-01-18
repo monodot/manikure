@@ -102,7 +102,6 @@ onMounted(() => {
         </svg>
         <h1 class="flex text-xl font-semibold gap-1">
           Manikure
-          <span class="hidden lg:block">Studio</span>
         </h1>
         <Badge variant="secondary" class="text-xs hidden lg:block">Preview</Badge>
         <p class="hidden lg:block text-gray-500 text-sm">A manifest editor for Kubernetes resources</p>

@@ -28,7 +28,7 @@ const isOpen = ref(false);
       <VisuallyHidden as-child>
         <DialogHeader>
           <DialogTitle>
-            About Manikure Studio
+            About Manikure
           </DialogTitle>
           <DialogDescription>
             Information about this application
@@ -37,11 +37,11 @@ const isOpen = ref(false);
       </VisuallyHidden>
       <div class="flex flex-col lg:flex-row  gap-6 items-center">
         <div class="flex-none lg:w-1/3 text-center">
-          <img :src="logo" alt="Manikure Studio" class="w-1/2 mx-auto lg:w-full"/>
+          <img :src="logo" alt="Manikure" class="w-1/2 mx-auto lg:w-full"/>
         </div>
         <div class="text-center lg:text-left">
           <h1 class="text-2xl font-semibold">
-            Manikure Studio
+            Manikure
             <span class="text-muted-foreground font-thin">%BUILD%</span>
           </h1>
           <p class="text-sm text-muted-foreground">A manifest editor for Kubernetes resources</p>
