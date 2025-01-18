@@ -70,11 +70,11 @@ const handleDialogOpen = () => {
     <PopoverTrigger as-child>
       <Button
           variant="outline"
-          class="gap-1.5"
+          class="h-9 w-9 lg:h-9 lg:w-auto lg:px-4 lg:py-2 gap-1.5"
           :disabled="resources.length === 0"
       >
         <Share/>
-        Share
+        <span class="hidden lg:block">Share</span>
       </Button>
     </PopoverTrigger>
     <PopoverContent align="end" class="w-[520px]">

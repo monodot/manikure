@@ -95,17 +95,17 @@ onMounted(() => {
         class="flex-none sticky top-0 z-10 flex justify-between h-[60px] items-center gap-1 border-b bg-background px-4"
     >
       <div class="flex items-center gap-2">
-        <!-- Logo -->
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hidden lg:display w-6 h-6">
           <path
               d="M11.7397 1.62537C11.9042 1.54614 12.0958 1.54614 12.2603 1.62537L20.3398 5.51624C20.5043 5.59547 20.6238 5.7453 20.6644 5.92331L22.6599 14.666C22.7005 14.844 22.6579 15.0309 22.5441 15.1736L16.9529 22.1848C16.839 22.3275 16.6664 22.4107 16.4838 22.4107H7.51622C7.33363 22.4107 7.16097 22.3275 7.04712 22.1848L1.45595 15.1736C1.3421 15.0309 1.29946 14.844 1.34009 14.666L3.33556 5.92331C3.37619 5.7453 3.49567 5.59547 3.66018 5.51624L11.7397 1.62537Z"
               stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <h1 class="text-xl font-semibold">
-          Manikure Studio
+        <h1 class="flex text-xl font-semibold gap-1">
+          Manikure
+          <span class="hidden lg:block">Studio</span>
         </h1>
-        <Badge variant="secondary" class="text-xs">Preview</Badge>
-        <p class="text-gray-500 text-sm">A manifest editor for Kubernetes resources</p>
+        <Badge variant="secondary" class="text-xs hidden lg:block">Preview</Badge>
+        <p class="hidden lg:block text-gray-500 text-sm">A manifest editor for Kubernetes resources</p>
       </div>
 
       <!-- Buttons -->
@@ -124,19 +124,18 @@ onMounted(() => {
 
         <Button
             variant="default"
-            class="gap-1.5 text-sm"
+            class="h-9 w-9 lg:h-9 lg:w-auto lg:px-4 lg:py-2 gap-1.5"
             @click="copyToClipboard"
         >
           <Clipboard class="size-3.5"/>
-          Copy YAML
+          <span class="hidden lg:block">Copy YAML</span>
         </Button>
 
         <DarkModeButton/>
 
         <a href="https://github.com/monodot/manikure" target="_blank"
-           class="text-sm font-medium px-2 flex items-center gap-1 hover:underline">
+           class="hidden lg:block text-sm font-medium px-2 flex items-center gap-1 hover:underline">
           <span>GitHub</span>
-          <ExternalLink class="size-3"/>
         </a>
 
         <AboutBox/>

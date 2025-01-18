@@ -94,9 +94,9 @@ const handleSubmit = () => {
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="outline" class="gap-1.5">
+      <Button variant="outline" class="h-9 w-9 lg:h-9 lg:w-auto lg:px-4 lg:py-2 gap-1.5">
         <Import class="size-4"/>
-        Import
+        <span class="hidden lg:block">Import</span>
       </Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[625px]">
