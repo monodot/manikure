@@ -7,7 +7,7 @@ import CodeViewer from "@/components/CodeViewer.vue";
 import ImportDialog from "@/components/ImportDialog.vue";
 import ResourcesList from "@/components/ResourcesList.vue";
 import {useToast} from "@/components/ui/toast/use-toast";
-import {Clipboard, ExternalLink} from "lucide-vue-next";
+import {Clipboard} from "lucide-vue-next";
 import {dump} from 'js-yaml';
 import type {Resource} from "@/types/resource.ts";
 import ResourceForm from "@/components/ResourceForm.vue";
