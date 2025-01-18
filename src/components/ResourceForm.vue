@@ -75,7 +75,7 @@ watch(
 </script>
 
 <template>
-  <div class="lg:min-w-[400px] p-4 flex-none overflow-y-auto">
+  <div class="lg:min-w-[400px] p-4 flex-none overflow-y-auto lg:border-r">
     <h1 class="text-lg font-semibold">{{ modelValue.kind }}</h1>
     <hr/>
     <AutoForm
