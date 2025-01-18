@@ -35,11 +35,11 @@ const isOpen = ref(false);
           </DialogDescription>
         </DialogHeader>
       </VisuallyHidden>
-      <div class="flex gap-6 items-center">
-        <div class="flex-none w-1/3">
-          <img :src="logo" alt="Manikure Studio" class="w-full"/>
+      <div class="flex flex-col lg:flex-row  gap-6 items-center">
+        <div class="flex-none lg:w-1/3 text-center">
+          <img :src="logo" alt="Manikure Studio" class="w-1/2 mx-auto lg:w-full"/>
         </div>
-        <div>
+        <div class="text-center lg:text-left">
           <h1 class="text-2xl font-semibold">
             Manikure Studio
             <span class="text-muted-foreground font-thin">%BUILD%</span>
