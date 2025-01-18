@@ -47,14 +47,16 @@ const handleSelect = (value: string) => {
 </script>
 
 <template>
-  <div class="lg:flex lg:flex-col lg:w-[225px] lg:justify-between">
+  <div class="drop-shadow top-[60px] lg:static lg:drop-shadow-none lg:border-r lg:top-auto lg:flex lg:flex-col lg:w-[225px] bg-background lg:justify-between">
 
-    <div class="flex justify-between items-center px-3 py-3 border-b gap-6">
-      <h3 class="hidden lg:display font-medium">Resources</h3>
-      <div class="flex-1">
+    <div class="flex justify-between items-center px-3 lg:px-4 py-3 border-b gap-6">
+      <h3 class="hidden lg:block font-medium">Resources</h3>
+
+      <!-- Mobile dropdown -->
+      <div class="flex-1 lg:hidden">
         <Select :model-value="selectedValue"
                 @update:model-value="handleSelect">
-          <SelectTrigger aria-label="Select a resource">
+          <SelectTrigger aria-label="Select a resource" class="w-[220px]">
             <SelectValue placeholder="Select a resource" />
           </SelectTrigger>
           <SelectContent>
@@ -72,7 +74,9 @@ const handleSelect = (value: string) => {
       </div>
       <TemplateDialog @select="(resources) => $emit('addResource', resources)" />
     </div>
-    <div class="hidden lg:display lg:flex-auto overflow-y-auto">
+
+    <!-- Desktop resource list -->
+    <div class="hidden lg:block lg:flex-auto overflow-y-auto">
 
       <div 
         v-for="resource in resources" 
