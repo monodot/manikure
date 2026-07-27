@@ -9,15 +9,16 @@ permissions: {}
 
 concurrency:
   group: deploy-production
-  cancel-in-progress: false          # never kill a deploy mid-rsync
+  cancel-in-progress: false          # never kill a deploy mid-upload
 
 jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    environment: production           # scopes secrets, adds optional approval
+    environment: production           # adds an optional approval gate
     permissions:
       contents: read
+      id-token: write                 # mint the OIDC token AWS exchanges for a role
 
     steps:
       - name: Checkout
@@ -44,25 +45,22 @@ jobs:
           [ "$(find dist -type f | wc -l)" -ge 6 ]
           ls dist/assets/*.js dist/assets/*.css >/dev/null
 
-      - name: Tailscale authenticate
-        uses: tailscale/github-action@780049a30b6ff5c378a9e7b389d15ece7a204888 # v4.1.3
+      # No long-lived credential: GitHub mints a short-lived OIDC token, AWS
+      # exchanges it for the upload role, and the trust policy pins the
+      # exchange to this repository. Nothing here is usable from a fork.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
         with:
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-          tags: tag:ci
-          ping: ${{ secrets.K8S_CONTROL_HOST }}
+          aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ vars.AWS_DEPLOY_ROLE }}
 
-      # No SSH key or known_hosts pinning: the target node runs Tailscale SSH
-      # (`tailscale set --ssh`), so tailscaled terminates SSH and authenticates
-      # this runner by its tailnet identity (tag:ci) using auth type `none`.
-      # The peer is already authenticated by WireGuard, and Tailscale presents
-      # its own host key rather than the node's, so pinning one would only break.
-      - name: Deploy site files
-        env:
-          K8S_CONTROL_USER: ${{ secrets.K8S_CONTROL_USER }}
-          K8S_CONTROL_HOST: ${{ secrets.K8S_CONTROL_HOST }}
+      # The cluster pulls this prefix rather than CI pushing to the node, so
+      # this workflow needs no access to the tailnet at all. --delete keeps the
+      # prefix an exact mirror of dist/; Vite's hashed asset filenames mean the
+      # copy-then-delete ordering can't leave index.html pointing at a
+      # bundle that has already gone.
+      - name: Upload site to S3
         run: |
-          rsync -rlptzv --delete --chmod=D755,F644 \
-            -e "ssh -o StrictHostKeyChecking=accept-new" \
-            dist/ \
-            "${K8S_CONTROL_USER}@${K8S_CONTROL_HOST}:/var/www/sites/manikure/"
+          aws s3 sync dist/ s3://monodot-dists/manikure/ \
+            --delete \
+            --no-progress
