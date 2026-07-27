@@ -10,7 +10,7 @@
     <img src="./application.png" alt="Screenshot of Manikure" width="80%"/>
 </p>
 <p align="center">
-    <a href="https://manikure.netlify.app"><strong>👉 Try it out now: manikure.netlify.app 👈</strong></a>
+    <a href="https://manikure.tomd.xyz"><strong>👉 Try it out now: manikure.tomd.xyz 👈</strong></a>
 </p>
 
 <hr/>
@@ -44,7 +44,7 @@
 
 You can use Manikure in your browser without having to install it.
 
-Simply head to https://manikure.netlify.app.
+Simply head to https://manikure.tomd.xyz.
 
 ### Run locally
 
