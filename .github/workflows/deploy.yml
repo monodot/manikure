@@ -1,0 +1,66 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+
+permissions: {}
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false          # never kill a deploy mid-upload
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: production           # adds an optional approval gate
+    permissions:
+      contents: read
+      id-token: write                 # mint the OIDC token AWS exchanges for a role
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci                   # lockfile drift fails the build
+
+      - name: Build site
+        run: npm run build            # vue-tsc type check, then vite build (production by default)
+
+      - name: Verify build output
+        run: |
+          test -s dist/index.html
+          # a real build currently emits 9 files (index.html, favicon, templates/, assets/)
+          [ "$(find dist -type f | wc -l)" -ge 6 ]
+          ls dist/assets/*.js dist/assets/*.css >/dev/null
+
+      # No long-lived credential: GitHub mints a short-lived OIDC token, AWS
+      # exchanges it for the upload role, and the trust policy pins the
+      # exchange to this repository. Nothing here is usable from a fork.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
+        with:
+          aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ vars.AWS_DEPLOY_ROLE }}
+
+      # The cluster pulls this prefix rather than CI pushing to the node, so
+      # this workflow needs no access to the tailnet at all. --delete keeps the
+      # prefix an exact mirror of dist/; Vite's hashed asset filenames mean the
+      # copy-then-delete ordering can't leave index.html pointing at a
+      # bundle that has already gone.
+      - name: Upload site to S3
+        run: |
+          aws s3 sync dist/ s3://monodot-dists/manikure/ \
+            --delete \
+            --no-progress

@@ -9,3 +9,11 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+
+  # The workflows pin actions by commit SHA, which is only worth doing if
+  # something keeps the pins current -- Dependabot rewrites the SHA and its
+  # trailing version comment together.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
